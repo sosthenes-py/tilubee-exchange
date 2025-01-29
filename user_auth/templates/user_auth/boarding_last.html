@@ -1,0 +1,33 @@
+{% extends 'user_auth/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="pt-45 pb-16">
+        <div class="tf-container">
+            <div class="banner-received mt-32">
+                <img src="{% static 'user_auth/images/banner/banner1.jpg' %}" alt="img">
+                <svg xmlns="http://www.w3.org/2000/svg" width="350" height="350" viewBox="0 0 390 350" fill="none">
+                    <g opacity="0.8" filter="url(#filter0_f_1_1747)">
+                      <path d="M263.966 174.967C166.335 248.996 230.871 248.996 190.046 248.996C149.221 248.996 228.168 263.895 116.126 174.967C4.0829 86.0396 149.221 100.938 190.046 100.938C230.871 100.938 361.596 100.938 263.966 174.967Z" fill="url(#paint0_linear_1_1747)"/>
+                    </g>
+                    <defs>
+                      <filter id="filter0_f_1_1747" x="-25.5" y="0" width="424.902" height="349.934" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur stdDeviation="50" result="effect1_foregroundBlur_1_1747"/>
+                      </filter>
+                      <linearGradient id="paint0_linear_1_1747" x1="271.289" y1="100" x2="178.95" y2="286.752" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#E250E5"/>
+                        <stop offset="1" stop-color="#4B50E6"/>
+                      </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h2 class="mt-40 text-center">Account Setup Complete.</h2>
+            <p class="mt-12 text-center text-large">Your email has been confirmed, welcome to PROJECT_NAME!</p>
+            <a href="{% url 'users:wallet' %}" class="tf-btn primary lg mt-40">Done</a>
+        </div>
+    </div>
+
+{% endblock content %}

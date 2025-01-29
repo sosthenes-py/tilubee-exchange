@@ -1,0 +1,21 @@
+from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+
+
+class CustomLoginRequiredMixin(LoginRequiredMixin):
+    """
+    This mixin checks if a user is still in session or has duplicate session and also
+    checks if the user has verified their email address.
+    If not, it redirects to the email verification page
+    """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.session.get('user_session'):
+            return redirect('user_auth:login')
+        if request.user.session.uid != request.session.get('user_session'):
+            url = reverse('user_auth:login')
+            query_param = "?flash=duplicate"
+            return redirect(f"{url}{query_param}")
+        if not request.user.email_verification.is_verified:
+            return redirect('user_auth:verify_email')
+        return super().dispatch(request, *args, **kwargs)

@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <!-- font -->
+    <link rel="stylesheet" href="{% static 'user_auth/fonts/fonts.css' %}">
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'user_auth/fonts/font-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'user_auth/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'user_auth/css/styles.css' %}"/>
+
+    <!-- Favicon and Touch Icons  -->
+    <link rel="shortcut icon" href="{% static 'user_auth/images/logo/48.png' %}" />
+    <link rel="apple-touch-icon-precomposed" href="{% static 'user_auth/images/logo/48.png' %}" />
+
+    <link rel="stylesheet" href="{% static 'user_auth/css/icomoon-font.css' %}">
+    <title>PROJECT_NAME Onboarding</title>
+    <style>
+        .tf-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .tf-btn:hover {
+            opacity: 0.9;
+        }
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #000;
+            cursor: pointer;
+        }
+        .close-icon:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- preloade -->
+    <div class="preload preload-container">
+      <div class="preload-logo" style="background-image: url('{% static 'user_auth/images/logo/144.png' %}')">
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <!-- /preload -->
+
+    {% block content %}{% endblock %}
+    <div style="min-height: 5em"></div>
+
+    <div class="modal fade modalCenter" id="notiPrivacy">
+      <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content p-20">
+            <div class="heading">
+             <h3>Privacy</h3>
+             <div class="mt-4 text-small">
+                 <p>A mobile app privacy policy is a legal statement that must be clear, conspicuous, and consented to by all users. It must disclose how a mobile app gathers, stores, and uses the personally identifiable information it collects from its users.</p>
+                 <p>A mobile privacy app is developed and presented to users so that mobile app developers stay compliant with state, federal, and international laws. As a result, they fulfill the legal requirement to safeguard user privacy while protecting the company itself from legal challenges.</p>
+             </div>
+             <h3 class="mt-12">Authorized Users</h3>
+             <p class="mt-4 text-small">
+                 A mobile app privacy policy is a legal statement that must be clear, conspicuous, and consented to by all users. It must disclose how a mobile app gathers, stores, and uses the personally identifiable information it collects from its users.
+             </p>
+
+            </div>
+         </div>
+      </div>
+    </div>
+
+
+    <!-- filter success -->
+     <div class="modal fade modalCenter" id="notifyModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content success_box">
+                <a href="#0" class="close-icon icon-close notify-cancel" data-bs-dismiss="modal" aria-label="Close"></a>
+                 <div class="icon-1 ani3">
+                        <span class="circle-box lg bg-circle check-icon notify-circles notify-icon"></span>
+                 </div>
+                <div class="icon-2 ani5">
+                    <span class="circle-box md notify-circles"></span>
+                </div>
+                <div class="icon-3 ani8">
+                    <span class="circle-box md notify-circles"></span>
+                </div>
+                <div class="icon-4 ani2">
+                    <span class="circle-box sm notify-circles"></span>
+                </div>
+                <h3 class="text-surface text-center notify-title"></h3>
+                <p class="text-large text-center mt-8 notify-message"></p>
+
+                <a href="#0" data-bs-dismiss="modal" class="tf-btn lg notify-circles mt-40 notify-done">Okay</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script type="text/javascript" src="{% static 'user_auth/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/count-down.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/main.js' %}"></script>
+
+    <script>
+        function showPreloader(){
+            $(".preload").fadeIn("slow");
+        }
+
+        function hidePreloader(){
+            $(".preload").fadeOut("slow");
+        }
+
+        function notify(status, message, action=null, redirect=null){
+            let title = ''
+            let stat = ''
+            action = action || 'Ok'
+            if (status === 'success'){
+                title = 'Request Success'
+                stat = 'success'
+            } else if (status === 'error'){
+                title = 'Request Failed'
+                stat = 'danger'
+            } else if (status === 'info'){
+                title = 'Info'
+                stat = 'info'
+            } else {
+                title = 'Warning'
+                stat = 'warning'
+            }
+            $('.notify-circles').removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').removeClass('bg-info').toggleClass(`bg-${stat}`);
+            $('.notify-icon').removeClass('success-icon').removeClass('warning-icon').removeClass('info-icon').removeClass('danger-icon').toggleClass(`${stat}-icon`);
+            $('.notify-title').text(title);
+            $('.notify-message').text(message);
+            if(redirect){
+                $('.notify-done').attr('href', redirect).attr('data-bs-dismiss', '');
+                $('.notify-cancel').attr('href', redirect).attr('data-bs-dismiss', '');
+            }
+            $('.notify-done').text(action)
+            $('#notifyModal').modal('show')
+        }
+
+
+        function countdown(seconds, elementId, onStart, onComplete) {
+            onStart();
+            let timer = setInterval(function () {
+                let minutes = Math.floor(seconds / 60);
+                let remainingSeconds = seconds % 60;
+
+                let timeString = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+
+                if (elementId) {
+                    $(`#${elementId}`).text(timeString);
+                }
+
+                seconds--;
+
+                if (seconds < 0) {
+                    clearInterval(timer);
+                    if (typeof onComplete === 'function') {
+                        onComplete();
+                    }
+                }
+            }, 1000);
+        }
+
+
+
+    </script>
+
+    {% block script %}{% endblock %}
+
+
+</body>
+</html>

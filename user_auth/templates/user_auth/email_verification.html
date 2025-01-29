@@ -1,0 +1,98 @@
+{% extends 'user_auth/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+        <a href="#" class="left back-btn"><i class="icon-left-btn"></i></a>
+        <h3>Email Verification</h3>
+    </div>
+    <div class="pt-45 pb-20">
+        <div class="tf-container">
+            <form class="mt-32" id="form">
+                <div class="digit-group mt-12">
+                    {{ form.digit1 }}
+                    {{ form.digit2 }}
+                    {{ form.digit3 }}
+                    {{ form.digit4 }}
+                </div>
+                <p class="text-center text-small text-white mt-16">A code has been sent to your email</p>
+                <p class="d-flex justify-content-center mt-4 text-center text-button text-primary fw-6 resend">Resend in&nbsp;<span id="countdown" ></span></p>
+                <a id="submit" class="mt-40 tf-btn lg primary">Confirm</a>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+{% block script %}
+    <script>
+        $(function (){
+            startCountdown(100)
+        })
+    </script>
+
+    <script>
+        function startCountdown(seconds){
+            countdown(seconds, 'countdown', function (){
+                $('.resend').html(`Resend in&nbsp;<span id="countdown" ></span>`).css('text-decoration', 'none');
+            } ,function (){
+                $('.resend').attr('id', 'resend').text('Resend').css('text-decoration', 'underline');
+            })
+        }
+
+        $('#submit').on('click', function(){
+            event.preventDefault();
+            var formData = $('#form').serialize();
+            showPreloader()
+            $.ajax({
+              url : "{% url 'user_auth:verify_email' %}",
+              type: 'POST',
+              dataType: 'json',
+              data: formData,
+              success: function(data){
+                  if(data.status === "success"){
+                      window.location.href = "{% url 'user_auth:last_boarding' %}"
+                  }else{
+                      hidePreloader()
+                      notify(data.status, data.message)
+                  }
+              },
+                error: function(xhr, ajaxOptions, thrownError){
+                  hidePreloader()
+                  notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        })
+
+
+        $('body').on('click', '#resend', function(){
+            showPreloader()
+            $.ajax({
+              url : "{% url 'user_auth:verify_email' %}",
+              type: 'POST',
+              dataType: 'json',
+              data: {'operation': 'resend'},
+              success: function(data){
+                  hidePreloader()
+                  notify(data.status, data.message)
+                  $('.resend').removeAttr('id')
+                  startCountdown(100)
+              },
+                error: function(xhr, ajaxOptions, thrownError){
+                  hidePreloader()
+                  notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        })
+
+    </script>
+{% endblock script %}

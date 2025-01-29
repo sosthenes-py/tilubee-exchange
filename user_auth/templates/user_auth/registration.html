@@ -1,0 +1,106 @@
+{% extends 'user_auth/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="pt-45">
+        <div class="tf-container">
+            <form class="mt-32 mb-16" id="form">
+                <h2 class="text-center">Create New Account</h2>
+                <fieldset class="mt-40">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small">{{ form.first_name.label }}</p>
+                        {{ form.first_name }}
+                    </label>
+                </fieldset>
+                <fieldset class="mt-16">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small">{{ form.last_name.label }}</p>
+                        {{ form.last_name }}
+                    </label>
+                </fieldset>
+                <fieldset class="mt-16">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small">{{ form.email.label }}</p>
+                        {{ form.email }}
+                    </label>
+                    <p class="text-extra-small text-warning" style="font-weight: normal;">We will send a code to verify your email</p>
+                </fieldset>
+                <fieldset class="mt-16">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small">{{ form.phone.label }}</p>
+                        {{ form.phone }}
+                    </label>
+                </fieldset>
+                <fieldset class="mt-16">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small">{{ form.password.label }}</p>
+                        <div class="box-auth-pass">
+                            {{ form.password }}
+                            <span class="show-pass">
+                                <i class="icon-view"></i>
+                                <i class="icon-view-hide"></i>
+                            </span>
+                        </div>
+                    </label>
+                </fieldset>
+                <fieldset class="mt-16">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small">{{ form.password_confirmation.label }}</p>
+                        <div class="box-auth-pass">
+                            {{ form.password_confirmation }}
+                            <span class="show-pass2">
+                                <i class="icon-view"></i>
+                                <i class="icon-view-hide"></i>
+                            </span>
+                        </div>
+                    </label>
+                </fieldset>
+                <fieldset class="group-cb cb-signup mt-12">
+                    {{ form.accept_terms }}
+                    <label for="cb-ip">I agree to <a href="#notiPrivacy" class="text-white" data-bs-toggle="modal">Terms and conditions</a></label>
+                </fieldset>
+                <button type="submit" class="mt-40" id="submit">Create an account</button>
+                <p class="mt-20 text-center text-small">Already a Member? &ensp;<a href="{% url 'user_auth:login' %}">Access your account</a></p>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+
+    <script>
+        $('#submit').on('click', function(){
+            event.preventDefault();
+            var formData = $('#form').serialize();
+            showPreloader()
+            $.ajax({
+              url : "{% url 'user_auth:register' %}",
+              type: 'POST',
+              dataType: 'json',
+              data: formData,
+              success: function(data){
+                  hidePreloader()
+                  if(data.status === "success"){
+                      notify('success', data.message, 'Continue', '{% url "user_auth:verify_email" %}')
+                  }else{
+                      let obj = Object.entries(data.errors).at(0)
+                      let title = obj.at(0).replace('_', ' ').toUpperCase()
+                      let msg = `${title}: ${obj.at(1)}`
+                      notify(data.status, msg)
+                  }
+              },
+                error: function(xhr, ajaxOptions, thrownError){
+                  hidePreloader()
+                  notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        })
+
+    </script>
+{% endblock script %}

@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <!-- font -->
+    <link rel="stylesheet" href="{% static 'users/fonts/fonts.css' %}">
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'users/fonts/font-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'user_auth/css/styles.css' %}"/>
+    <link rel="stylesheet" href="{% static 'users/css/swiper-bundle.min.css' %}">
+
+    <!-- Favicon and Touch Icons  -->
+    <link rel="shortcut icon" href="{% static 'users/images/logo/48.png' %}" />
+    <link rel="apple-touch-icon-precomposed" href="{% static 'user_auth/images/logo/48.png' %}" />
+
+    <link rel="stylesheet" href="{% static 'users/css/icomoon-font.css' %}">
+    <title>PROJECT_NAME User</title>
+    <style>
+        .tf-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .tf-btn:hover {
+            opacity: 0.9;
+        }
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #000;
+            cursor: pointer;
+        }
+        .close-icon:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+     <!-- preloader -->
+     <div class="preload preload-container">
+        <div class="preload-logo" style="background-image: url('{% static 'user_auth/images/logo/144.png' %}')">
+          <div class="spinner"></div>
+        </div>
+      </div>
+      <!-- /preload -->
+
+    {% block content %}{% endblock %}
+
+
+    <!-- noti popup -->
+    <div class="modal fade modalCenter" id="modalNoti">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+           <div class="modal-content modal-sm">
+              <div class="p-16 line-bt text-center">
+                  <h4>“Cointex” Would Like To Send You Notifications</h4>
+                  <p class="mt-8 text-large">Notifications may include alerts, sounds, and icon badges. These can be configured in Settings.</p>
+              </div>
+              <div class="grid-2">
+                 <a href="#" class="line-r text-center text-button fw-6 p-10 text-secondary btn-hide-modal" data-bs-dismiss="modal" >Don’t Allow</a>
+                 <a href="#" class="text-center text-button fw-6 p-10 text-primary btn-hide-modal"  data-bs-toggle="modal" data-bs-target="#notiPrivacy"> Allow</a>
+              </a>
+              </div>
+           </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade modalCenter" id="amountNotifyModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content success_box">
+                <a href="#0" class="close-icon icon-close notify-cancel" data-bs-dismiss="modal" aria-label="Close"></a>
+                 <div class="icon-1 ani3">
+                        <span class="circle-box lg bg-circle check-icon notify-circles notify-icon"></span>
+                 </div>
+                <div class="icon-2 ani5">
+                    <span class="circle-box md notify-circles"></span>
+                </div>
+                <div class="icon-3 ani8">
+                    <span class="circle-box md notify-circles"></span>
+                </div>
+                <div class="icon-4 ani2">
+                    <span class="circle-box sm notify-circles"></span>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-surface">Successful!</h2>
+                    <h1 class="mt-8 text-primary">$ 1200.0</h1>
+                    <p class="mt-16 text-surface text-button">Notification</p>
+                </div>
+
+                <a href="#0" data-bs-dismiss="modal" class="tf-btn lg notify-circles mt-40 notify-done">Okay</a>
+            </div>
+        </div>
+    </div>
+
+
+     <div class="menubar-footer footer-fixed">
+        <ul class="inner-bar">
+            <li class="active">
+                <a href="wallet.html">
+                    <i class="icon icon-home2"></i>
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="exchange-market.html">
+                    <i class="icon icon-exchange"></i>
+                    Exchange
+                </a>
+            </li>
+            <li>
+                <a href="earn.html">
+                    <i class="icon icon-earn"></i>
+                    Earn
+                </a>
+            </li>
+            <li>
+                <a href="wallet.html">
+                    <i class="icon icon-wallet"></i>
+                    Wallet
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+
+    <script type="text/javascript" src="{% static 'user_auth/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/count-down.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/swiper-bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/carousel.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/apexcharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/chart.bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'user_auth/js/line-chart.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'user_auth/js/main.js' %}"></script>
+
+    <script type="application/javascript">
+        const main_wallets = ['ngn', 'btc', 'usdt', 'eth', 'bnb', 'trx']
+
+        function showPreloader(){
+            $(".preload").fadeIn("slow");
+        }
+
+        function hidePreloader(){
+            $(".preload").fadeOut("slow");
+        }
+
+        function notify(status, message, action=null, redirect=null){
+            let title = ''
+            let stat = ''
+            action = action || 'Ok'
+            if (status === 'success'){
+                title = 'Request Success'
+                stat = 'success'
+            } else if (status === 'error'){
+                title = 'Request Failed'
+                stat = 'danger'
+            } else if (status === 'info'){
+                title = 'Info'
+                stat = 'info'
+            } else {
+                title = 'Warning'
+                stat = 'warning'
+            }
+            $('.notify-circles').removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').removeClass('bg-info').toggleClass(`bg-${stat}`);
+            $('.notify-icon').removeClass('success-icon').removeClass('warning-icon').removeClass('info-icon').removeClass('danger-icon').toggleClass(`${stat}-icon`);
+            $('.notify-title').text(title);
+            $('.notify-message').text(message);
+            if(redirect){
+                $('.notify-done').attr('href', redirect).attr('data-bs-dismiss', '');
+                $('.notify-cancel').attr('href', redirect).attr('data-bs-dismiss', '');
+            }
+            $('.notify-done').text(action)
+            $('#notifyModal').modal('show')
+        }
+
+
+        function countdown(seconds, elementId, onStart, onComplete) {
+            onStart();
+            let timer = setInterval(function () {
+                let minutes = Math.floor(seconds / 60);
+                let remainingSeconds = seconds % 60;
+
+                let timeString = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+
+                if (elementId) {
+                    $(`#${elementId}`).text(timeString);
+                }
+
+                seconds--;
+
+                if (seconds < 0) {
+                    clearInterval(timer);
+                    if (typeof onComplete === 'function') {
+                        onComplete();
+                    }
+                }
+            }, 1000);
+        }
+
+        function formatNumber(num) {
+            if (isNaN(num)) return '...';
+            let [integer, decimal] = num.toString().split('.');
+            integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return decimal ? `${integer}.${decimal}` : integer;
+        }
+
+        $(function (){
+            if (localStorage.getItem('base-currency') === null) {
+                localStorage.setItem('base-currency', 'usd');
+                $('.base-currency').text('USD')
+            }else{
+                $('.base-currency').text(localStorage.getItem('base-currency').toUpperCase())
+            }
+
+
+        })
+
+    </script>
+
+    {% block script %}{% endblock %}
+
+</body>
+
+</html>

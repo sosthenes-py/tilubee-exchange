@@ -1,0 +1,88 @@
+{% extends 'user_auth/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+
+    <div class="pt-45 pb-20">
+        <div class="tf-container">
+            <div class="mt-32">
+                <h2 class="text-center">Access Your Account</h2>
+            </div>
+            <form class="mt-16" id="form">
+                <fieldset class="mt-16">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small"> {{ form.email.label }}</p>
+                        {{ form.email }}
+                    </label>
+                </fieldset>
+                <fieldset class="mt-16 mb-12">
+                    <label class="label-ip">
+                        <p class="mb-8 text-small">{{ form.password.label }}</p>
+                        <div class="box-auth-pass">
+                            {{ form.password }}
+                            <span class="show-pass">
+                                <i class="icon-view"></i>
+                                <i class="icon-view-hide"></i>
+                            </span>
+                        </div>
+                    </label>
+                </fieldset>
+                <a href="#0" class="text-secondary">Forgot Password?</a>
+                <button class="mt-20" id="submit">Login</button>
+                <p class="mt-20 text-center text-small">Already have a Account? &ensp;<a href="{% url 'user_auth:register' %}">Sign up</a></p>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+{% block script %}
+    <script>
+        $(function (){
+            const flash = "{{ flash }}"
+            if (flash !== ""){
+                if (flash === "duplicate"){
+                    notify('info', 'Duplicate login detected, please login again')
+                }
+            }
+        })
+    </script>
+
+    <script>
+        $('#submit').on('click', function(){
+            event.preventDefault();
+            var formData = $('#form').serialize();
+            showPreloader()
+            $.ajax({
+              url : "{% url 'user_auth:login' %}",
+              type: 'POST',
+              dataType: 'json',
+              data: formData,
+              success: function(data){
+                  hidePreloader()
+                  if(data.status === "success"){
+                      notify('success', data.message, 'Continue', '{% url "users:wallet" %}')
+                  }else if(data.status === "warning"){
+                      let obj = Object.entries(data.errors).at(0)
+                      let title = obj.at(0).replace('_', ' ').toUpperCase()
+                      let msg = `${title}: ${obj.at(1)}`
+                      notify(data.status, msg)
+                  }else{
+                      notify(data.status, data.message)
+                  }
+              },
+                error: function(xhr, ajaxOptions, thrownError){
+                  hidePreloader()
+                  notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        })
+
+    </script>
+
+{% endblock script %}

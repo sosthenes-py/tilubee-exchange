@@ -1,0 +1,367 @@
+{% extends 'users/layout.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <div class="header-style2 fixed-top bg-menuDark">
+        <div class="d-flex justify-content-between align-items-center gap-14">
+            <div class="box-account style-2">
+                <a href="user-info.html">
+                    <img src="images/avt/avt2.jpg" alt="img" class="avt">
+                </a>
+                <div class="search-box box-input-field style-2">
+                    <a href="home-search.html" class="icon-search"></a>
+                    <input type="text" placeholder="Looking for crypto" required class="clear-ip">
+                    <i class="icon-close"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-8">
+                <a href="list-blog.html" class="icon-gift"></a>
+                <a href="#notification" class="icon-noti box-noti" data-bs-toggle="modal"></a>
+            </div>
+        </div>
+    </div>
+
+
+{#    WALLET BALANCE AND TOP#}
+    <div class="pt-68 pb-80">
+        <div class="bg-menuDark tf-container">
+            <div class="pt-12 pb-12 mt-4">
+                <h5><span class="text-primary">My Wallet</span> - <a href="#" class="choose-account" data-bs-toggle="modal" data-bs-target="#accountWallet"><span class="dom-text base-currency">USD </span> &nbsp;<i class="icon-select-down"></i></a> </h5>
+                <h1 class="mt-16"><a href="#"><span class="total-balance">2,159.34</span> <span class="text-small base-currency">BTC</span></a></h1>
+                <ul class="mt-16 grid-4 m--16">
+                    <li>
+                        <a href="choose-payment.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
+                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-way"></i></span>
+                            Send
+                        </a>
+                    </li>
+                    <li>
+                        <a href="qr-code2.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
+                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-way2"></i></span>
+                            Receive
+                        </a>
+                    </li>
+                    <li>
+                        <a href="buy-quantity.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
+                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-wallet"></i></span>
+                            Buy
+                        </a>
+                    </li>
+                    <li>
+                        <a href="earn.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
+                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-exchange"></i></span>
+                            Earn
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+{#        MAIN MARKETS#}
+        <div class="bg-menuDark tf-container">
+            <div class="pt-12 pb-12 mt-4">
+                <h5>Market</h5>
+
+                <div class="swiper tf-swiper swiper-wrapper-r mt-16" data-space-between="16" data-preview="2.8" data-tablet="2.8" data-desktop="3">
+                    <div class="swiper-wrapper market-data">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+{#        RECENT AND FAVS#}
+        <div class="bg-menuDark tf-container">
+            <div class="tf-tab pt-12 mt-4">
+                <div class="tab-slide">
+                    <ul class="nav nav-tabs wallet-tabs" role="tablist" >
+                        <li class="item-slide-effect"></li>
+                        <li class="nav-item active" role="presentation">
+                            <button class="nav-link active"  data-bs-toggle="tab" data-bs-target="#recent">Recent History</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+							<button class="nav-link" data-bs-toggle="tab" data-bs-target="#conversions">Conversions</button>
+						</li>
+
+
+                    </ul>
+                </div>
+                <div class="tab-content pt-16 pb-16">
+					<div class="tab-pane fade active show" id="recent" role="tabpanel">
+						<ul class="history-list">
+                            <li>
+                                <a href="choose-payment.html" class="coin-item style-1 gap-12 bg-surface">
+                                    <img src="images/coin/coin-1.jpg" alt="img" class="img">
+                                    <div class="content">
+                                        <div class="title">
+                                            <p class="mb-4 text-large">Bitcoin</p>
+                                            <span class="text-secondary">11:34 AM</span>
+                                        </div>
+                                        <div class="box-price">
+                                            <p class="text-small mb-4"><span class="text-primary">+</span> BTC 0.0056</p>
+                                            <p class="text-end"><span class="text-red">-</span> $950.50</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="mt-8">
+                                <a href="choose-payment.html" class="coin-item style-1 gap-12 bg-surface">
+                                    <img src="images/coin/coin-2.jpg" alt="img" class="img">
+                                    <div class="content">
+                                        <div class="title">
+                                            <p class="mb-4 text-large">Withdraw</p>
+                                            <span class="text-secondary">1:12 PM</span>
+                                        </div>
+
+                                        <p class="text-small"><span class="text-red">-</span> 2,700.00</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+					</div>
+					<div class="tab-pane fade" id="conversions" role="tabpanel">
+						<ul class="conversions-list">
+                            <li>
+                                <a href="choose-payment.html" class="coin-item style-1 gap-12 bg-surface">
+                                    <img src="images/coin/coin-6.jpg" alt="img" class="img">
+                                    <div class="content">
+                                        <div class="title">
+                                            <p class="mb-4 text-button">ETH</p>
+                                            <span class="text-secondary">$360,6M</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-12">
+                                            <span class="text-small">$1.878,80</span>
+                                            <span class="coin-btn decrease">-1,62%</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+
+                        </ul>
+					</div>
+				</div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+    <!-- SELECT BASE CURRENCY -->
+    <div class="modal fade action-sheet" id="accountWallet">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Base Currency</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal"></span>
+                </div>
+                <ul class="mt-20 pb-16 base-currency-list">
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- notification -->
+    <div class="modal fade modalRight" id="notification">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <span class="left" data-bs-dismiss="modal"  aria-hidden="true"><i class="icon-left-btn"></i></span>
+                    <h3>Notification</h3>
+                </div>
+                <div class="overflow-auto pt-45 pb-16">
+                    <div class="tf-container">
+                        <ul class="mt-12">
+                            <li>
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt d-flex">
+                                        <p class="text-button fw-6">Cointex to just tick size and trading amount precision of spots/margins and perpetual swaps</p>
+                                        <i class="dot-lg bg-primary"></i>
+                                    </div>
+                                    <span class="d-block mt-8">5 minutes ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt d-flex">
+                                        <p class="text-button fw-6">Cointex to adjust components of several indexes</p>
+                                        <i class="dot-lg bg-primary"></i>
+                                    </div>
+                                    <span class="d-block mt-8">5 minutes ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt d-flex">
+                                        <p class="text-button fw-6">Cointex to just tick size and trading amount precision of spots/margins and perpetual swaps</p>
+                                        <i class="dot-lg bg-primary"></i>
+                                    </div>
+                                    <span class="d-block mt-8">5 minutes ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt">
+                                        <p class="text-button fw-6 text-secondary">Cointex to adjust components of several indexes</p>
+                                    </div>
+                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt">
+                                        <p class="text-button fw-6 text-secondary">Cryptex wallet uses Achain network service</p>
+                                    </div>
+                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt">
+                                        <p class="text-button fw-6 text-secondary">Cointex to adjust components of several indexes</p>
+                                    </div>
+                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock content %}
+
+{% block script %}
+
+    <script>
+        $(function (){
+            loadPage()
+        })
+
+        function loadPage(){
+            showPreloader()
+                $.ajax({
+                  url : "{% url 'users:wallet' %}",
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {
+                      'action': 'onload',
+                      'base': localStorage.getItem('base-currency')
+                  },
+                  success: function(data){
+                      hidePreloader()
+                      if(data.status === "success"){
+                          fix_data(data)
+                      }
+                  },
+                    error: function(xhr, ajaxOptions, thrownError){
+                      hidePreloader()
+                      notify('error', xhr.status + ': ' + xhr.statusText)
+                    },
+                    beforeSend: function (xhr, settings){
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+        }
+
+        function fix_data(data){
+            const total_balance = data.total_balance;
+            const wallets = data.wallets
+            const markets = data.markets
+            const history = data.recent_history
+            const convs = data.recent_conv
+            $('.total-balance').text(formatNumber(data.total_balance))
+
+            $('.base-currency-list').html('')
+            $.each(wallets, function(coin, balance){
+                if($.inArray(coin, main_wallets) !== -1) {
+                    coin = (coin === 'usdt') ? 'usd' : coin
+                    let active = (localStorage.getItem('base-currency') === coin) ? 'active' : ''
+                    $('.base-currency-list').append(
+                        `<li><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check dom-value select-base ${active}" data-currency="${coin}">${coin.toUpperCase()} <i class="icon icon-check-circle"></i> </div></li>`
+                    )
+                }
+            })
+            populate_market_data(markets)
+        }
+
+        function populate_market_data(markets) {
+            $('.market-data').html('')
+            let count = 0;
+            $.each(markets, function (coin, details) {
+                count++;
+                let change_dir = (details['change'] >= 0) ? 'up' : 'down'
+                let change_class = (details['change'] >= 0) ? 'primary' : 'danger'
+                let display = ($.inArray(coin, main_wallets) !== -1) ? 'block' : 'none'
+                $('.market-data').append(
+                    ` <div class="swiper-slide d-${display}">
+                            <a href="#0" class="coin-box d-block">
+                                <div class="coin-logo">
+                                    <img src="{% static 'transactions/images/tokens' %}/${coin}.png" alt="img" class="logo">
+                                    <div class="title">
+                                        <p>${details['long']}</p>
+                                        <span>${coin.toUpperCase()}</span>
+                                    </div>
+                                </div>
+                                <div class="mt-8 mb-8 coin-chart">
+                                    <div id="line-chart-${count}"></div>
+                                </div>
+                                <div class="coin-price d-flex justify-content-between">
+                                    <span>$${formatNumber(details['price'])}</span>
+                                    <span class="text-${change_class} d-flex align-items-center gap-2"><i class="icon-select-${change_dir} text-${change_class}"></i> ${details['change']}%</span>
+                                </div>
+                                <div class="blur bg${count}">
+                                </div>
+
+                            </a>
+                        </div>`
+                )
+
+            })
+        }
+
+        function populate_recent_history(history, conversions){
+            $('.history-list').html('')
+            $.each(history, function (index, details){
+                console.log(details['type'])
+            })
+        }
+
+
+        $('body').on('click', '.select-base', function(){
+            $('.select-base').removeClass('active')
+            $(this).addClass('active')
+            const currency = $(this).data('currency')
+            $('.base-currency').text(currency.toUpperCase())
+            localStorage.setItem('base-currency', currency)
+            loadPage()
+            $('#accountWallet').modal('hide')
+        })
+
+    </script>
+
+{% endblock script %}
+
+
+
+
+
+
+
+
+
