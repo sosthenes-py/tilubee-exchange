@@ -9,7 +9,7 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li class="accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#inflation">
+                        <li class="accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#buywithNgnModal">
                             <div class="content">
                                 <h5><a href="#">Buy with NGN</a></h5>
                                 <p class="mt-8 text-small text">Buy crypto with Fiat - Bank Transfer, Visa and Mastercard</p>
@@ -34,5 +34,81 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+
+    <div class="modal fade action-sheet" id="buyWithNgnModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
+                </div>
+                <div class="modal-body text-center">
+                    <span class="logo icon-bank"></span>
+                    <h3 class="mt-4">Buy with NGN</h3>
+                    <p class="mt-12 text-white text-large">A bank account will be displayed where to make this transfer and transactions are confirmed automatically</p>
+                    <div class="mt-32">
+                        <a href="javascript:void(0);" class="tf-btn sm primary d-inline-flex" data-bs-toggle="modal" data-bs-target="#keyWallet">Create Account Details</a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F">
+        <div class="modal-dialog modal-lg modal-dialog-centere">
+            <div class="modal-content" style="background-color: #11150F">
+
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <a href="#0" data-bs-dismiss="modal" class="left"><i class="icon-left-btn"></i></a>
+                    <h3 class="action-title text-capitalize">Buy with NGN</h3>
+                </div>
+
+                <div class="pt-45 pb-90">
+                    <div class="tf-container">
+                        <p class="text-center text-small mt-4">Quantity</p>
+                        <h1 class="mt-8 text-center history-qty"></h1>
+                        <p class="text-center text-small mt-1 history-status text-capitalize"><span class="icon icon-noti"></span> Please complete acion below to fund your account</p>
+
+                        <ul class="mt-40 accent-box-v4 bg-menuDark">
+                            <li class="d-flex align-items-center justify-content-between pb-8 line-bt">
+                                <span class="text-small">Transaction Account</span>
+                                <span class="text-large text-white">My wallet</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Transaction Fee </span>
+                                <span class="text-large text-white text-end history-fee">0</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Currency</span>
+                                <span class="text-large text-white history-currency text-uppercase">Crypto</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Time</span>
+                                <span class="text-large text-white history-time">0.0.0 00:00</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Address</span>
+                                <span class="text-large text-white history-address">walletaddress</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8">
+                                <span class="text-small">Transaction Hash</span>
+                                <span class="text-large text-white history-ref text-wrap flex-wrap">hash</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="menubar-footer footer-fixed bg-surface">
+                    <div class="inner-bar">
+                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-toggle="modal" data-bs-target="#otpPin">Confirm</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>

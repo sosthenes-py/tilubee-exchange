@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'user_auth',
-    'transactions'
+    'transactions',
+    'admin_panel'
 ]
 
 MIDDLEWARE = [

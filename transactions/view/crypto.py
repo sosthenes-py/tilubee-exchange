@@ -1,6 +1,7 @@
 from django.views import View
 from django.db.models import Q, QuerySet
 from transactions.models import Ticker
+from users.models import UserWallet
 
 
 coins_dict = {
@@ -100,3 +101,13 @@ def bcdiv(amount, one_usd_in_base=None):
     else:
         amt = f'{amount:.2f}'
     return float(amt)
+
+def create_user_wallet(user, currency):
+    if currency not in coins_dict.keys:
+        raise ValueError(f'Cannot create this wallet because specified currency {currency} does not exist')
+    
+    address = ''
+    wallet = UserWallet.objects.create(user=user, currency=currency, currency_name=coins_dict[currency], address=address)
+    return wallet
+
+

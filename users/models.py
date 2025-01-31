@@ -20,3 +20,11 @@ class Session(models.Model):
     uid = models.CharField(max_length=30, editable=False)
     ip_address = models.GenericIPAddressField()
     created_at = models.DateTimeField(auto_now=True)
+
+
+class UserWallet(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='user_wallets')
+    currency = models.CharField(max_length=20, default='')
+    currency_name = models.CharField(max_length=100, default='')
+    address = models.CharField(max_length=100, default='')
+    created_at = models.DateTimeField(default=timezone.now)
