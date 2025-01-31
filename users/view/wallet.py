@@ -37,7 +37,7 @@ class WalletView(CustomLoginRequiredMixin, View):
         user_transactions = UserTransactions(request.user, self.one_usd_in_base, self.base_currency)
         history = user_transactions.as_list()
         conversions = user_transactions.get_conversions()
-        recent_history = history[-5:] if history else []
+        history = history
         recent_conv = conversions[-5:] if conversions else []
         return JsonResponse({
             'status': 'success',
@@ -45,7 +45,7 @@ class WalletView(CustomLoginRequiredMixin, View):
             'wallets': wallets,
             'markets': markets,
             'recent_conv': recent_conv,
-            'recent_history': recent_history
+            'history': history
         })
 
 

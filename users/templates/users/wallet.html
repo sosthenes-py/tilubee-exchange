@@ -3,6 +3,19 @@
 
 
 {% block content %}
+    <style>
+        .conv-img{
+            width: 18px !important;
+            height: 18px !important;
+        }
+        .history-ref {
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            display: block;
+            text-align: right;
+        }
+    </style>
 
     <div class="header-style2 fixed-top bg-menuDark">
         <div class="d-flex justify-content-between align-items-center gap-14">
@@ -32,15 +45,15 @@
                 <h1 class="mt-16"><a href="#"><span class="total-balance">2,159.34</span> <span class="text-small base-currency">BTC</span></a></h1>
                 <ul class="mt-16 grid-4 m--16">
                     <li>
-                        <a href="choose-payment.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
-                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-way"></i></span>
-                            Send
+                        <a href="#0" class="tf-list-item d-flex flex-column gap-8 align-items-center" data-bs-toggle="modal" data-bs-target="#depositModal">
+                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-way2"></i></span>
+                            Deposit
                         </a>
                     </li>
                     <li>
-                        <a href="qr-code2.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
-                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-way2"></i></span>
-                            Receive
+                        <a href="#0" class="tf-list-item d-flex flex-column gap-8 align-items-center"  data-bs-toggle="modal" data-bs-target="#withdrawalModal">
+                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-way"></i></span>
+                            Withdraw
                         </a>
                     </li>
                     <li>
@@ -77,7 +90,7 @@
 
 
 
-{#        RECENT AND FAVS#}
+{#        RECENT AND CONVS#}
         <div class="bg-menuDark tf-container">
             <div class="tf-tab pt-12 mt-4">
                 <div class="tab-slide">
@@ -96,53 +109,12 @@
                 <div class="tab-content pt-16 pb-16">
 					<div class="tab-pane fade active show" id="recent" role="tabpanel">
 						<ul class="history-list">
-                            <li>
-                                <a href="choose-payment.html" class="coin-item style-1 gap-12 bg-surface">
-                                    <img src="images/coin/coin-1.jpg" alt="img" class="img">
-                                    <div class="content">
-                                        <div class="title">
-                                            <p class="mb-4 text-large">Bitcoin</p>
-                                            <span class="text-secondary">11:34 AM</span>
-                                        </div>
-                                        <div class="box-price">
-                                            <p class="text-small mb-4"><span class="text-primary">+</span> BTC 0.0056</p>
-                                            <p class="text-end"><span class="text-red">-</span> $950.50</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="mt-8">
-                                <a href="choose-payment.html" class="coin-item style-1 gap-12 bg-surface">
-                                    <img src="images/coin/coin-2.jpg" alt="img" class="img">
-                                    <div class="content">
-                                        <div class="title">
-                                            <p class="mb-4 text-large">Withdraw</p>
-                                            <span class="text-secondary">1:12 PM</span>
-                                        </div>
 
-                                        <p class="text-small"><span class="text-red">-</span> 2,700.00</p>
-                                    </div>
-                                </a>
-                            </li>
                         </ul>
 					</div>
 					<div class="tab-pane fade" id="conversions" role="tabpanel">
 						<ul class="conversions-list">
-                            <li>
-                                <a href="choose-payment.html" class="coin-item style-1 gap-12 bg-surface">
-                                    <img src="images/coin/coin-6.jpg" alt="img" class="img">
-                                    <div class="content">
-                                        <div class="title">
-                                            <p class="mb-4 text-button">ETH</p>
-                                            <span class="text-secondary">$360,6M</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-12">
-                                            <span class="text-small">$1.878,80</span>
-                                            <span class="coin-btn decrease">-1,62%</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
+
 
                         </ul>
 					</div>
@@ -243,7 +215,61 @@
     </div>
 
 
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F">
+        <div class="modal-dialog modal-lg modal-dialog-centere">
+            <div class="modal-content" style="background-color: #11150F">
 
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <a href="#0" data-bs-dismiss="modal" class="left"><i class="icon-left-btn"></i></a>
+                    <h3 class="history-title text-capitalize">Confirm</h3>
+                </div>
+
+                <div class="pt-45 pb-90">
+                    <div class="tf-container">
+                        <p class="text-center text-small mt-4">Quantity</p>
+                        <h1 class="mt-8 text-center history-qty">0.00 USD</h1>
+                        <p class="text-center text-small mt-1 history-status text-capitalize">Action status</p>
+
+                        <ul class="mt-40 accent-box-v4 bg-menuDark">
+                            <li class="d-flex align-items-center justify-content-between pb-8 line-bt">
+                                <span class="text-small">Transaction Account</span>
+                                <span class="text-large text-white">My wallet</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Transaction Fee </span>
+                                <span class="text-large text-white text-end history-fee">0</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Currency</span>
+                                <span class="text-large text-white history-currency text-uppercase">Crypto</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Time</span>
+                                <span class="text-large text-white history-time">0.0.0 00:00</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
+                                <span class="text-small">Address</span>
+                                <span class="text-large text-white history-address">walletaddress</span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8">
+                                <span class="text-small">Transaction Hash</span>
+                                <span class="text-large text-white history-ref text-wrap flex-wrap">hash</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="menubar-footer footer-fixed bg-surface">
+                    <div class="inner-bar">
+                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-toggle="modal" data-bs-target="#otpPin">Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% include 'users/deposit.html' %}
 {% endblock content %}
 
 {% block script %}
@@ -251,6 +277,7 @@
     <script>
         $(function (){
             loadPage()
+            {#$('#historyModal').modal('show')#}
         })
 
         function loadPage(){
@@ -283,7 +310,7 @@
             const total_balance = data.total_balance;
             const wallets = data.wallets
             const markets = data.markets
-            const history = data.recent_history
+            const history = data.history
             const convs = data.recent_conv
             $('.total-balance').text(formatNumber(data.total_balance))
 
@@ -298,6 +325,8 @@
                 }
             })
             populate_market_data(markets)
+            populate_recent_history(history)
+            populate_recent_convs(convs)
         }
 
         function populate_market_data(markets) {
@@ -335,10 +364,66 @@
             })
         }
 
-        function populate_recent_history(history, conversions){
+        function populate_recent_history(history) {
             $('.history-list').html('')
-            $.each(history, function (index, details){
-                console.log(details['type'])
+            $.each(history, function (index, d) {
+                if(index <= 4){
+                    const status_class = (d.type === 'deposit') ? 'success' : 'danger'
+                    const status_sign = (d.type === 'deposit') ? '+' : '-'
+                    const mt = (index === 0) ? '' : 'mt-8'
+                    $('.history-list').append(
+                        `<li class="${mt}">
+                                    <a href="#0" data-bs-toggle="modal" data-bs-target="#historyModal" class="coin-item style-1 gap-12 bg-surface history-row"
+                                    data-title="${d.type} Details"
+                                    data-qty="${d.qty}"
+                                    data-status="${d.status}"
+                                    data-fee="${d.fee}"
+                                    data-currency="${d.currency}"
+                                    data-time="${d.created_at}"
+                                    data-address="${d.address}"
+                                    data-ref="${d.hash}"
+                                    >
+                                        <img src="{% static 'transactions/images/tokens' %}/${d.currency}.png" alt="img" class="img">
+                                        <div class="content">
+                                            <div class="title">
+                                                <p class="mb-4 text-large">${d.currency_name}</p>
+                                                <span class="text-secondary">${d.created_at}</span>
+                                            </div>
+                                            <div class="box-price">
+                                                <p class="text-small mb-4"><span class="text-${status_class}">${status_sign}</span> ${d.qty} ${d.currency.toUpperCase()}</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>`
+                    )
+                }
+            })
+        }
+
+        function populate_recent_convs(history) {
+            $('.conversions-list').html('')
+            $.each(history, function (index, details) {
+                if(index <= 4){
+                    $('.conversions-list').append(
+                        ` <li>
+                                <a href="#0" class="coin-item style-1 gap-12 bg-surface">
+                                    <img src="{% static 'transactions/images/tokens' %}/${details.currency_from}.png" alt="img" class="img conv-img">
+                                    <i class="icon-select-right"></i>
+                                    <img src="{% static 'transactions/images/tokens' %}/${details.currency_to}.png" alt="img" class="img conv-img">
+                                    <div class="content">
+                                        <div class="title">
+                                            <p class="mb-4 text-danger">${details.qty_from} ${details.currency_from.toUpperCase()}</p>
+                                            <span class="text-success">${details.qty_to} ${details.currency_to.toUpperCase()}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-12">
+                                            <span class="text-secondary">${details.created_at}</span>
+                                            <span class="coin-btn increase">Done</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>`
+                    )
+                }
             })
         }
 
@@ -353,6 +438,34 @@
             $('#accountWallet').modal('hide')
         })
 
+        $('body').on('click', '.history-row', function(){
+            $('.history-title').text($(this).data('title'))
+            $('.history-qty').text(`${$(this).data('qty')} ${$(this).data('currency').toUpperCase()}`)
+            $('.history-address').text($(this).data('address'))
+            $('.history-type').text($(this).data('type'))
+            $('.history-currency').text($(this).data('currency'))
+            $('.history-fee').text($(this).data('fee'))
+            $('.history-time').text($(this).data('time'))
+            $('.history-ref').text($(this).data('ref'))
+            const status = $(this).data('status')
+            $('.history-status').removeClass('text-danger').removeClass('text-success').removeClass('text-warning').text(status)
+
+            if(status === 'pending'){
+                $('.history-status').toggleClass('text-warning')
+            }else if(status === 'failed'){
+                $('.history-status').toggleClass('text-danger')
+            }else{
+                $('.history-status').toggleClass('text-success')
+            }
+        })
+
+    </script>
+
+
+    <script>
+        $(function (){
+
+        })
     </script>
 
 {% endblock script %}

@@ -1,5 +1,5 @@
 import django.db
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from user_auth.forms import LoginForm
 from django.http import JsonResponse
@@ -32,6 +32,8 @@ def update_session(request):
 
 class LoginView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('users:wallet')
         flash = request.GET.get('flash', '')
         form = LoginForm()
         return render(request, 'user_auth/login.html', {'form': form, 'flash': flash})

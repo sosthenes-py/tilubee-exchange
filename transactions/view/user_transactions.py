@@ -19,11 +19,12 @@ class UserTransactions:
             {
                 'type': transaction.transaction_type,
                 'status': transaction.status,
-                'amount': bcdiv(transaction.amount),
-                'in_base': f'{bcdiv(transaction.amount, self.one_usd_in_base)} {self.base_currency}',
+                'qty': bcdiv(transaction.qty),
+                'fee': transaction.fee,
+                'in_base': f'{bcdiv(transaction.qty, self.one_usd_in_base)} {self.base_currency}',
                 'currency': transaction.currency,
-                'created_at': transaction.created_at,
-                'updated_at': transaction.updated_at,
+                'created_at': f'{transaction.created_at:%Y-%m-%d %H:%M:%S}',
+                'updated_at': transaction.updated_at if not transaction.updated_at else f'{transaction.updated_at:%Y-%m-%d %H:%M:%S}',
                 'address': transaction.address,
                 'reference': transaction.reference,
                 'hash': transaction.hash,
@@ -45,10 +46,11 @@ class UserTransactions:
         history = [
             {
                 'status': tx.status,
-                'amount_from': bcdiv(tx.amount_from),
-                'amount_to': bcdiv(tx.amount_to),
-                'currency_from': bcdiv(tx.currency_to),
-                'created_at': tx.created_at,
+                'qty_from': bcdiv(tx.qty_from),
+                'qty_to': bcdiv(tx.qty_to),
+                'currency_from': tx.currency_from,
+                'currency_to': tx.currency_to,
+                'created_at': f'{tx.created_at:%Y-%m-%d %H:%M:%S}',
             }
             for tx in conversions
         ]

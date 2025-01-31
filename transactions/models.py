@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 from users.models import AppUser
 
 
@@ -61,34 +63,24 @@ class Ticker(models.Model):
 
 
 class Transaction(models.Model):
-    transaction_type = [
-        ('deposit', 'Deposit'),
-        ('withdraw', 'Withdraw')
-    ]
-    status = [
-        ('pending', 'Pending'),
-        ('confirmed', 'Confirmed'),
-        ('failed', 'Failed'),
-    ]
+    transaction_type = models.CharField(max_length=10, blank=False)  # deposit, withdrawal
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='deposits')
-    amount = models.FloatField(default=0, blank=False, null=False)
+    qty = models.FloatField(default=0, blank=False, null=False)
     currency = models.CharField(max_length=10, blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(null=True)
     address = models.CharField(max_length=70, blank=True, null=True)
     reference = models.CharField(max_length=70, blank=False, null=False)
     hash = models.CharField(max_length=70, blank=True, null=True)
+    status = models.CharField(max_length=10, blank=False, null=False)  # pending, completed, failed
+    fee = models.FloatField(default=0)
 
 
 class Conversion(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='conversions')
-    amount_from = models.FloatField(default=0)
-    amount_to = models.FloatField(default=0)
+    qty_from = models.FloatField(default=0)
+    qty_to = models.FloatField(default=0)
     currency_from = models.CharField(max_length=10, blank=False, null=False)
     currency_to = models.CharField(max_length=10, blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    status = [
-        ('pending', 'Pending'),
-        ('confirmed', 'Confirmed'),
-        ('failed', 'Failed'),
-    ]
+    status = models.CharField(max_length=10, blank=False, null=False)  # completed
+    created_at = models.DateTimeField(default=timezone.now)
