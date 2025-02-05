@@ -27,4 +27,13 @@ class UserWallet(models.Model):
     currency = models.CharField(max_length=20, default='')
     currency_name = models.CharField(max_length=100, default='')
     address = models.CharField(max_length=100, default='')
+    network = models.CharField(max_length=100, default='')
     created_at = models.DateTimeField(default=timezone.now)
+
+class UserBankAccount(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='user_bank_accounts')
+    number = models.CharField(max_length=20, default='')
+    bank = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='')
+    created_at = models.DateTimeField(default=timezone.now)
+

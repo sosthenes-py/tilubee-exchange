@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from users.models import AppUser
+from users.models import AppUser, UserBankAccount
 
 
 # Create your models here.
@@ -60,20 +60,24 @@ class Ticker(models.Model):
     coin_long = models.CharField(max_length=50)
     price = models.FloatField(default=0)
     change = models.FloatField(default=0)
+    network = models.CharField(max_length=10, default='bep20')
+    min = models.FloatField(default=1)
 
 
 class Transaction(models.Model):
     transaction_type = models.CharField(max_length=10, blank=False)  # deposit, withdrawal
-    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='deposits')
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='transactions')
     qty = models.FloatField(default=0, blank=False, null=False)
     currency = models.CharField(max_length=10, blank=False, null=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(null=True)
     address = models.CharField(max_length=70, blank=True, null=True)
-    reference = models.CharField(max_length=70, blank=False, null=False)
+    reference = models.CharField(max_length=70, blank=True, null=True)
     hash = models.CharField(max_length=70, blank=True, null=True)
-    status = models.CharField(max_length=10, blank=False, null=False)  # pending, completed, failed
+    status = models.CharField(max_length=10, default='pending')  # pending, completed, failed
     fee = models.FloatField(default=0)
+    medium = models.CharField(max_length=10, default='')
+    bank = models.ForeignKey(UserBankAccount, on_delete=models.CASCADE, related_name='transactions', null=True, default=None)
 
 
 class Conversion(models.Model):

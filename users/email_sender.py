@@ -54,9 +54,9 @@ class EmailSender:
                 {
                     "subject": "Set A Password"
                 },
-            "resend_email":
+            "otp":
                 {
-                    "subject": "Confirm Your Email"
+                    "subject": "Your OTP is Here"
                 },
             "reset_password":
                 {
@@ -1571,7 +1571,7 @@ class EmailSender:
 </div>
 
             """
-        elif self.reason == "resend_email":
+        elif self.reason == "otp":
             return f"""
 
             <div style="padding:0">
@@ -1620,9 +1620,10 @@ class EmailSender:
                                                    Hi {self.kwargs['name']},
 
                                                    <p>
-                                                      To complete the ongoing request on {SITE_NAME}, please verify your email address: <a href="#0">{self.kwargs['email']}</a>
+                                                      Use the code below to authenticate your request:
 
                                                    </p>
+                                                   <p style="font-family: monospace; font-size: 1.3em">{self.kwargs['code']}</p>
 
                                                    <div>
                                                       <div style="padding-top:16px;padding-bottom:16px;text-align:left">
@@ -1633,31 +1634,6 @@ class EmailSender:
                                                                <td style="width:100%;height:5px"></td>
                                                             </tr>
 
-
-<!-- BUTTON                                                            -->
-<table border="0" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse">
-   <tbody>
-      <tr>
-         <td height="2" style="line-height:2px">&nbsp;</td>
-      </tr>
-      <tr>
-         <td align="middle">
-            <a href="http://{SITE_DOMAIN}/verify-email?code={self.kwargs['code']}" style="color:#01344B;text-decoration:none" rel="noreferrer" target="_blank" >
-               <table border="0" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse">
-                  <tbody>
-                     <tr>
-                        <td style="border-collapse:collapse;border-radius:6px;text-align:center;display:block;background:#01344B;padding:8px 16px 10px 16px">
-            <a href="http://{SITE_DOMAIN}/verify-email?code={self.kwargs['code']}" style="color:#01344B;text-decoration:none;display:block" rel="noreferrer" target="_blank" ><center><table border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse"><tbody><tr align="center"><td style="padding-top:6px"></td><td><font size="3"><span style="font-family:Helvetica Neue,Helvetica,Lucida Grande,tahoma,verdana,arial,sans-serif;white-space:nowrap;font-weight:bold;vertical-align:middle;color:#ffffff;font-weight:500;font-family:Roboto-Medium,Roboto,-apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,Lucida Grande,tahoma,verdana,arial,sans-serif;font-size:14px;line-height:14px; text-align: center !important;">Verify Email</span></font></td></tr></tbody></table></center></a></td></tr></tbody></table></a>
-         </td>
-      </tr>
-      <tr>
-         <td height="8" style="line-height:8px">&nbsp;</td>
-      </tr>
-      <tr>
-         <td height="0" style="line-height:0px">&nbsp;</td>
-      </tr>
-   </tbody>
-</table>
 
 
 

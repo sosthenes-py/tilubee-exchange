@@ -47,7 +47,7 @@
 <body>
      <!-- preloader -->
      <div class="preload preload-container">
-        <div class="preload-logo" style="background-image: url('{% static 'users/images/logo/144.png' %}')">
+        <div class="preload-logo" style=""> <img src="{% static 'users/images/logo/144.png' %}">
           <div class="spinner"></div>
         </div>
       </div>
@@ -92,15 +92,40 @@
                     <span class="circle-box sm notify-circles"></span>
                 </div>
                 <div class="text-center">
-                    <h2 class="text-surface">Successful!</h2>
-                    <h1 class="mt-8 text-primary">$ 1200.0</h1>
-                    <p class="mt-16 text-surface text-button">Notification</p>
+                    <h2 class="text-surface notify-title">Successful!</h2>
+                    <h1 class="mt-8 text-primary notify-amount">0</h1>
+                    <p class="mt-16 text-surface text-button notify-message">Notification</p>
                 </div>
 
                 <a href="#0" data-bs-dismiss="modal" class="tf-btn lg notify-circles mt-40 notify-done">Okay</a>
             </div>
         </div>
     </div>
+
+    <div class="modal fade modalCenter" id="notifyModal" data-bs-backdrop="static" data-bs-keyboard="false" style="z-index: 10000">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content success_box">
+                <a href="#0" class="close-icon icon-close notify-cancel" data-bs-dismiss="modal" aria-label="Close"></a>
+                 <div class="icon-1 ani3">
+                        <span class="circle-box lg bg-circle check-icon notify-circles notify-icon"></span>
+                 </div>
+                <div class="icon-2 ani5">
+                    <span class="circle-box md notify-circles"></span>
+                </div>
+                <div class="icon-3 ani8">
+                    <span class="circle-box md notify-circles"></span>
+                </div>
+                <div class="icon-4 ani2">
+                    <span class="circle-box sm notify-circles"></span>
+                </div>
+                <h3 class="text-surface text-center notify-title"></h3>
+                <p class="text-large text-center mt-8 notify-message"></p>
+
+                <a href="#0" data-bs-dismiss="modal" class="tf-btn lg notify-circles mt-40 notify-done">Okay</a>
+            </div>
+        </div>
+    </div>
+
 
 
      <div class="menubar-footer footer-fixed">
@@ -156,7 +181,7 @@
             $(".preload").fadeOut("slow");
         }
 
-        function notify(status, message, action=null, redirect=null){
+        function notify(status, message, action=null, redirect=null, timeout=null){
             let title = ''
             let stat = ''
             action = action || 'Ok'
@@ -185,6 +210,65 @@
             $('#notifyModal').modal('show')
         }
 
+        function notify_kwarg({status, message, action=null, redirect=null, timeout=0} = {}){
+            let title = ''
+            let stat = ''
+            action = action || 'Ok'
+            if (status === 'success'){
+                title = 'Request Success'
+                stat = 'success'
+            } else if (status === 'error'){
+                title = 'Request Failed'
+                stat = 'danger'
+            } else if (status === 'info'){
+                title = 'Info'
+                stat = 'info'
+            } else {
+                title = 'Warning'
+                stat = 'warning'
+            }
+            $('.notify-circles').removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').removeClass('bg-info').toggleClass(`bg-${stat}`);
+            $('.notify-icon').removeClass('success-icon').removeClass('warning-icon').removeClass('info-icon').removeClass('danger-icon').toggleClass(`${stat}-icon`);
+            $('.notify-title').text(title);
+            $('.notify-message').text(message);
+            if(redirect){
+                $('.notify-done').attr('href', redirect).attr('data-bs-dismiss', '');
+                $('.notify-cancel').attr('href', redirect).attr('data-bs-dismiss', '');
+            }
+            $('.notify-done').text(action)
+            $('#notifyModal').modal('show')
+            if(timeout > 0){
+                setTimeout(function (){
+                    $('#notifyModal').modal('hide')
+                }, timeout)
+            }
+        }
+
+        function notifyAmount(amount, message, action=null, redirect=null){
+            let title = ''
+            let stat = ''
+            action = action || 'Ok'
+            title = 'Request Success'
+            stat = 'success'
+            $('.notify-circles').removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').removeClass('bg-info').toggleClass(`bg-${stat}`);
+            $('.notify-icon').removeClass('success-icon').removeClass('warning-icon').removeClass('info-icon').removeClass('danger-icon').toggleClass(`${stat}-icon`);
+            $('.notify-title').text(title);
+            $('.notify-amount').text(amount);
+            $('.notify-message').text(message);
+            if(redirect){
+                $('.notify-done').attr('href', redirect).attr('data-bs-dismiss', '');
+                $('.notify-cancel').attr('href', redirect).attr('data-bs-dismiss', '');
+            }
+            $('.notify-done').text(action)
+            $('#amountNotifyModal').modal('show')
+        }
+
+        function trim(str) {
+            if (str.length <= 17) {
+                return str;
+            }
+            return str.substring(0, 11) + "..." + str.slice(-5);
+        }
 
         function countdown(seconds, elementId, onStart, onComplete) {
             onStart();
@@ -209,12 +293,36 @@
             }, 1000);
         }
 
-        function formatNumber(num) {
+        function fmtNum(num) {
+            num = fmt(num)
             if (isNaN(num)) return '...';
             let [integer, decimal] = num.toString().split('.');
             integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             return decimal ? `${integer}.${decimal}` : integer;
         }
+
+        function fmt(amount) {
+            let amt;
+            if (amount < 0.09) {
+                amt = amount.toFixed(5);
+            } else if (amount >= 0.09 && amount < 1) {
+                amt = amount.toFixed(3);
+            } else {
+                amt = amount.toFixed(2);
+            }
+            return parseFloat(amt);
+        }
+
+
+        $('body').on('click', '.copy', function () {
+            const item = $(this).data('item');
+            navigator.clipboard.writeText(item);
+            $(this).text(' copied!');
+            const $elem = $(this);
+            setTimeout(function (){
+                $elem.text('')
+            }, 1500)
+        })
 
         $(function (){
             if (localStorage.getItem('base-currency') === null) {
@@ -223,8 +331,9 @@
             }else{
                 $('.base-currency').text(localStorage.getItem('base-currency').toUpperCase())
             }
-
-
+            $('input').each(function () {
+                $(this).prop('autocomplete', 'off');
+            })
         })
 
     </script>

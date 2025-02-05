@@ -1,0 +1,232 @@
+
+<style>
+    .icon-small {
+        font-size: 18px;
+    }
+</style>
+
+    <div class="modal fade action-sheet" id="withdrawalModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Select payment method</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li class="accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#withdrawalSelectBankModal" onclick="reset_storage(); w_populate_banks()">
+                            <div class="content">
+                                <h5><a href="#">Withdraw NGN</a></h5>
+                                <p class="mt-8 text-small text">Withdraw NGN directly to your bank account</p>
+                            </div>
+                            <span class="icon icon-bank"></span>
+                        </li>
+                        <li class="mt-8 accent-box-v3 bg-surface tf-list-item-v3" onclick="reset_storage(); w_populate_cryptos()" data-bs-toggle="modal" data-bs-target="#w-cryptosModal">
+                            <div class="content">
+                                <h5><a href="#">Withdraw Crypto</a></h5>
+                                <p class="mt-8 text-small text">Withdraw crypto directly to an external wallet</p>
+                            </div>
+                            <span class="icon icon-coins"></span>
+                        </li>
+                        <li class="mt-8 accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#w-uidModal" onclick="reset_storage()">
+                            <div class="content">
+                                <h5><a href="#">Withdraw via UID <span class="badge bg-info p-1" style="font-size: 12px">free</span></a></h5>
+                                <p class="mt-8 text-small text">Withdraw directly to your Binance/ByBit UID</p>
+                            </div>
+                            <span class="icon icon-convert2"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade action-sheet" id="withdrawalSelectBankModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
+                </div>
+                <div class="modal-body text-center">
+                    <span class="logo icon-bank text-primary" style="font-size: 80px"></span>
+                    <h3 class="mt-4">Select Bank</h3>
+
+                    <ul class="mt-20 pb-16 banks-list">
+
+                    </ul>
+                    <a href="javascript:void(0);" class="tf-btn secondary d-inline-flex"  data-bs-toggle="modal" data-bs-target="#addBankModal">Add New Bank</a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <!-- modal list crypto-->
+    <div class="modal fade action-sheet" id="w-cryptosModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Select Cryptocurrency</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal"></span>
+                </div>
+                <ul class="mt-20 pb-16 cryptos-list">
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- modal list uid types-->
+    <div class="modal fade action-sheet" id="w-uidModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Select Platform</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal"></span>
+                </div>
+                <ul class="mt-20 pb-16">
+                    <li data-bs-dismiss='modal'>
+                        <div class="d-flex justify-content-between align-items-center gap-8 text-large item-check" data-bs-target="#cryptosModal" data-bs-toggle="modal" onclick="set_storage('uid', 'platform', 'binance'); w_populate_crypto_for_uid()">Binance</div>
+                    </li>
+
+                    <li data-bs-dismiss='modal'>
+                        <div class="d-flex justify-content-between align-items-center gap-8 text-large item-check" data-bs-target="#cryptosModal" data-bs-toggle="modal" onclick="set_storage('uid', 'platform', 'bybit'); w_populate_crypto_for_uid()">ByBit</div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+{#    Amount modal #}
+    <div class="modal fade" id="amountModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #11150F">
+
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <a href="#0" data-bs-dismiss="modal" class="left"><i class="icon-left-btn"></i></a>
+{#                    <h3 class="text-capitalize">Withdrawal Details</h3>#}
+                </div>
+
+                <div class="pt-45 pb-16">
+                    <div class="tf-container">
+                        <div class="mt-4 coin-item style-2 gap-8">
+                            <img src="" alt="img" class="img w-img">
+                            <h5 class="w-title">- </h5>
+                        </div>
+                        <div class="mt-16 d-flex justify-content-between">
+                            <span>Current balance</span>
+                            <span class="text-primary d-flex align-items-center gap-4"><span class="w-bal"></span> <span class="w-curr"></span><i
+                                    class="icon-leftRight"></i></span>
+                        </div>
+                        <div class="mt-8 group-ip-select">
+                            <input type="number" placeholder="Please enter quantity" id="w-amount" autocomplete="off">
+                        </div>
+                        <p class="mt-8">Balance after withdrawal: <span class="w-bal-after"></span></p>
+
+                        <div class="mt-24 group-ip-select w-notbank-wallet">
+                            <input type="text" placeholder="" id="w-wallet" autocomplete="off">
+                        </div>
+
+
+                    </div>
+
+                    <ul class="mt-30 accent-box line-border w-bank-conf">
+                            <li class="trade-list-item">
+                                 <p class="d-flex align-items-center text-small gap-4">Account Number </p>
+                                 <p class="d-flex gap-8 text-white w-bank-number"></p>
+                            </li>
+                            <li class="trade-list-item mt-16">
+                                 <p class="d-flex align-items-center text-small gap-4">Account Name</p>
+                                 <p class="d-flex gap-8 text-white w-bank-name"></p>
+                            </li>
+                            <li class="trade-list-item mt-16">
+                                 <p class="d-flex align-items-center text-small gap-4">Bank</p>
+                                 <a href="#" class="d-flex align-items-center gap-8 w-bank-bank"> <i class="icon-arr-right fs-8"></i></a>
+                            </li>
+
+                        </ul>
+
+                </div>
+
+
+                <div class="menubar-footer footer-fixed bg-surface">
+                    <div class="inner-bar">
+                        <a href="javascript:void(0);" class="tf-btn lg primary"
+                        onclick="w_final_checks($('#w-amount').val(), $('#w-wallet').val())"
+                        >Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+     <!-- filter otp -->
+    <div class="modal fade action-sheet sheet-down" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="header d-flex justify-content-center align-items-center">
+                    <span class="left icon-cancel" data-bs-dismiss="modal"></span>
+                    <h3 class="otp-title">Authentication</h3>
+                </div>
+                <form class="modal-body" id="otp-form">
+                    <div class="digit-group">
+                        <input required type="text" id="digit-2" name="digit1" data-next="digit-3" data-previous="digit-1" value="">
+                        <input required type="text" id="digit-3" name="digit2" data-next="digit-4" data-previous="digit-2" value="">
+                        <input required type="text" id="digit-4" name="digit3" data-next="digit-5" data-previous="digit-3">
+                        <input required type="text" id="digit-5" name="digit4" data-next="digit-6" data-previous="digit-4">
+                    </div>
+                    <p class="text-center text-small text-white mt-16">A code will be sent to your email</p>
+                    <p class="d-flex justify-content-center mt-4 text-center text-button text-primary fw-6 resend" id="resend" style="text-decoration: underline">Click to receive code</p>
+                    <a href="#0" id="confirm-otp" class="mt-40 tf-btn lg primary" >Continue</a>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <!-- filter success -->
+    <div class="modal fade modalCenter" id="wNotifyModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content success_box">
+                 <div class="icon-1 ani3">
+                        <span class="circle-box lg bg-circle success-icon bg-primary"></span>
+                 </div>
+                <div class="icon-2 ani5">
+                    <span class="circle-box md bg-primary"></span>
+                </div>
+                <div class="icon-3 ani8">
+                    <span class="circle-box md bg-primary"></span>
+                </div>
+                <div class="icon-4 ani2">
+                    <span class="circle-box sm bg-primary"></span>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-surface">Successful!</h2>
+                    <p class="text-small mt-8 w-notify-message"></p>
+                    <h5 class="mt-16 text-surface">Amount</h5>
+                    <h1 class="mt-8 text-primary w-notify-amount" style="font-size: 25px">0</h1>
+                    <p class="mt-16 text-surface text-button">Method</p>
+                    <p class="text-small mt-4 w-notify-medium"></p>
+                </div>
+
+                <a href="#0" data-bs-dismiss="modal" class="tf-btn lg bg-primary mt-40 w-notify-done">Okay</a>
+            </div>
+        </div>
+    </div>

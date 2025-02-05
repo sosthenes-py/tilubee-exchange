@@ -7,6 +7,7 @@ from users.mixins import CustomLoginRequiredMixin
 from transactions.view.crypto import markets as crypto_markets, bcdiv
 from transactions.models import Ticker, Transaction
 from transactions.view.user_transactions import UserTransactions
+from users.models import UserBankAccount
 
 
 class WalletView(CustomLoginRequiredMixin, View):
@@ -39,13 +40,15 @@ class WalletView(CustomLoginRequiredMixin, View):
         conversions = user_transactions.get_conversions()
         history = history
         recent_conv = conversions[-5:] if conversions else []
+        user_banks = UserBankAccount.objects.filter(user=self.user).order_by('-created_at').values()
         return JsonResponse({
             'status': 'success',
             'total_balance': total_balance,
             'wallets': wallets,
             'markets': markets,
             'recent_conv': recent_conv,
-            'history': history
+            'history': history,
+            'user_banks': list(user_banks)
         })
 
 

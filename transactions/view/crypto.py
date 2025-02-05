@@ -81,7 +81,9 @@ def markets(tickers: QuerySet = None):
             'short': ticker.coin_short,
             'long': ticker.coin_long,
             'price': ticker.price,
-            'change': ticker.change
+            'change': ticker.change,
+            'network': ticker.network,
+            'min': ticker.min
         }
         for ticker in tickers
     }
@@ -94,20 +96,21 @@ def bcdiv(amount, one_usd_in_base=None):
     if one_usd_in_base is not None:
         amount = amount * one_usd_in_base
 
-    if amount < 0.001:
+    if amount < 0.09:
         amt = f'{amount:.5f}'
-    elif 0.001 <= amount < 1:
+    elif 0.09 <= amount < 1:
         amt = f'{amount:.3f}'
     else:
         amt = f'{amount:.2f}'
     return float(amt)
 
 def create_user_wallet(user, currency):
-    if currency not in coins_dict.keys:
+    if currency not in coins_dict.keys():
         raise ValueError(f'Cannot create this wallet because specified currency {currency} does not exist')
     
     address = ''
-    wallet = UserWallet.objects.create(user=user, currency=currency, currency_name=coins_dict[currency], address=address)
+    network = ''
+    wallet = UserWallet.objects.create(user=user, currency=currency, currency_name=coins_dict[currency], address=address, network=network)
     return wallet
 
 

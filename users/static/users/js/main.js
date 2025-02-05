@@ -163,9 +163,8 @@
   ------------------------------------------------------------------------------------- */
   var changeValue = function () {
     $(".tag-money").on("click", function () {
-      var val = $(this).text();
-      var str = val.slice(1);
-      $(".value_input").val(str);
+      var val = $(this).data('value');
+      $(".value_input").val(val);
     });
 
     $(".dom-value").click(function () {

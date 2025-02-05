@@ -1,6 +1,11 @@
 
+<style>
+    .icon-small {
+        font-size: 18px;
+    }
+</style>
 
-<div class="modal fade action-sheet" id="depositModal">
+    <div class="modal fade action-sheet" id="depositModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -9,23 +14,23 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li class="accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#buywithNgnModal">
+                        <li class="accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#buyWithNgnModal" onclick="reset_storage()">
                             <div class="content">
                                 <h5><a href="#">Buy with NGN</a></h5>
                                 <p class="mt-8 text-small text">Buy crypto with Fiat - Bank Transfer, Visa and Mastercard</p>
                             </div>
                             <span class="icon icon-bank"></span>
                         </li>
-                        <li class="mt-8 accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#inflation">
+                        <li class="mt-8 accent-box-v3 bg-surface tf-list-item-v3" onclick="reset_storage(); populate_cryptos('deposit')" data-bs-toggle="modal" data-bs-target="#cryptosModal">
                             <div class="content">
                                 <h5><a href="#">Deposit Crypto</a></h5>
                                 <p class="mt-8 text-small text">Already have crypto? Deposit directly</p>
                             </div>
                             <span class="icon icon-coins"></span>
                         </li>
-                        <li class="mt-8 accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#inflation">
+                        <li class="mt-8 accent-box-v3 bg-surface tf-list-item-v3" data-bs-toggle="modal" data-bs-target="#uidModal" onclick="reset_storage()">
                             <div class="content">
-                                <h5><a href="#">Deposit using UID (free)</a></h5>
+                                <h5><a href="#">Deposit using UID <span class="badge bg-info p-1" style="font-size: 12px">free</span></a></h5>
                                 <p class="mt-8 text-small text">Already have crypto? Deposit using Binance/ByBit UID</p>
                             </div>
                             <span class="icon icon-convert2"></span>
@@ -45,11 +50,11 @@
                     <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
                 </div>
                 <div class="modal-body text-center">
-                    <span class="logo icon-bank"></span>
+                    <span class="logo icon-bank text-primary" style="font-size: 80px"></span>
                     <h3 class="mt-4">Buy with NGN</h3>
                     <p class="mt-12 text-white text-large">A bank account will be displayed where to make this transfer and transactions are confirmed automatically</p>
                     <div class="mt-32">
-                        <a href="javascript:void(0);" class="tf-btn sm primary d-inline-flex" data-bs-toggle="modal" data-bs-target="#keyWallet">Create Account Details</a>
+                        <a href="javascript:void(0);" class="tf-btn sm primary d-inline-flex"  data-bs-toggle="modal" data-bs-target="#bankAmountModal" onclick="set_for_bank()">Enter Amount</a>
                     </div>
                 </div>
             </div>
@@ -58,9 +63,199 @@
     </div>
 
 
+    <!-- modal list crypto-->
+    <div class="modal fade action-sheet" id="cryptosModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Select Cryptocurrency</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal"></span>
+                </div>
+                <ul class="mt-20 pb-16 cryptos-list">
 
-    <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F">
-        <div class="modal-dialog modal-lg modal-dialog-centere">
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- modal list uid types-->
+    <div class="modal fade action-sheet" id="uidModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Select Platform</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal"></span>
+                </div>
+                <ul class="mt-20 pb-16">
+                    <li data-bs-dismiss='modal'>
+                        <div class="d-flex justify-content-between align-items-center gap-8 text-large item-check" data-bs-target="#cryptosModal" data-bs-toggle="modal" onclick="set_storage('uid', 'platform', 'binance'); populate_crypto_for_uid('deposit')">Binance</div>
+                    </li>
+
+                    <li data-bs-dismiss='modal'>
+                        <div class="d-flex justify-content-between align-items-center gap-8 text-large item-check" data-bs-target="#cryptosModal" data-bs-toggle="modal" onclick="set_storage('uid', 'platform', 'bybit'); populate_crypto_for_uid('deposit')">ByBit</div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+{#    Enter amount modal for bank#}
+    <div class="modal fade" id="bankAmountModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #11150F">
+
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <a href="#0" data-bs-dismiss="modal" class="left"><i class="icon-left-btn"></i></a>
+                    <h3 class="text-capitalize">Amount to Fund</h3>
+                </div>
+
+                <div class="pt-45 pb-90">
+                    <div class="tf-container">
+                        <div class="mt-4 accent-box-v2 bg-menuDark">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Your Balance:</span>
+                                <h5><span class="bank-bal"></span> <span class="">NGN</span></h5>
+                            </div>
+                            <div class="mt-12 box-input-field">
+                                <input type="number" value="0" required class="clear-ip value_input ip-style2" id="bank-amount">
+                                <i class="icon-close"></i>
+                            </div>
+                            <span style="font-size: 10px" class="text-success">Balance after top up: <span class="bank-bal-after">0</span> <span class="">NGN</span></span>
+                        </div>
+                        <ul class="grid-3 gap-12 mt-16">
+                            <li><a href="javascript:void(0);" data-value="2000" class="tag-money bank-tag text-small">&#8358;2K</a></li>
+                            <li><a href="javascript:void(0);" data-value="10000" class="tag-money bank-tag text-small">&#8358;10K</a></li>
+                            <li><a href="javascript:void(0);" data-value="50000" class="tag-money bank-tag text-small">&#8358;50K</a></li>
+                            <li><a href="javascript:void(0);" data-value="200000" class="tag-money bank-tag text-small">&#8358;200K</a></li>
+                            <li><a href="javascript:void(0);" data-value="500000" class="tag-money bank-tag text-small">&#8358;500K</a></li>
+                            <li><a href="javascript:void(0);" data-value="1000000" class="tag-money bank-tag text-small">&#8358;1M</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+
+
+                <div class="menubar-footer footer-fixed bg-surface">
+                    <div class="inner-bar">
+                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-dismiss="modal"
+                        onclick="create_ngn($('#bank-amount').val())"
+                        >Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{#    Enter amount modal for uid#}
+    <div class="modal fade" id="uidAmountModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #11150F">
+
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <a href="#0" data-bs-dismiss="modal" class="left"><i class="icon-left-btn"></i></a>
+                    <h3 class="text-capitalize">Amount to Fund</h3>
+                </div>
+
+                <div class="pt-45 pb-90">
+                    <div class="tf-container">
+                        <div class="mt-4 accent-box-v2 bg-menuDark">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Your Balance:</span>
+                                <h5><span class="uid-bal"></span> <span class="uid-curr"></span></h5>
+                            </div>
+                            <div class="mt-12 box-input-field">
+                                <input type="number" value="0" required class="clear-ip value_input ip-style2" id="uid-amount">
+                                <i class="icon-close"></i>
+                            </div>
+                            <span style="font-size: 10px" class="text-success">Balance after top up: <span class="uid-bal-after">0</span> <span class="uid-curr"></span></span>
+                        </div>
+                        <ul class="grid-3 gap-12 mt-16">
+                            <li><a href="javascript:void(0);" data-value="50" class="tag-money uid-tag text-small">$50</a></li>
+                            <li><a href="javascript:void(0);" data-value="100" class="tag-money uid-tag text-small">$100</a></li>
+                            <li><a href="javascript:void(0);" data-value="200" class="tag-money uid-tag text-small">$200</a></li>
+                            <li><a href="javascript:void(0);" data-value="500" class="tag-money uid-tag text-small">$500</a></li>
+                            <li><a href="javascript:void(0);" data-value="1000" class="tag-money uid-tag text-small">$1000</a></li>
+                            <li><a href="javascript:void(0);" data-value="2000" class="tag-money uid-tag text-small">$2000</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+
+
+                <div class="menubar-footer footer-fixed bg-surface">
+                    <div class="inner-bar">
+                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-dismiss="modal"
+                        onclick="create_uid($('#uid-amount').val())"
+                        >Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{#    Enter amount modal for crypto #}
+    <div class="modal fade" id="cryptoAmountModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background-color: #11150F">
+
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <a href="#0" data-bs-dismiss="modal" class="left"><i class="icon-left-btn"></i></a>
+                    <h3 class="text-capitalize">Amount to Fund</h3>
+                </div>
+
+                <div class="pt-45 pb-90">
+                    <div class="tf-container">
+                        <div class="mt-4 accent-box-v2 bg-menuDark">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Your Balance:</span>
+                                <h5><span class="crypto-bal"></span> <span class="crypto-curr"></span></h5>
+                            </div>
+                            <div class="mt-12 box-input-field">
+                                <input type="number" value="0" required class="clear-ip value_input ip-style2" id="crypto-amount">
+                                <i class="icon-close"></i>
+                            </div>
+                            <span style="font-size: 10px" class="text-success">Balance after top up: <span class="crypto-bal-after">0</span> <span class="crypto-curr"></span></span>
+                        </div>
+                        <ul class="grid-3 gap-12 mt-16">
+                            <li><a href="javascript:void(0);" data-value="50" class="tag-money crypto-tag text-small">$50</a></li>
+                            <li><a href="javascript:void(0);" data-value="100" class="tag-money crypto-tag text-small">$100</a></li>
+                            <li><a href="javascript:void(0);" data-value="200" class="tag-money crypto-tag text-small">$200</a></li>
+                            <li><a href="javascript:void(0);" data-value="500" class="tag-money crypto-tag text-small">$500</a></li>
+                            <li><a href="javascript:void(0);" data-value="1000" class="tag-money crypto-tag text-small">$1000</a></li>
+                            <li><a href="javascript:void(0);" data-value="2000" class="tag-money crypto-tag text-small">$2000</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+
+
+                <div class="menubar-footer footer-fixed bg-surface">
+                    <div class="inner-bar">
+                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-dismiss="modal"
+                        onclick="create_crypto($('#crypto-amount').val())"
+                        >Confirm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+     <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content" style="background-color: #11150F">
 
                 <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
@@ -69,46 +264,18 @@
                 </div>
 
                 <div class="pt-45 pb-90">
-                    <div class="tf-container">
-                        <p class="text-center text-small mt-4">Quantity</p>
-                        <h1 class="mt-8 text-center history-qty"></h1>
-                        <p class="text-center text-small mt-1 history-status text-capitalize"><span class="icon icon-noti"></span> Please complete acion below to fund your account</p>
+                    <div class="tf-container action-body">
 
-                        <ul class="mt-40 accent-box-v4 bg-menuDark">
-                            <li class="d-flex align-items-center justify-content-between pb-8 line-bt">
-                                <span class="text-small">Transaction Account</span>
-                                <span class="text-large text-white">My wallet</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                <span class="text-small">Transaction Fee </span>
-                                <span class="text-large text-white text-end history-fee">0</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                <span class="text-small">Currency</span>
-                                <span class="text-large text-white history-currency text-uppercase">Crypto</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                <span class="text-small">Time</span>
-                                <span class="text-large text-white history-time">0.0.0 00:00</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                <span class="text-small">Address</span>
-                                <span class="text-large text-white history-address">walletaddress</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8">
-                                <span class="text-small">Transaction Hash</span>
-                                <span class="text-large text-white history-ref text-wrap flex-wrap">hash</span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
 
 
                 <div class="menubar-footer footer-fixed bg-surface">
                     <div class="inner-bar">
-                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-toggle="modal" data-bs-target="#otpPin">Confirm</a>
+                        <a href="javascript:void(0);" class="tf-btn lg primary action-submit" onclick="deposit_complete()">Completed</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+

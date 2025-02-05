@@ -14,7 +14,7 @@ class UserTransactions:
         self.base_currency = base_currency
 
     def as_list(self):
-        transactions = Transaction.objects.filter(user=self.user).order_by('created_at')
+        transactions = Transaction.objects.filter(user=self.user).order_by('-created_at')
         history = [
             {
                 'type': transaction.transaction_type,
@@ -29,6 +29,7 @@ class UserTransactions:
                 'reference': transaction.reference,
                 'hash': transaction.hash,
                 'currency_name': coins_dict.get(transaction.currency, "NULL"),
+                'medium': transaction.medium
             }
             for transaction in transactions
         ]
