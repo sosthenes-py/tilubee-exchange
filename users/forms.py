@@ -26,4 +26,13 @@ class WithdrawalForm(forms.Form):
     bank_id = forms.IntegerField(required=False)
 
 
+class NewBankForm(forms.Form):
+    number = forms.CharField(max_length=20)
+    bank = forms.CharField(max_length=20)
+    name = forms.CharField(max_length=50)
 
+
+class SettingsForm(forms.Form):
+    action = forms.ChoiceField(choices=[
+        ('add_new_bank', 'add New Bank'),
+    ])

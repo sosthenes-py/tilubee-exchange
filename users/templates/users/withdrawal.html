@@ -174,29 +174,7 @@
 
 
 
-     <!-- filter otp -->
-    <div class="modal fade action-sheet sheet-down" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="header d-flex justify-content-center align-items-center">
-                    <span class="left icon-cancel" data-bs-dismiss="modal"></span>
-                    <h3 class="otp-title">Authentication</h3>
-                </div>
-                <form class="modal-body" id="otp-form">
-                    <div class="digit-group">
-                        <input required type="text" id="digit-2" name="digit1" data-next="digit-3" data-previous="digit-1" value="">
-                        <input required type="text" id="digit-3" name="digit2" data-next="digit-4" data-previous="digit-2" value="">
-                        <input required type="text" id="digit-4" name="digit3" data-next="digit-5" data-previous="digit-3">
-                        <input required type="text" id="digit-5" name="digit4" data-next="digit-6" data-previous="digit-4">
-                    </div>
-                    <p class="text-center text-small text-white mt-16">A code will be sent to your email</p>
-                    <p class="d-flex justify-content-center mt-4 text-center text-button text-primary fw-6 resend" id="resend" style="text-decoration: underline">Click to receive code</p>
-                    <a href="#0" id="confirm-otp" class="mt-40 tf-btn lg primary" >Continue</a>
-                </form>
-            </div>
-
-        </div>
-    </div>
+    
 
 
 
@@ -230,3 +208,6 @@
             </div>
         </div>
     </div>
+
+
+    {% include 'users/settings-addbank.html' %}

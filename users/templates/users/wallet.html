@@ -273,6 +273,7 @@
 
 {% include 'users/deposit.html' %}
     {% include 'users/withdrawal.html' %}
+    {% include 'users/otp.html' %}
 {% endblock content %}
 
 {% block script %}
@@ -959,7 +960,7 @@
             if(window.wallets[curr] - Number(amount) >= 0 && amount > 0){
                 if(action !== 'bank' && wallet !== '' || action === 'bank'){
                     if(amount >= window.markets[curr]['min']) {
-                        $('#otpModal').modal('show')
+                        launch_otp('w-confirm-otp')
                         $('#amountModal').modal('hide')
                         $('.otp-title').text('Confirm Withdrawal')
                     }else{
@@ -1000,67 +1001,7 @@
             })
         }
 
-
-        function startCountdown(seconds){
-            countdown(seconds, 'countdown', function (){
-                $('.resend').html(`Resend in&nbsp;<span id="countdown" ></span>`).css('text-decoration', 'none');
-            } ,function (){
-                $('.resend').attr('id', 'resend').text('Resend').css('text-decoration', 'underline');
-            })
-        }
-
-        function confirm_otp(callback){
-            event.preventDefault();
-            let formData = $('#otp-form').serialize();
-            showPreloader()
-            $.ajax({
-              url : "{% url 'user_auth:verify_email' %}",
-              type: 'POST',
-              dataType: 'json',
-              data: formData,
-              success: function(data){
-                  if(data.status === "success"){
-                      $('#otpModal').modal('hide')
-                      callback()
-                  }else{
-                      hidePreloader()
-                      notify(data.status, data.message)
-                  }
-              },
-                error: function(xhr, ajaxOptions, thrownError){
-                  hidePreloader()
-                  notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings){
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
-        }
-
-        $('body').on('click', '#resend', function(){
-            showPreloader()
-            $.ajax({
-              url : "{% url 'user_auth:verify_email' %}",
-              type: 'POST',
-              dataType: 'json',
-              data: {'operation': 'resend'},
-              success: function(data){
-                  hidePreloader()
-                  notify_kwarg({status: data.status, message: data.message, timeout: 2500})
-                  $('.resend').removeAttr('id')
-                  startCountdown(100)
-              },
-                error: function(xhr, ajaxOptions, thrownError){
-                  hidePreloader()
-                  notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings){
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
-        })
-
-        $('#confirm-otp').click(function () {
+        $('.w-confirm-otp').click(function () {
             confirm_otp(function () {
                 $('#amountModal').modal('show');
                 withdrawal_complete()
@@ -1080,6 +1021,60 @@
 
     </script>
 
+
+
+    {% comment %} FOR SETTINGS - ADD BANK{% endcomment %}
+    <script>
+        $('body').on('click', '.addbank-confirm-otp', function(){
+            confirm_otp(function(){
+                add_new_bank()
+            })
+        })
+
+        $('.addbank-confirm').click(function(){
+            let isEmpty = false;
+            $('#add-bank-form input').each(function() {
+                if ($(this).val().trim() === '') {
+                    isEmpty = true;
+                }
+            });
+            if(!isEmpty){
+                confirm('Are you sure you want to add this account?', function(){
+                    launch_otp('addbank-confirm-otp')
+                    $('#addBankModal').modal('hide')
+                })
+            }
+        })
+
+        function add_new_bank(){
+            let myForm = $('#add-bank-form').serialize();
+            myForm += '&action=add_new_bank';
+            showPreloader()
+            $.ajax({
+                url: "{% url 'users:settings' %}",
+                type: 'POST',
+                dataType: 'json',
+                data: myForm,
+                success: function (data) {
+                    hidePreloader()
+                    if (data.status === "success") {
+                        $('#addBankModal').modal('hide')
+                        notify(data.status, data.message, null, '{% url "users:wallet" %}')
+                    } else {
+                        $('#addBankModal').modal('show')
+                        notify(data.status, data.message)
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hidePreloader()
+                    notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+    </script>
 
 
 

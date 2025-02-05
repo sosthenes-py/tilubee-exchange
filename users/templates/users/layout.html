@@ -57,16 +57,16 @@
 
 
     <!-- noti popup -->
-    <div class="modal fade modalCenter" id="modalNoti">
+    <div class="modal fade modalCenter" id="confirmModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
            <div class="modal-content modal-sm">
               <div class="p-16 line-bt text-center">
-                  <h4>“Cointex” Would Like To Send You Notifications</h4>
-                  <p class="mt-8 text-large">Notifications may include alerts, sounds, and icon badges. These can be configured in Settings.</p>
+                  <h4>Comfirm Your Action</h4>
+                  <p class="mt-8 text-large confirm-message"></p>
               </div>
               <div class="grid-2">
-                 <a href="#" class="line-r text-center text-button fw-6 p-10 text-secondary btn-hide-modal" data-bs-dismiss="modal" >Don’t Allow</a>
-                 <a href="#" class="text-center text-button fw-6 p-10 text-primary btn-hide-modal"  data-bs-toggle="modal" data-bs-target="#notiPrivacy"> Allow</a>
+                 <a href="#" class="line-r text-center text-button fw-6 p-10 text-secondary btn-hide-modal confirm-cancel" data-bs-dismiss="modal" >Cancels in <span id='confirm-cd'></span></a>
+                 <a href="#" class="text-center text-button fw-6 p-10 text-primary btn-hide-modal confirm-proceed"> Proceed</a>
               </a>
               </div>
            </div>
@@ -271,7 +271,9 @@
         }
 
         function countdown(seconds, elementId, onStart, onComplete) {
-            onStart();
+            if(typeof onStart === 'function'){
+                onStart()
+            }
             let timer = setInterval(function () {
                 let minutes = Math.floor(seconds / 60);
                 let remainingSeconds = seconds % 60;
@@ -313,6 +315,18 @@
             return parseFloat(amt);
         }
 
+        function confirm(message, callback){
+            $('.confirm-message').text(message)
+            $('#confirmModal').modal('show')
+            countdown(7, 'confirm-cd', null, function(){
+                $('#confirmModal').modal('hide')
+            })
+            $('.confirm-proceed').click(function(){
+                $('#confirmModal').modal('hide')
+                callback()
+            })
+        }
+
 
         $('body').on('click', '.copy', function () {
             const item = $(this).data('item');
@@ -331,12 +345,88 @@
             }else{
                 $('.base-currency').text(localStorage.getItem('base-currency').toUpperCase())
             }
-            $('input').each(function () {
-                $(this).prop('autocomplete', 'off');
-            })
         })
 
     </script>
+
+
+
+     <!-- FOR OTP -->
+     <script>
+
+        function startCountdown(seconds){
+            countdown(seconds, 'countdown', function (){
+                $('.resend').html(`Resend in&nbsp;<span id="countdown" ></span>`).css('text-decoration', 'none');
+            } ,function (){
+                $('.resend').attr('id', 'resend').text('Resend').css('text-decoration', 'underline');
+            })
+        }
+
+        function confirm_otp(callback){
+            event.preventDefault();
+            let formData = $('#otp-form').serialize();
+            showPreloader()
+            $.ajax({
+              url : "{% url 'user_auth:verify_email' %}",
+              type: 'POST',
+              dataType: 'json',
+              data: formData,
+              success: function(data){
+                  if(data.status === "success"){
+                      $('#otpModal').modal('hide')
+                      callback()
+                  }else{
+                      hidePreloader()
+                      notify(data.status, data.message)
+                  }
+              },
+                error: function(xhr, ajaxOptions, thrownError){
+                  hidePreloader()
+                  notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+        $('body').on('click', '#resend', function(){
+            showPreloader()
+            $.ajax({
+              url : "{% url 'user_auth:verify_email' %}",
+              type: 'POST',
+              dataType: 'json',
+              data: {'operation': 'resend'},
+              success: function(data){
+                  hidePreloader()
+                  notify_kwarg({status: data.status, message: data.message, timeout: 2500})
+                  $('.resend').removeAttr('id')
+                  startCountdown(100)
+              },
+                error: function(xhr, ajaxOptions, thrownError){
+                  hidePreloader()
+                  notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        })
+
+        
+
+        function launch_otp(add_class){
+            $('.otp-block-inputs input').each(function(){
+                $(this).val('')
+            })
+            $('#otpModal').modal('show')
+            $('#confirm-otp').addClass(add_class)
+        }
+
+        
+
+     </script>
+
 
     {% block script %}{% endblock %}
 

@@ -1,0 +1,60 @@
+{% load static %}
+
+<!-- ADD NEW Bank -->
+
+
+ <div class="modal fade action-sheet sheet-down" id="addBankModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="header d-flex justify-content-center align-items-center">
+                <span class="left icon-cancel" data-bs-dismiss="modal"></span>
+                <h3 class="otp-title">New Bank Account</h3>
+            </div>
+            <div class="pt-45 pb-16">
+                <form class="tf-container" id="add-bank-form">
+                    <div class="mt-4 coin-item style-2 gap-8">
+                        <img src="{% static 'transactions/images/tokens/ngn.png' %}" alt="img" class="img w-img">
+                        <h5 class="w-title"> NGN Account</h5>
+                    </div>
+                    <div class="mt-16 d-flex justify-content-between">
+                        <span>Account Number</span>
+                    </div>
+                    <div class="mt-8 group-ip-select">
+                        <input type="number" placeholder="1234567890" name="number" autocomplete="off">
+                    </div>
+
+                    <div class="mt-16 d-flex justify-content-between">
+                        <span>Account Bank</span>
+                    </div>
+                    <div class="mt-8 group-ip-select">
+                        <input type="text" placeholder="Kuda Bank" name="bank" autocomplete="off">
+                    </div>
+
+                    <div class="mt-16 d-flex justify-content-between">
+                        <span>Account name</span>
+                    </div>
+                    <div class="mt-8 group-ip-select">
+                        <input type="text" placeholder="John Smith" name="name" autocomplete="off">
+                    </div>
+                    <p class="mt-8 text-warning">Account name must match your profile name</p>
+                   
+                    <div class="inner-bar" style='margin-top: 50px'>
+                        <a href="javascript:void(0);" class="tf-btn lg primary addbank-confirm" 
+                        >Confirm</a>
+                    </div>
+                </form>
+                
+
+            </div>
+
+            <div class="menubar-footer footer-fixed bg-surface">
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
