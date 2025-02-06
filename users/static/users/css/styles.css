@@ -1933,6 +1933,42 @@ input[type=text].ip-style2, input[type=number].ip-style2 {
   background-color: #0082FE;
   opacity: 0.4;
 }
+.coin-box .blur.bg4 {
+  background-color: #FFB800;
+  opacity: 0.4;
+}
+.coin-box .blur.bg5 {
+  background-color: #FF5A5F;
+  opacity: 0.4;
+}
+.coin-box .blur.bg6 {
+  background-color: #00E7D5;
+  opacity: 0.4;
+}
+.coin-box .blur.bg7 {
+  background-color: #1E1E1E;
+  opacity: 0.4;
+}
+.coin-box .blur.bg8 {
+  background-color: #FFC0CB;
+  opacity: 0.4;
+}
+.coin-box .blur.bg9 {
+  background-color: #A6FF00;
+  opacity: 0.4;
+}
+.coin-box .blur.bg10 {
+  background-color: #6A1B9A;
+  opacity: 0.4;
+}
+.coin-box .blur.bg11 {
+  background-color: #FF7F00;
+  opacity: 0.4;
+}
+.coin-box .blur.bg12 {
+  background-color: #005F73;
+  opacity: 0.4;
+}
 .coin-box .apexcharts-canvas {
   z-index: 1;
 }

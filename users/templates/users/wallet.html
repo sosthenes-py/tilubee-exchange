@@ -90,6 +90,84 @@
 
 
 
+        <div class="bg-menuDark tf-container">
+            <div class="pt-12 pb-12 mt-4">
+                <div class="wrap-filter-swiper">
+                    <h5><a href="#0" class="cryptex-rating"><i class="icon-star"></i>Market Rating</a></h5>
+                    <!-- <div class="swiper swiper-wrapper-r market-swiper" data-space-between="20" data-preview="auto"> -->
+                        <div class="swiper-wrapper1 menu-tab-v3 mt-12" role="tablist">
+                            <div class="swiper-slide1 nav-link active" data-bs-toggle="tab" data-bs-target="#market_by_general"  role="tab" aria-controls="favorites" aria-selected="true">
+                                All Markets
+                            </div>
+                            <div class="swiper-slide1 nav-link" data-bs-toggle="tab" data-bs-target="#market_by_gainer" role="tab" aria-controls="top" aria-selected="false">
+                                Top Gainers
+                            </div>
+                            <div class="swiper-slide1 nav-link" data-bs-toggle="tab" data-bs-target="#market_by_cap" role="tab" aria-controls="popular" aria-selected="false">
+                                High Cap
+                            </div>
+                            <div class="swiper-slide1 nav-link" data-bs-toggle="tab" data-bs-target="#market_by_favorites" role="tab" aria-controls="popular" aria-selected="false">
+                                Favorites
+                            </div>
+                        </div>
+                    <!-- </div> -->
+                </div>
+                <div class="tab-content mt-8" style="min-height: 40vh">
+                    <div class="tab-pane fade show active" id="market_by_general" role="tabpanel">
+                        <div class="d-flex justify-content-between">
+                            Name
+                            <p class="d-flex gap-8">
+                                <span>Last price</span>
+                                <span>Change</span>
+                            </p>
+                        </div>
+                        <ul class="mt-16 market_by_general_list">
+
+
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="market_by_gainer" role="tabpanel">
+                        <div class="d-flex justify-content-between">
+                            Name
+                            <p class="d-flex gap-8">
+                                <span>Last price</span>
+                                <span>Change</span>
+                            </p>
+                        </div>
+                        <ul class="mt-16 market_by_gainer_list">
+
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="market_by_cap" role="tabpanel">
+                        <div class="d-flex justify-content-between">
+                            Name
+                            <p class="d-flex gap-8">
+                                <span>Last price</span>
+                                <span>Change</span>
+                            </p>
+                        </div>
+                        <ul class="mt-16 market_by_cap_list">
+
+                        </ul>
+                    </div>
+
+                     <div class="tab-pane fade" id="market_by_favorite" role="tabpanel">
+                        <div class="d-flex justify-content-between">
+                            Name
+                            <p class="d-flex gap-8">
+                                <span>Last price</span>
+                                <span>Change</span>
+                            </p>
+                        </div>
+                        <ul class="mt-16">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
 {#        RECENT AND CONVS#}
         <div class="bg-menuDark tf-container">
             <div class="tf-tab pt-12 mt-4">
@@ -317,7 +395,7 @@
             const convs = data.recent_conv
             $('.total-balance').text(fmtNum(data.total_balance))
             window.wallets = wallets
-            window.markets = markets
+            window.markets = markets.general
             window.user_banks = data.user_banks
 
             $('.base-currency-list').html('')
@@ -330,7 +408,8 @@
                     )
                 }
             })
-            populate_market_data(markets)
+            populate_market_data(markets.general)
+            populate_market_tabs(markets)
             populate_recent_history(history)
             populate_recent_convs(convs)
         }
@@ -339,10 +418,12 @@
             $('.market-data').html('')
             let count = 0;
             $.each(markets, function (coin, details) {
-                count++;
                 let change_dir = (details['change'] >= 0) ? 'up' : 'down'
                 let change_class = (details['change'] >= 0) ? 'success' : 'danger'
                 let display = ($.inArray(coin, main_wallets) !== -1) ? 'block' : 'none'
+                if($.inArray(coin, main_wallets) !== -1){
+                    count ++;
+                }
                 $('.market-data').append(
                     ` <div class="swiper-slide d-${display}">
                             <a href="#0" class="coin-box d-block">
@@ -367,6 +448,43 @@
                         </div>`
                 )
 
+            })
+        }
+
+        function populate_market_tabs(markets) {
+            let market_obj = {
+                'market_by_general_list': markets.general,
+                'market_by_gainer_list': markets.gainer,
+                'market_by_cap_list': markets.cap,
+            }
+            $.each(market_obj, function (elem_class, data_obj) {
+                $(`.${elem_class}`).html('')
+                $.each(data_obj, function (coin, details) {
+                    let change_dir = (details['change'] >= 0) ? 'increase' : 'decrease'
+                    let change_class = (details['change'] >= 0) ? 'success' : 'danger'
+                    let display = ($.inArray(coin, main_wallets) !== -1) ? 'block' : 'none'
+                    if ($.inArray(coin, main_wallets) !== -1) {
+                    }
+                    $(`.${elem_class}`).append(
+                        ` <li class="mt-16">
+                                <a href="#0" class="coin-item style-2 gap-12">
+                                    <img src="{% static 'transactions/images/tokens' %}/${coin}.png" alt="img" class="img">
+                                    <div class="content">
+                                        <div class="title">
+                                            <p class="mb-4 text-button">${coin.toUpperCase()}</p>
+                                            <span class="text-secondary">${details.long}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-12">
+                                            <span class="text-small">$${fmtNum(details.price)}</span>
+                                            <span class="coin-btn ${change_dir}">${details.change}%</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>`
+
+                    )
+
+                })
             })
         }
 

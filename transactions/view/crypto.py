@@ -61,7 +61,7 @@ coins_dict = {
     "zec": "Zcash"
 }
 
-def markets(tickers: QuerySet = None):
+def markets(tickers: QuerySet = None, order_by=''):
     """
     Returns all available markets in a dictionary, Eg:
     {
@@ -76,6 +76,8 @@ def markets(tickers: QuerySet = None):
     }
     """
     tickers = Ticker.objects.all() if tickers is None else tickers
+    if order_by != '':
+        tickers = tickers.order_by(order_by)
     return {
         ticker.coin_short: {
             'short': ticker.coin_short,

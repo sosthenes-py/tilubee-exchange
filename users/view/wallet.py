@@ -34,7 +34,9 @@ class WalletView(CustomLoginRequiredMixin, View):
     def onload(self, request):
         total_balance = self.total_balance()
         wallets = self.all_balance()
-        markets = crypto_markets()
+        markets = crypto_markets(tickers=self.tickers)
+        markets_by_gainer = crypto_markets(tickers=self.tickers, order_by='-change')
+        markets_by_cap = crypto_markets(tickers=self.tickers, order_by='-price')
         user_transactions = UserTransactions(request.user, self.one_usd_in_base, self.base_currency)
         history = user_transactions.as_list()
         conversions = user_transactions.get_conversions()
@@ -45,10 +47,16 @@ class WalletView(CustomLoginRequiredMixin, View):
             'status': 'success',
             'total_balance': total_balance,
             'wallets': wallets,
-            'markets': markets,
+            'markets_by_gainer': markets_by_gainer,
+            'markets_by_cap': markets_by_cap,
             'recent_conv': recent_conv,
             'history': history,
-            'user_banks': list(user_banks)
+            'user_banks': list(user_banks),
+            'markets': {
+                'general': markets,
+                'gainer': markets_by_gainer,
+                'cap': markets_by_cap,
+            }
         })
 
 
