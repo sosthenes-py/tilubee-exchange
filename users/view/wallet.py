@@ -41,7 +41,7 @@ class WalletView(CustomLoginRequiredMixin, View):
         history = user_transactions.as_list()
         conversions = user_transactions.get_conversions()
         history = history
-        recent_conv = conversions[-5:] if conversions else []
+        recent_conv = conversions[-20:] if conversions else []
         user_banks = UserBankAccount.objects.filter(user=self.user).order_by('-created_at').values()
         return JsonResponse({
             'status': 'success',

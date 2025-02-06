@@ -65,7 +65,7 @@
                     <li>
                         <a href="earn.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
                             <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-exchange"></i></span>
-                            Earn
+                            Recents
                         </a>
                     </li>
                 </ul>
@@ -417,12 +417,14 @@
         function populate_market_data(markets) {
             $('.market-data').html('')
             let count = 0;
+            let chart = 0;
             $.each(markets, function (coin, details) {
                 let change_dir = (details['change'] >= 0) ? 'up' : 'down'
                 let change_class = (details['change'] >= 0) ? 'success' : 'danger'
                 let display = ($.inArray(coin, main_wallets) !== -1) ? 'block' : 'none'
                 if($.inArray(coin, main_wallets) !== -1){
                     count ++;
+                    
                 }
                 $('.market-data').append(
                     ` <div class="swiper-slide d-${display}">

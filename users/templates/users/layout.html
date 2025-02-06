@@ -338,6 +338,38 @@
             }, 1500)
         })
 
+        function start_market_slider(){
+            var direction = 1; // 1 for forward, -1 for backward
+            var swiper = new Swiper(".tf-swiper", {
+                slidesPerView: 2.8,
+                spaceBetween: 16,
+                speed: 800,  // Adjust speed for smooth effect
+                autoplay: {
+                    delay: 2000,  // Delay before auto-sliding
+                    disableOnInteraction: false,
+                },
+                loop: false, // No infinite loop (to allow back-and-forth)
+                allowTouchMove: true, // Users can still swipe manually
+                breakpoints: {
+                    768: { slidesPerView: 2.8 },
+                    1024: { slidesPerView: 3 },
+                }
+            });
+
+            function autoSlide() {
+                if (swiper.isEnd) {
+                    direction = -1; // Reverse direction at last slide
+                } else if (swiper.isBeginning) {
+                    direction = 1; // Forward direction at first slide
+                }
+
+                swiper.slideTo(swiper.activeIndex + direction); // Move in correct direction
+            }
+
+            // Run autoSlide every 2 seconds
+            setInterval(autoSlide, 2000);
+        }
+
         $(function (){
             if (localStorage.getItem('base-currency') === null) {
                 localStorage.setItem('base-currency', 'usd');
@@ -345,6 +377,7 @@
             }else{
                 $('.base-currency').text(localStorage.getItem('base-currency').toUpperCase())
             }
+            start_market_slider()
         })
 
     </script>
