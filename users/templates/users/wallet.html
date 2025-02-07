@@ -15,6 +15,10 @@
             display: block;
             text-align: right;
         }
+        #historyModal {
+            z-index: 2000;
+        }
+        
     </style>
 
     <div class="header-style2 fixed-top bg-menuDark">
@@ -63,8 +67,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="earn.html" class="tf-list-item d-flex flex-column gap-8 align-items-center">
-                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-exchange"></i></span>
+                        <a href="#0" class="tf-list-item d-flex flex-column gap-8 align-items-center" data-bs-toggle="modal" data-bs-target="#allHistoryModal">
+                            <span class="box-round bg-surface d-flex justify-content-center align-items-center"><i class="icon icon-history"></i></span>
                             Recents
                         </a>
                     </li>
@@ -75,6 +79,9 @@
 
 
 {#        MAIN MARKETS#}
+
+
+
         <div class="bg-menuDark tf-container">
             <div class="pt-12 pb-12 mt-4">
                 <h5>Market</h5>
@@ -168,37 +175,6 @@
 
 
 
-{#        RECENT AND CONVS#}
-        <div class="bg-menuDark tf-container">
-            <div class="tf-tab pt-12 mt-4">
-                <div class="tab-slide">
-                    <ul class="nav nav-tabs wallet-tabs" role="tablist" >
-                        <li class="item-slide-effect"></li>
-                        <li class="nav-item active" role="presentation">
-                            <button class="nav-link active"  data-bs-toggle="tab" data-bs-target="#recent">Recent History</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-							<button class="nav-link" data-bs-toggle="tab" data-bs-target="#conversions">Conversions</button>
-						</li>
-
-
-                    </ul>
-                </div>
-                <div class="tab-content pt-16 pb-16">
-					<div class="tab-pane fade active show" id="recent" role="tabpanel">
-						<ul class="history-list">
-
-                        </ul>
-					</div>
-					<div class="tab-pane fade" id="conversions" role="tabpanel">
-						<ul class="conversions-list">
-
-
-                        </ul>
-					</div>
-				</div>
-            </div>
-        </div>
 
 
 
@@ -294,7 +270,7 @@
 
 
 
-    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="confirmModalLabe" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="false" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="background-color: #11150F">
 
@@ -349,9 +325,11 @@
     </div>
 
 
-{% include 'users/deposit.html' %}
+
+    {% include 'users/deposit.html' %}
     {% include 'users/withdrawal.html' %}
     {% include 'users/otp.html' %}
+    {% include 'users/history.html' %}
 {% endblock content %}
 
 {% block script %}
@@ -493,7 +471,7 @@
         function populate_recent_history(history) {
             $('.history-list').html('')
             $.each(history, function (index, d) {
-                if(index <= 4){
+                if(index <= 50){
                     let status_class = (d.type === 'deposit') ? 'success' : 'danger'
                     if(d.status === 'pending'){
                         status_class = 'warning'
@@ -504,7 +482,7 @@
                     const mt = (index === 0) ? '' : 'mt-8'
                     $('.history-list').append(
                         `<li class="${mt}">
-                                    <a href="#0" data-bs-toggle="modal" data-bs-target="#historyModal" class="coin-item style-1 gap-12 bg-surface history-row"
+                                    <a href="#0" class="coin-item style-1 gap-12 bg-surface history-row"
                                     data-title="${d.type} Details"
                                     data-qty="${d.qty}"
                                     data-status="${d.status}"
@@ -536,7 +514,7 @@
         function populate_recent_convs(history) {
             $('.conversions-list').html('')
             $.each(history, function (index, details) {
-                if(index <= 4){
+                if(index <= 20){
                     $('.conversions-list').append(
                         ` <li>
                                 <a href="#0" class="coin-item style-1 gap-12 bg-surface">
@@ -559,7 +537,12 @@
                 }
             })
         }
+        
 
+        $('body').on('click', '.history-row', function(){
+            var modal = new bootstrap.Modal(document.getElementById('historyModal'));
+            modal.show();
+        })
 
         $('body').on('click', '.select-base', function(){
             $('.select-base').removeClass('active')
@@ -583,6 +566,14 @@
             const status = $(this).data('status')
             $('.history-status').removeClass('text-danger').removeClass('text-success').removeClass('text-warning').text(status)
 
+            if(status === 'pending'){
+                $('.history-status').toggleClass('text-warning')
+            }else if(status === 'failed'){
+                $('.history-status').toggleClass('text-danger')
+            }else{
+                $('.history-status').toggleClass('text-success')
+            }
+
             if($(this).data('medium') === 'bank'){
                 $('.history-medium-key').text('Method')
                 $('.history-medium-value').text('Bank Transfer')
@@ -594,13 +585,7 @@
                 $('.history-medium-value').text(trim($(this).data('address')))
             }
 
-            if(status === 'pending'){
-                $('.history-status').toggleClass('text-warning')
-            }else if(status === 'failed'){
-                $('.history-status').toggleClass('text-danger')
-            }else{
-                $('.history-status').toggleClass('text-success')
-            }
+            
         })
 
     </script>
@@ -610,95 +595,111 @@
     <script>
 
         function create_crypto(amount){
-            const currency = window.myForm['currency']
-            let qty;
-            qty = (1 / window.markets[currency]['price']) * parseFloat(amount);
-            window.myForm['qty'] = qty
-            showPreloader()
-            $.ajax({
-                url: "{% url 'users:deposit' %}",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    'action': 'retrieve_crypto_wallet',
-                    'currency': currency
-                },
-                success: function (data) {
-                    hidePreloader()
-                    if (data.status === "success") {
-                        set_deposit_modal_crypto(data)
-                    }else{
-                        notify(data.status, data.message)
+            console.log(`Amount: ${amount}`)
+            if(amount !== '' && amount > 0){
+                $('#cryptoAmountModal').modal('hide')
+                const currency = window.myForm['currency']
+                let qty;
+                qty = (1 / window.markets[currency]['price']) * parseFloat(amount);
+                window.myForm['qty'] = qty
+                showPreloader()
+                $.ajax({
+                    url: "{% url 'users:deposit' %}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'action': 'retrieve_crypto_wallet',
+                        'currency': currency
+                    },
+                    success: function (data) {
+                        hidePreloader()
+                        if (data.status === "success") {
+                            set_deposit_modal_crypto(data)
+                        }else{
+                            notify(data.status, data.message)
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        hidePreloader()
+                        notify('error', xhr.status + ': ' + xhr.statusText)
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    hidePreloader()
-                    notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
+                })
+            }else{
+                notify('warning', 'Amount is required to proceed')
+            }
         }
 
         function create_ngn(amount){
-            window.myForm['qty'] = Number(amount)
-            showPreloader()
-            $.ajax({
-                url: "{% url 'users:deposit' %}",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    'action': 'retrieve_bank_account'
-                },
-                success: function (data) {
-                    hidePreloader()
-                    if (data.status === "success") {
-                        set_deposit_modal_bank(data)
-                    }else{
-                        notify(data.status, data.message)
+            if(amount !== '' && amount > 0){
+                $('#bankAmountModal').modal('hide')
+                window.myForm['qty'] = Number(amount)
+                showPreloader()
+                $.ajax({
+                    url: "{% url 'users:deposit' %}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'action': 'retrieve_bank_account'
+                    },
+                    success: function (data) {
+                        hidePreloader()
+                        if (data.status === "success") {
+                            set_deposit_modal_bank(data)
+                        }else{
+                            notify(data.status, data.message)
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        hidePreloader()
+                        notify('error', xhr.status + ': ' + xhr.statusText)
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    hidePreloader()
-                    notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
+                })
+            }else{
+                notify('warning', 'Amount is required to proceed')
+            }
         }
 
         function create_uid(amount){
-            const curr = window.myForm['currency']
-            let qty;
-            qty = (1 / window.markets[curr]['price']) * parseFloat(amount);
-            window.myForm['qty'] = qty
-            showPreloader()
-            $.ajax({
-                url: "{% url 'users:deposit' %}",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    'action': 'retrieve_uid',
-                    'platform': window.myForm['platform']
-                },
-                success: function (data) {
-                    hidePreloader()
-                    if (data.status === "success") {
-                        set_deposit_modal_uid(data)
-                    }else{
-                        notify(data.status, data.message)
+            if(amount !== '' && amount > 0){
+                $('#uidAmountModal').modal('hide')
+                const curr = window.myForm['currency']
+                let qty;
+                qty = (1 / window.markets[curr]['price']) * parseFloat(amount);
+                window.myForm['qty'] = qty
+                showPreloader()
+                $.ajax({
+                    url: "{% url 'users:deposit' %}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'action': 'retrieve_uid',
+                        'platform': window.myForm['platform']
+                    },
+                    success: function (data) {
+                        hidePreloader()
+                        if (data.status === "success") {
+                            set_deposit_modal_uid(data)
+                        }else{
+                            notify(data.status, data.message)
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        hidePreloader()
+                        notify('error', xhr.status + ': ' + xhr.statusText)
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    hidePreloader()
-                    notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
+                })
+            }else{
+                notify('warning', 'Amount is required to proceed')
+            }
         }
 
 
@@ -840,11 +841,13 @@
                                 <span class="text-large text-white"><i class="icon icon-copy text-muted copy" data-item="${data.narration}"></i> ${data.narration}</span>
                             </li>
                         </ul>
-                <p class="text-small mt-3 text-danger">
-                    <span class="icon icon-noti text-danger icon-small"></span> Ensure to enter the code above in your transfer narration to enable the system confirm your transaction automatically. <br>
-                    <span class="icon icon-noti text-danger icon-small"></span> Ensure to send from a bank account that bears your name as on PROJECT_NAME <br>
-                    <span class="icon icon-noti text-danger icon-small"></span> Click the button below only when you have completed this transfer
-                </p>
+
+                        <ul class='p-1 info-list mt-18'>
+                            <li>Ensure to enter the code above in your transfer narration to enable the system confirm your transaction automatically.</li>
+                            <li>Ensure to send from a bank account that bears your name as on your profile</li>
+                            <li>Ensure to click the button below when transaction is completed</li>
+                        </ul>
+              
                 `
             )
             window.myForm['ref'] = data.narration
@@ -871,9 +874,11 @@
                             </li>
 
                         </ul>
-                <p class="text-small mt-3 text-danger"><span class="icon icon-noti text-danger icon-small"></span> Ensure to send the exact amount entered previously for quicker confirmation <br>
-                            <span class="icon icon-noti text-danger icon-small"></span> Click the button below when completed to start confirmation
-                </p>
+               
+                <ul class='p-1 info-list mt-18'>
+                            <li>Ensure to send the exact amount entered previously for quicker confirmation.</li>
+                            <li>Ensure to click the button below when transaction is completed</li>
+                        </ul>
                 `
             )
             window.myForm['uid'] =  data.uid

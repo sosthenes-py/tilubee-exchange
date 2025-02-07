@@ -3,6 +3,15 @@
     .icon-small {
         font-size: 18px;
     }
+    .info-list {
+        background-color: #f53966; 
+        color: #ffffff; 
+        border-radius:4px; 
+    }
+    .info-list li::before {
+        content: '✔';
+        margin-right: 8px;
+    }
 </style>
 
     <div class="modal fade action-sheet" id="depositModal">
@@ -143,7 +152,7 @@
 
                 <div class="menubar-footer footer-fixed bg-surface">
                     <div class="inner-bar">
-                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-dismiss="modal"
+                        <a href="javascript:void(0);" class="tf-btn lg primary" 
                         onclick="create_ngn($('#bank-amount').val())"
                         >Confirm</a>
                     </div>
@@ -193,7 +202,7 @@
 
                 <div class="menubar-footer footer-fixed bg-surface">
                     <div class="inner-bar">
-                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-dismiss="modal"
+                        <a href="javascript:void(0);" class="tf-btn lg primary" 
                         onclick="create_uid($('#uid-amount').val())"
                         >Confirm</a>
                     </div>
@@ -242,7 +251,7 @@
 
                 <div class="menubar-footer footer-fixed bg-surface">
                     <div class="inner-bar">
-                        <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-dismiss="modal"
+                        <a href="javascript:void(0);" class="tf-btn lg primary" 
                         onclick="create_crypto($('#crypto-amount').val())"
                         >Confirm</a>
                     </div>
@@ -265,7 +274,7 @@
 
                 <div class="pt-45 pb-90">
                     <div class="tf-container action-body">
-
+                        
                     </div>
                 </div>
 

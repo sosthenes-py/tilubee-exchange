@@ -1,55 +1,47 @@
 
 
-<div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="allHistoryModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" style="background-color: #11150F" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" style="background-color: #11150F">
-
-            <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
-                <a href="#0" data-bs-dismiss="modal" class="left"><i class="icon-left-btn"></i></a>
-                <h3 class="history-title text-capitalize">Confirm</h3>
+            <div class="modal-header">
+                <span></span>
+                <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
             </div>
 
-            <div class="pt-45 pb-90">
-                <div class="tf-container">
-                    <p class="text-center text-small mt-4">Quantity</p>
-                    <h1 class="mt-8 text-center history-qty">0.00 USD</h1>
-                    <p class="text-center text-small mt-1 history-status text-capitalize">Action status</p>
+           
+            {#        RECENT AND CONVS#}
+        <div class="bg-menuDark tf-container mt-8" style='margin: 0; padding-left: 12px; padding-right: 12px'>
+            <div class="tf-tab pt-12 mt-4">
+                <div class="tab-slide">
+                    <ul class="nav nav-tabs wallet-tabs" role="tablist" >
+                        <li class="item-slide-effect"></li>
+                        <li class="nav-item active" role="presentation">
+                            <button class="nav-link active"  data-bs-toggle="tab" data-bs-target="#recent">Recent History</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+							<button class="nav-link" data-bs-toggle="tab" data-bs-target="#conversions">Conversions</button>
+						</li>
 
-                    <ul class="mt-40 accent-box-v4 bg-menuDark">
-                        <li class="d-flex align-items-center justify-content-between pb-8 line-bt">
-                            <span class="text-small">Transaction Account</span>
-                            <span class="text-large text-white">My wallet</span>
-                        </li>
-                        <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                            <span class="text-small">Transaction Fee </span>
-                            <span class="text-large text-white text-end history-fee">0</span>
-                        </li>
-                        <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                            <span class="text-small">Currency</span>
-                            <span class="text-large text-white history-currency text-uppercase"></span>
-                        </li>
-                        <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                            <span class="text-small">Time</span>
-                            <span class="text-large text-white history-time">0.0.0 00:00</span>
-                        </li>
-                        <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                            <span class="text-small history-medium-key">Address</span>
-                            <span class="text-large text-white history-medium-value"></span>
-                        </li>
-                        <li class="d-flex align-items-center justify-content-between pt-8 pb-8">
-                            <span class="text-small">Transaction Hash</span>
-                            <span class="text-large text-white history-hash text-wrap flex-wrap"></span>
-                        </li>
+
                     </ul>
                 </div>
-            </div>
+                <div class="tab-content pt-16 pb-16">
+					<div class="tab-pane fade active show" id="recent" role="tabpanel">
+						<ul class="history-list">
+
+                        </ul>
+					</div>
+					<div class="tab-pane fade" id="conversions" role="tabpanel">
+						<ul class="conversions-list">
 
 
-            <div class="menubar-footer footer-fixed bg-surface">
-                <div class="inner-bar">
-                    <a href="javascript:void(0);" class="tf-btn lg primary" data-bs-toggle="modal" data-bs-target="#otpPin">Confirm</a>
-                </div>
+                        </ul>
+					</div>
+				</div>
             </div>
+        </div>
+
+
         </div>
     </div>
 </div>

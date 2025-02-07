@@ -13,11 +13,12 @@ def custom_login_required(function=None):
     def wrapper(request, *args, **kwargs):
         if not request.session.get('user_session'):
             return redirect('user_auth:login')
-        if request.user.session.uid != request.session.get('user_session'):
-            url = reverse('user_auth:login')
-            query_param = "?flash=duplicate"
-            return redirect(f"{url}{query_param}")
-        if not request.user.email_verification.is_verified:
-            return redirect('user_auth:verify_email')
+        if request.user.is_authenticated:
+            if request.user.session.uid != request.session.get('user_session'):
+                url = reverse('user_auth:login')
+                query_param = "?flash=duplicate"
+                return redirect(f"{url}{query_param}")
+            if not request.user.email_verification.is_verified:
+                return redirect('user_auth:verify_email')
         return function(request, *args, **kwargs)
     return wrapper

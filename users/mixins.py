@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.contrib.auth import logout
 
 
 class CustomLoginRequiredMixin(LoginRequiredMixin):
@@ -12,10 +13,12 @@ class CustomLoginRequiredMixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         if not request.session.get('user_session'):
             return redirect('user_auth:login')
-        if request.user.session.uid != request.session.get('user_session'):
-            url = reverse('user_auth:login')
-            query_param = "?flash=duplicate"
-            return redirect(f"{url}{query_param}")
-        if not request.user.email_verification.is_verified:
-            return redirect('user_auth:verify_email')
+        if request.user.is_authenticated:
+            # if request.user.session.uid != request.session.get('user_session'):
+            #     logout(request)
+            #     url = reverse('user_auth:login')
+            #     query_param = "?flash=duplicate"
+            #     return redirect(f"{url}{query_param}")
+            if not request.user.email_verification.is_verified:
+                return redirect('user_auth:verify_email')
         return super().dispatch(request, *args, **kwargs)

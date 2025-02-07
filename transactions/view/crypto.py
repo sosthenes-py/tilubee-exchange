@@ -39,7 +39,7 @@ coins_dict = {
     "ltc": "Litecoin",
     "mana": "Decentraland",
     "matic": "Polygon",
-    "ngn": "Nigerian Naira",
+    "ngn": "NGN Naira",
     "neo": "NEO",
     "nmr": "Numeraire",
     "one": "Harmony",
