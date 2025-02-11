@@ -41,6 +41,21 @@
         .close-icon:hover {
             color: #007bff;
         }
+
+        .conv-img{
+            width: 18px !important;
+            height: 18px !important;
+        }
+        .history-ref, .long-line {
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            display: block;
+            text-align: right;
+        }
+        #historyModal {
+            z-index: 2000;
+        }
     </style>
 </head>
 
@@ -131,15 +146,15 @@
      <div class="menubar-footer footer-fixed">
         <ul class="inner-bar">
             <li class="active">
-                <a href="wallet.html">
+                <a href="{% url 'users:wallet' %}">
                     <i class="icon icon-home2"></i>
                     Home
                 </a>
             </li>
             <li>
-                <a href="exchange-market.html">
+                <a href="{% url 'users:convert' %}">
                     <i class="icon icon-exchange"></i>
-                    Exchange
+                    Convert
                 </a>
             </li>
             <li>
@@ -172,6 +187,7 @@
 
     <script type="application/javascript">
         const main_wallets = ['ngn', 'btc', 'usdt', 'eth', 'bnb', 'trx']
+        const token_base_url = '{% static 'transactions/images/tokens' %}'
 
         function showPreloader(){
             $(".preload").fadeIn("slow");
@@ -338,37 +354,7 @@
             }, 1500)
         })
 
-        function start_market_slider(){
-            var direction = 1; // 1 for forward, -1 for backward
-            var swiper = new Swiper(".tf-swiper", {
-                slidesPerView: 2.8,
-                spaceBetween: 16,
-                speed: 800,  // Adjust speed for smooth effect
-                autoplay: {
-                    delay: 2000,  // Delay before auto-sliding
-                    disableOnInteraction: false,
-                },
-                loop: false, // No infinite loop (to allow back-and-forth)
-                allowTouchMove: true, // Users can still swipe manually
-                breakpoints: {
-                    768: { slidesPerView: 2.8 },
-                    1024: { slidesPerView: 3 },
-                }
-            });
 
-            function autoSlide() {
-                if (swiper.isEnd) {
-                    direction = -1; // Reverse direction at last slide
-                } else if (swiper.isBeginning) {
-                    direction = 1; // Forward direction at first slide
-                }
-
-                swiper.slideTo(swiper.activeIndex + direction); // Move in correct direction
-            }
-
-            // Run autoSlide every 2 seconds
-            setInterval(autoSlide, 2000);
-        }
 
         $(function (){
             if (localStorage.getItem('base-currency') === null) {
@@ -377,7 +363,6 @@
             }else{
                 $('.base-currency').text(localStorage.getItem('base-currency').toUpperCase())
             }
-            start_market_slider()
         })
 
     </script>
@@ -462,6 +447,7 @@
 
 
     {% block script %}{% endblock %}
+    {% block embedded_scripts %}{% endblock embedded_scripts %}
 
 </body>
 

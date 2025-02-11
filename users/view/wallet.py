@@ -12,7 +12,7 @@ from users.models import UserBankAccount
 
 class WalletView(CustomLoginRequiredMixin, View):
     def __init__(self, *args, **kwargs):
-        super().__init__()
+        super().__init__(*args, **kwargs)
         self.user = None
         self.base_currency = 'usdt'
         self.tickers = Ticker.objects.all()
@@ -30,6 +30,7 @@ class WalletView(CustomLoginRequiredMixin, View):
         action = request.POST.get('action')
         if action == 'onload':
             return self.onload(request)
+        return None
 
     def onload(self, request):
         total_balance = self.total_balance()

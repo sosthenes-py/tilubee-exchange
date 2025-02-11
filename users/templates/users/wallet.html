@@ -3,23 +3,7 @@
 
 
 {% block content %}
-    <style>
-        .conv-img{
-            width: 18px !important;
-            height: 18px !important;
-        }
-        .history-ref, .long-line {
-            word-break: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
-            display: block;
-            text-align: right;
-        }
-        #historyModal {
-            z-index: 2000;
-        }
-        
-    </style>
+
 
     <div class="header-style2 fixed-top bg-menuDark">
         <div class="d-flex justify-content-between align-items-center gap-14">
@@ -329,7 +313,7 @@
     {% include 'users/deposit.html' %}
     {% include 'users/withdrawal.html' %}
     {% include 'users/otp.html' %}
-    {% include 'users/history.html' %}
+    {% include 'users/all-history.html' %}
 {% endblock content %}
 
 {% block script %}
@@ -338,7 +322,40 @@
     <script>
         $(function (){
             loadPage()
+            start_market_slider()
         })
+
+        function start_market_slider(){
+            var direction = 1; // 1 for forward, -1 for backward
+            var swiper = new Swiper(".tf-swiper", {
+                slidesPerView: 2.8,
+                spaceBetween: 16,
+                speed: 800,  // Adjust speed for smooth effect
+                autoplay: {
+                    delay: 2000,  // Delay before auto-sliding
+                    disableOnInteraction: false,
+                },
+                loop: false, // No infinite loop (to allow back-and-forth)
+                allowTouchMove: true, // Users can still swipe manually
+                breakpoints: {
+                    768: { slidesPerView: 2.8 },
+                    1024: { slidesPerView: 3 },
+                }
+            });
+
+            function autoSlide() {
+                if (swiper.isEnd) {
+                    direction = -1; // Reverse direction at last slide
+                } else if (swiper.isBeginning) {
+                    direction = 1; // Forward direction at first slide
+                }
+
+                swiper.slideTo(swiper.activeIndex + direction); // Move in correct direction
+            }
+
+            // Run autoSlide every 2 seconds
+            setInterval(autoSlide, 2000);
+        }
 
         function loadPage(){
             showPreloader()
@@ -468,76 +485,6 @@
             })
         }
 
-        function populate_recent_history(history) {
-            $('.history-list').html('')
-            $.each(history, function (index, d) {
-                if(index <= 50){
-                    let status_class = (d.type === 'deposit') ? 'success' : 'danger'
-                    if(d.status === 'pending'){
-                        status_class = 'warning'
-                    }else if(d.status === 'failed'){
-                        status_class = 'danger'
-                    }
-                    const status_sign = (d.type === 'deposit') ? '+' : '-'
-                    const mt = (index === 0) ? '' : 'mt-8'
-                    $('.history-list').append(
-                        `<li class="${mt}">
-                                    <a href="#0" class="coin-item style-1 gap-12 bg-surface history-row"
-                                    data-title="${d.type} Details"
-                                    data-qty="${d.qty}"
-                                    data-status="${d.status}"
-                                    data-fee="${d.fee}"
-                                    data-currency="${d.currency}"
-                                    data-time="${d.created_at}"
-                                    data-address="${d.address}"
-                                    data-hash="${d.hash}"
-                                    data-ref="${d.reference}"
-                                    data-medium="${d.medium}"
-                                    >
-                                        <img src="{% static 'transactions/images/tokens' %}/${d.currency}.png" alt="img" class="img">
-                                        <div class="content">
-                                            <div class="title">
-                                                <p class="mb-4 text-large">${d.currency_name}</p>
-                                                <span class="text-secondary">${d.created_at}</span>
-                                            </div>
-                                            <div class="box-price">
-                                                <p class="text-small mb-4"><span class="text-${status_class}">${status_sign}</span> ${fmtNum(d.qty)} ${d.currency.toUpperCase()}</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>`
-                    )
-                }
-            })
-        }
-
-        function populate_recent_convs(history) {
-            $('.conversions-list').html('')
-            $.each(history, function (index, details) {
-                if(index <= 20){
-                    $('.conversions-list').append(
-                        ` <li>
-                                <a href="#0" class="coin-item style-1 gap-12 bg-surface">
-                                    <img src="{% static 'transactions/images/tokens' %}/${details.currency_from}.png" alt="img" class="img conv-img">
-                                    <i class="icon-select-right"></i>
-                                    <img src="{% static 'transactions/images/tokens' %}/${details.currency_to}.png" alt="img" class="img conv-img">
-                                    <div class="content">
-                                        <div class="title">
-                                            <p class="mb-4 text-danger">${fmtNum(details.qty_from)} ${details.currency_from.toUpperCase()}</p>
-                                            <span class="text-success">${fmtNum(details.qty_to)} ${details.currency_to.toUpperCase()}</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-12">
-                                            <span class="text-secondary">${details.created_at}</span>
-                                            <span class="coin-btn increase">Done</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>`
-                    )
-                }
-            })
-        }
-        
 
         $('body').on('click', '.history-row', function(){
             var modal = new bootstrap.Modal(document.getElementById('historyModal'));
@@ -1204,7 +1151,10 @@
 
 
 {% endblock script %}
-
+{% block embedded_scripts %}
+    <script type="text/javascript" src="{% static 'users/js/custom/history-transactions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'users/js/custom/history-conversions.js' %}"></script>
+{% endblock embedded_scripts %}
 
 
 

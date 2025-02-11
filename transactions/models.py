@@ -62,6 +62,7 @@ class Ticker(models.Model):
     change = models.FloatField(default=0)
     network = models.CharField(max_length=10, default='bep20')
     min = models.FloatField(default=1)
+    max = models.FloatField(default=1000)
 
 
 class Transaction(models.Model):

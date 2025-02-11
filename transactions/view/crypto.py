@@ -85,7 +85,8 @@ def markets(tickers: QuerySet = None, order_by=''):
             'price': ticker.price,
             'change': ticker.change,
             'network': ticker.network,
-            'min': ticker.min
+            'min': ticker.min,
+            'max': ticker.max
         }
         for ticker in tickers
     }

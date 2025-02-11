@@ -1,0 +1,386 @@
+{% extends 'users/layout.html' %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .inputs {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: right;
+            width: 100%;
+            outline: none;
+        }
+
+        .inputs::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+        }
+
+        .coin-select-list {
+            overflow-y: auto;
+            max-height: 50vh;
+        }
+        .title{
+            width: 100%;
+        }
+    </style>
+
+    <div class="header-style2 fixed-top d-flex align-items-center justify-content-between bg-surface">
+        <h3 class="d-flex gap-12">
+            <a href="#0" class="text-secondary">Convert</a>
+        </h3>
+        <i class="icon-history text-white" style="font-size: 1.8em" data-bs-toggle="modal"
+           data-bs-target="#historyModal"></i>
+    </div>
+    <div class="pt-55 pb-120">
+        <div class="tf-container">
+            <div class="tf-tab pt-12 mt-4">
+
+                <div class="tab-content pt-16 pb-16">
+                    <div class="tab-pane fade active show" id="link" role="tabpanel">
+                        <div class="trade-box">
+                            <div class="accent-box bg-menuDark">
+                                <div class="text-small d-flex justify-content-between">
+                                    <p class="text-white">From</p>
+                                    <p class="d-flex align-items-center gap-20">
+                                        <span class="d-flex align-items-center gap-4">
+                                            <i class="icon-wallet fs-24"></i>
+                                            <span class="from-bal">0.00</span>
+                                        </span>
+                                        <span class="text-light badge bg-success from-max">Max</span>
+                                    </p>
+                                </div>
+                                <div class="coin-item style-1 gap-8 mt-20">
+                                    <img src="images/coin/coin-3.jpg" alt="img" class="img from-img">
+                                    <div class="content">
+                                        <div class="title">
+                                            <h4 class="mb-4">
+                                                <a href="#" class="d-flex align-items-center" onclick="populate_coin_select('from')">
+                                                    <span class="from-coin">-</span>
+                                                    <i class="icon-select-down"></i>
+                                                </a>
+                                            </h4>
+                                            <span class="from-name">Ethereum</span>
+                                        </div>
+                                        <div class="box-price text-end">
+                                            <input class="mb-4 from-input inputs" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="round-swap"><i class="icon icon-clockwise"></i></div>
+
+
+                            <div class="accent-box bg-menuDark mt-8">
+                                <div class="text-small d-flex justify-content-between">
+                                    <p class="text-white">To</p>
+                                    <span class="d-flex align-items-center gap-4">
+                                        <i class="icon-wallet fs-24"></i>
+                                        <span class="to-bal">0.0</span>
+                                    </span>
+                                </div>
+                                <div class="coin-item style-1 gap-8 mt-20">
+                                    <img src="images/coin/coin-5.jpg" alt="img" class="img to-img">
+                                    <div class="content">
+                                        <div class="title">
+                                            <h4 class="mb-4">
+                                                <a href="#" class="d-flex align-items-center" onclick="populate_coin_select('to')">
+                                                    <span class="to-coin">-</span>
+                                                    <i class="icon-select-down"></i>
+                                                </a>
+                                            </h4>
+                                            <span class="to-name">Ethereum</span>
+                                        </div>
+                                        <div class="box-price text-end">
+                                            <h3 class="mb-4 to-input inputs">-</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="javascript:void(0);" class="tf-btn lg mt-20 secondary" data-bs-toggle="modal"
+                           data-bs-target="#connectWallet">Quote</a>
+
+
+                        <ul class="mt-20 accent-box line-border">
+                            <li class="trade-list-item">
+                                <p class="d-flex align-items-center text-small gap-4">Reference <i
+                                        class="icon-question fs-16 text-secondary"></i></p>
+                                <p class="d-flex gap-8 text-white">1 ETH = 1.876,515984 USDC <i
+                                        class="icon-clockwise2 fs-16"></i></p>
+                            </li>
+                            <li class="trade-list-item mt-16">
+                                <p class="d-flex align-items-center text-small gap-4">Estimated network charges</p>
+                                <p class="d-flex gap-8 text-white">$3,71 (1 Minute)</p>
+                            </li>
+                            <li class="trade-list-item mt-16">
+                                <p class="d-flex align-items-center text-small gap-4">Acceptable slippage<i
+                                        class="icon-question fs-16 text-secondary"></i></p>
+                                <a href="#" class="d-flex align-items-center gap-8">1% <i
+                                        class="icon-arr-right fs-8"></i></a>
+                            </li>
+                            <li class="trade-list-item mt-16">
+                                <p class="d-flex align-items-center text-small gap-4">X Routing <i
+                                        class="icon-question fs-16 text-secondary"></i></p>
+                                <a href="#" class="d-flex gap-4 align-items-center">
+                                    <img src="images/coin/coin-3.jpg" alt="img" class="img">
+                                    <i class="icon-select-right"></i>
+                                    <img src="images/coin/coin-5.jpg" alt="img" class="img">
+                                    <i class="icon-arr-right fs-8"></i>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+    <!-- history -->
+    <div class="modal fade modalRight" id="historyModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                    <span class="left" data-bs-dismiss="modal" aria-hidden="true"><i class="icon-left-btn"></i></span>
+                    <h3>Conversions</h3>
+                    <span class="right text-white btn-filter-history"><i class="icon-funnel"></i></span>
+                </div>
+                <div class="overflow-auto pt-45 pb-16">
+                    <div class="tf-container">
+                        {% include 'users/history-conversions.html' %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- filter history -->
+    <div class="modal fade action-sheet" id="filterModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Filters</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
+                </div>
+                <div class="modal-body">
+                    <div class="text-button fw-6 text-white">Time</div>
+                    <ul class="grid-2 rcg-12-16 mt-16">
+                        <li><a href="javascript:void(0);" class="tf-btn xs line active text-secondary item-time">All</a>
+                        </li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">24 Hours</a>
+                        </li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">7 Days</a>
+                        </li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">12 Days </a>
+                        </li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">30 Days</a>
+                        </li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">3 Month</a>
+                        </li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">6 Month</a>
+                        </li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">12 Month</a>
+                        </li>
+                    </ul>
+                    <div class="text-button fw-6 text-white mt-16">Categories</div>
+                    <ul class="grid-2 rcg-12-16 mt-16">
+                        <li><a href="javascript:void(0);"
+                               class="tf-btn xs line active text-secondary item-category">All</a></li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-category">Transfer
+                            money</a></li>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-category">Receive
+                            money</a></li>
+                    </ul>
+                    <div class="mt-16 pt-16 line-t grid-2 gap-16">
+                        <a href="javascript:void(0);" class="tf-btn sm secondary" data-bs-dismiss="modal">Delete</a>
+                        <a href="javascript:void(0);" class="tf-btn sm primary" data-bs-dismiss="modal">Apply</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade action-sheet" id="coinSelectModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Base Currency</span>
+                    <span class="icon-cancel" data-bs-dismiss="modal"></span>
+                </div>
+                <ul class="mt-20 pb-16 coin-select-list">
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade action-sheet" id="quoteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
+                </div>
+                <div class="modal-body text-center">
+                    <span class="logo icon-convert text-primary" style="font-size: 80px"></span>
+                    <h3 class="mt-4">Buy with NGN</h3>
+                    <p class="mt-12 text-white text-large">A bank account will be displayed where to make this transfer and transactions are confirmed automatically</p>
+                    <div class="mt-32">
+                        <a href="javascript:void(0);" class="tf-btn sm primary d-inline-flex"  data-bs-toggle="modal" data-bs-target="#bankAmountModal" onclick="set_for_bank()">Enter Amount</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock content %}
+
+{% block script %}
+
+    <script>
+        $(function () {
+            loadPage()
+            window.myForm = {
+                'from': {'coin': 'btc'},
+                'to': {'coin': 'usdt'}
+            };
+        })
+
+
+        function loadPage() {
+            showPreloader()
+            $.ajax({
+                url: "{% url 'users:convert' %}",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'action': 'onload',
+                    'base': localStorage.getItem('base-currency')
+                },
+                success: function (data) {
+                    hidePreloader()
+                    if (data.status === "success") {
+                        fix_data(data)
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hidePreloader()
+                    notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+        function fix_data(data) {
+            const wallets = data.wallets
+            const markets = data.markets
+            const convs = data.recent_conv
+            window.wallets = wallets
+            window.markets = markets.general
+
+            populate_recent_convs(convs, 'bg-menuDark')
+            select_coin('btc', 'from')
+            select_coin('usdt', 'to')
+        }
+
+        function populate_coin_select(pos1) {
+            const pos2 = (pos1 === 'to') ? 'from' : 'to'
+            $('.coin-select-list').html('')
+            $.each(window.wallets, function (coin, bal) {
+                    let active = (window.myForm[pos1]['coin'] === coin) ? 'active' : ''
+                    $('.coin-select-list').append(
+                        `<li><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check dom-value select-coin ${active}"
+                            data-coin="${coin}"
+                            data-pos="${pos1}"
+                            >${coin.toUpperCase()} <i class="icon icon-check-circle"></i>
+                         </div></li>`
+                    )
+            })
+            $('#coinSelectModal').modal('show')
+        }
+
+        $('body').on('click', '.select-coin', function () {
+            $('.select-coin').removeClass('active')
+            $(this).addClass('active')
+            const coin = $(this).data('coin')
+            const pos = $(this).data('pos')
+            select_coin(coin, pos)
+            $('#coinSelectModal').modal('hide')
+        })
+
+        $('.from-max').click(function (){
+            $('.from-input').val(window.myForm['from']['bal'])
+        })
+
+        function select_coin(coin, pos){
+            const pos2 = (pos === 'to') ? 'from' : 'to'
+            $('.from-input').val('')
+            $('.to-input').text('-')
+            const markets = window.markets
+            const wallet = window.wallets
+            let bal = wallet[coin]
+            let name = markets[coin]['long']
+            let min = markets[coin]['min']
+            let max = markets[coin]['max']
+            $(`.${pos}-name`).text(name)
+            $(`.${pos}-bal`).text(fmtNum(bal))
+            $(`.${pos}-coin`).text(coin.toUpperCase())
+            $(`.${pos}-img`).attr('src', `${token_base_url}/${coin}.png`)
+            if(pos === 'from'){
+                $(`.${pos}-input`).attr('placeholder', `${fmtNum(min)} - ${fmtNum(max)}`)
+            }
+            window.myForm[pos]['coin'] = coin
+            window.myForm[pos]['price'] = markets[coin]['price']
+            window.myForm[pos]['min'] = min
+            window.myForm[pos]['max'] = max
+            window.myForm[pos]['bal'] = bal
+            if(coin === window.myForm[pos2]['coin']){
+                take_random_coin(pos2)
+            }
+        }
+
+        function take_random_coin(pos) {
+            let keys = Object.keys(window.wallets);
+            let coin = keys[Math.floor(Math.random() * keys.length)];
+            select_coin(coin, pos)
+        }
+
+    </script>
+
+{% endblock script %}
+
+{% block embedded_scripts %}
+    <script type="text/javascript" src="{% static 'users/js/custom/history-conversions.js' %}"></script>
+{% endblock embedded_scripts %}
+
+
+
+
+
+
+
+
+
+
