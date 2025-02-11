@@ -1,10 +1,12 @@
-function populate_recent_convs(history, bg) {
+function populate_recent_convs(history, bg, limit) {
     bg = bg || 'bg-surface'
+    limit = limit || 20
     $('.conversions-list').html('')
     $.each(history, function (index, details) {
-        if (index <= 20) {
+        if (index <= limit) {
+            const mt = (index === 0) ? '' : 'mt-8'
             $('.conversions-list').append(
-                ` <li>
+                ` <li class='${mt}'>
                        <a href="#0" class="coin-item style-1 gap-12 ${bg}">
                            <img src="${token_base_url}/${details.currency_from}.png" alt="img" class="img conv-img">
                            <i class="icon-select-right"></i>

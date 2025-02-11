@@ -17,18 +17,18 @@ class WalletView(CustomLoginRequiredMixin, View):
         self.base_currency = 'usdt'
         self.tickers = Ticker.objects.all()
         self.one_usd_in_base = None
+        self.action = ''
 
     def get(self, request):
         return render(request, 'users/wallet.html')
 
     def post(self, request):
-        base = request.POST.get('base')
-        self.base_currency = base if base != 'usd' else 'usdt'
         self.user = request.user
-        self.one_usd_in_base = 1 / crypto_markets(self.tickers)[self.base_currency]['price']
-
-        action = request.POST.get('action')
-        if action == 'onload':
+        self.action = request.POST.get('action')
+        if self.action == 'onload':
+            base = request.POST.get('base')
+            self.base_currency = base if base != 'usd' else 'usdt'
+            self.one_usd_in_base = 1 / crypto_markets(self.tickers)[self.base_currency]['price']
             return self.onload(request)
         return None
 

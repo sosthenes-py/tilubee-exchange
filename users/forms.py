@@ -1,4 +1,5 @@
 from django import forms
+from transactions.view.crypto import coins_dict
 
 
 class DepositForm(forms.Form):
@@ -36,3 +37,19 @@ class SettingsForm(forms.Form):
     action = forms.ChoiceField(choices=[
         ('add_new_bank', 'add New Bank'),
     ])
+
+
+class ConvertQuoteForm(forms.Form):
+    action2 = forms.ChoiceField(choices=[
+        ('quote', 'Quote'),
+        ('confirm', 'Confirm')
+    ], required=True)
+    from_qty = forms.FloatField(required=True)
+    from_coin = forms.ChoiceField(choices=[
+        (coin, full)
+        for coin, full in coins_dict.items()
+    ], required=True)
+    to_coin = forms.ChoiceField(choices=[
+        (coin, full)
+        for coin, full in coins_dict.items()
+    ], required=True)

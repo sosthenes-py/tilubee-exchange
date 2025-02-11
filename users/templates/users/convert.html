@@ -26,6 +26,9 @@
         .title{
             width: 100%;
         }
+
+        
+        
     </style>
 
     <div class="header-style2 fixed-top d-flex align-items-center justify-content-between bg-surface">
@@ -54,7 +57,7 @@
                                     </p>
                                 </div>
                                 <div class="coin-item style-1 gap-8 mt-20">
-                                    <img src="images/coin/coin-3.jpg" alt="img" class="img from-img">
+                                    <img src="{% static 'users/images/logo/logo.png' %}" alt="img" class="img from-img">
                                     <div class="content">
                                         <div class="title">
                                             <h4 class="mb-4">
@@ -63,7 +66,7 @@
                                                     <i class="icon-select-down"></i>
                                                 </a>
                                             </h4>
-                                            <span class="from-name">Ethereum</span>
+                                            <span class="from-name">-</span>
                                         </div>
                                         <div class="box-price text-end">
                                             <input class="mb-4 from-input inputs" value="">
@@ -85,7 +88,7 @@
                                     </span>
                                 </div>
                                 <div class="coin-item style-1 gap-8 mt-20">
-                                    <img src="images/coin/coin-5.jpg" alt="img" class="img to-img">
+                                    <img src="{% static 'users/images/logo/logo.png' %}" alt="img" class="img to-img">
                                     <div class="content">
                                         <div class="title">
                                             <h4 class="mb-4">
@@ -94,7 +97,7 @@
                                                     <i class="icon-select-down"></i>
                                                 </a>
                                             </h4>
-                                            <span class="to-name">Ethereum</span>
+                                            <span class="to-name">-</span>
                                         </div>
                                         <div class="box-price text-end">
                                             <h3 class="mb-4 to-input inputs">-</h3>
@@ -103,39 +106,38 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="javascript:void(0);" class="tf-btn lg mt-20 secondary" data-bs-toggle="modal"
-                           data-bs-target="#connectWallet">Quote</a>
+                        
+                        <a href="javascript:void(0);" class="tf-btn lg mt-20 bg-secondary" id="submit">Quote</a>
+
 
 
                         <ul class="mt-20 accent-box line-border">
                             <li class="trade-list-item">
-                                <p class="d-flex align-items-center text-small gap-4">Reference <i
-                                        class="icon-question fs-16 text-secondary"></i></p>
-                                <p class="d-flex gap-8 text-white">1 ETH = 1.876,515984 USDC <i
+                                <p class="d-flex align-items-center text-small gap-4">Reference </p>
+                                <p class="d-flex gap-8 text-white quote-ref">-<i
                                         class="icon-clockwise2 fs-16"></i></p>
                             </li>
                             <li class="trade-list-item mt-16">
                                 <p class="d-flex align-items-center text-small gap-4">Estimated network charges</p>
-                                <p class="d-flex gap-8 text-white">$3,71 (1 Minute)</p>
+                                <p class="d-flex gap-8 text-white quote-fee">-</p>
                             </li>
                             <li class="trade-list-item mt-16">
-                                <p class="d-flex align-items-center text-small gap-4">Acceptable slippage<i
-                                        class="icon-question fs-16 text-secondary"></i></p>
-                                <a href="#" class="d-flex align-items-center gap-8">1% <i
+                                <p class="d-flex align-items-center text-small gap-4">Acceptable slippage</p>
+                                <a href="#" class="d-flex align-items-center gap-8 quote-slippage">- <i
                                         class="icon-arr-right fs-8"></i></a>
                             </li>
                             <li class="trade-list-item mt-16">
-                                <p class="d-flex align-items-center text-small gap-4">X Routing <i
-                                        class="icon-question fs-16 text-secondary"></i></p>
+                                <p class="d-flex align-items-center text-small gap-4">X Routing </p>
                                 <a href="#" class="d-flex gap-4 align-items-center">
-                                    <img src="images/coin/coin-3.jpg" alt="img" class="img">
+                                    <img src="{% static 'users/images/logo/logo.png' %}" alt="img" class="img from-img">
                                     <i class="icon-select-right"></i>
-                                    <img src="images/coin/coin-5.jpg" alt="img" class="img">
+                                    <img src="{% static 'users/images/logo/logo.png' %}" alt="img" class="img to-img">
                                     <i class="icon-arr-right fs-8"></i>
                                 </a>
                             </li>
                         </ul>
 
+                        
                     </div>
                 </div>
 
@@ -220,7 +222,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span>Base Currency</span>
+                    <span class='coin-select-title'>-</span>
                     <span class="icon-cancel" data-bs-dismiss="modal"></span>
                 </div>
                 <ul class="mt-20 pb-16 coin-select-list">
@@ -232,24 +234,7 @@
     </div>
 
 
-    <div class="modal fade action-sheet" id="quoteModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
-                </div>
-                <div class="modal-body text-center">
-                    <span class="logo icon-convert text-primary" style="font-size: 80px"></span>
-                    <h3 class="mt-4">Buy with NGN</h3>
-                    <p class="mt-12 text-white text-large">A bank account will be displayed where to make this transfer and transactions are confirmed automatically</p>
-                    <div class="mt-32">
-                        <a href="javascript:void(0);" class="tf-btn sm primary d-inline-flex"  data-bs-toggle="modal" data-bs-target="#bankAmountModal" onclick="set_for_bank()">Enter Amount</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
+ 
 
 
 
@@ -270,7 +255,7 @@
         function loadPage() {
             showPreloader()
             $.ajax({
-                url: "{% url 'users:convert' %}",
+                url: convert_base_url,
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -300,7 +285,7 @@
             window.wallets = wallets
             window.markets = markets.general
 
-            populate_recent_convs(convs, 'bg-menuDark')
+            populate_recent_convs(convs, 'bg-menuDark', 10000)
             select_coin('btc', 'from')
             select_coin('usdt', 'to')
         }
@@ -310,6 +295,7 @@
             $('.coin-select-list').html('')
             $.each(window.wallets, function (coin, bal) {
                     let active = (window.myForm[pos1]['coin'] === coin) ? 'active' : ''
+                    $('.coin-select-title').text(pos1.toUpperCase())
                     $('.coin-select-list').append(
                         `<li><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check dom-value select-coin ${active}"
                             data-coin="${coin}"
@@ -319,6 +305,13 @@
                     )
             })
             $('#coinSelectModal').modal('show')
+
+            // Cancel ongoing countdown if exists
+            if(window.timer){
+                clearInterval(window.timer);
+            }
+            $('#submit').text('Quote').removeClass('confirm').addClass('quote').removeClass('bg-icon2').addClass('bg-success')
+            $('.from-input').attr('readonly', false)
         }
 
         $('body').on('click', '.select-coin', function () {
@@ -332,6 +325,27 @@
 
         $('.from-max').click(function (){
             $('.from-input').val(window.myForm['from']['bal'])
+        })
+
+        $('.from-input').keyup(function(){
+            if (check_inputs()){
+                $('#submit').removeClass('bg-secondary').addClass('bg-success').addClass('quote')
+            }else{
+                $('#submit').removeClass('bg-success').addClass('bg-secondary').removeClass('quote')
+            }
+        })
+
+        
+        $('body').on('click', '.quote', function(){
+            if(check_inputs()){
+                quote()
+            }
+        })
+
+        $('body').on('click', '.confirm', function(){
+            if(check_inputs()){
+                quote('confirm')
+            }
         })
 
         function select_coin(coin, pos){
@@ -348,6 +362,7 @@
             $(`.${pos}-bal`).text(fmtNum(bal))
             $(`.${pos}-coin`).text(coin.toUpperCase())
             $(`.${pos}-img`).attr('src', `${token_base_url}/${coin}.png`)
+
             if(pos === 'from'){
                 $(`.${pos}-input`).attr('placeholder', `${fmtNum(min)} - ${fmtNum(max)}`)
             }
@@ -365,6 +380,88 @@
             let keys = Object.keys(window.wallets);
             let coin = keys[Math.floor(Math.random() * keys.length)];
             select_coin(coin, pos)
+        }
+
+        function check_inputs(){
+            const myForm = window.myForm
+            const from_qty = $('.from-input').val()
+            if(myForm.from.coin !== '' && myForm.to.coin !== ''){
+                if(from_qty > 0 && from_qty !== ''){
+                    if(from_qty <= window.wallets[myForm.from.coin]){
+                        return true
+                    }
+                    return false
+                }
+                return false
+            }
+            return false
+        }
+
+        function quote(action2){
+            showPreloader()
+            const myForm = window.myForm
+            action2 = action2 || 'quote'
+            $.ajax({
+                url: convert_base_url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'action': 'convert',
+                    'action2': action2,
+                    'from_coin': myForm.from.coin,
+                    'to_coin': myForm.to.coin,
+                    'from_qty': $('.from-input').val()
+                },
+                success: function (data) {
+                    hidePreloader()
+                    if (data.status === "success") {
+                        if(action2 === 'quote'){
+                            $('.quote-ref').text(data.ref)
+                            $('.quote-slippage').text(data.slippage)
+                            $('.quote-fee').text(data.fee)
+                            $('.to-input').text(fmtNum(data.quote_qty))
+                            convert_countdown(10)
+                        }else{
+                            notifyAmount(data.amount, data.message, null, convert_base_url)
+                        }
+                        
+                    }else{
+                        notify('error', data.message)
+                        $('#submit').text('Quote').removeClass('confirm').addClass('quote').removeClass('bg-icon2').addClass('bg-success')
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hidePreloader()
+                    notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+
+    
+
+        function convert_countdown(seconds) {
+            $('#submit').removeClass('quote').addClass('confirm').removeClass('bg-success').addClass('bg-icon2')
+            $('.from-input').attr('readonly', true)
+            window.timer = setInterval(function () {
+                let minutes = Math.floor(seconds / 60);
+                let remainingSeconds = seconds % 60;
+
+                let timeString = `${remainingSeconds}`;
+
+                $('#submit').text(`Confirm (${timeString})`);
+
+                seconds--;
+
+                if (seconds < 0) {
+                    clearInterval(window.timer);
+                    $('#submit').text('Quote').removeClass('confirm').addClass('quote').removeClass('bg-icon2').addClass('bg-success')
+                    $('.from-input').attr('readonly', false)
+                }
+            }, 1000);
         }
 
     </script>

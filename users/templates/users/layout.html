@@ -188,6 +188,7 @@
     <script type="application/javascript">
         const main_wallets = ['ngn', 'btc', 'usdt', 'eth', 'bnb', 'trx']
         const token_base_url = '{% static 'transactions/images/tokens' %}'
+        const convert_base_url = "{% url 'users:convert' %}"
 
         function showPreloader(){
             $(".preload").fadeIn("slow");

@@ -43,7 +43,7 @@ class UserTransactions:
         return transactions
 
     def get_conversions(self):
-        conversions = Conversion.objects.filter(user=self.user).order_by('created_at')
+        conversions = Conversion.objects.filter(user=self.user).order_by('-created_at')
         history = [
             {
                 'status': tx.status,
