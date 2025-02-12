@@ -1,17 +1,19 @@
 from django.views import View
 from transactions.models import Transaction, Conversion
 from transactions.view.crypto import coins_dict, bcdiv
-from django.db.models import Count
+from django.db.models import Count, QuerySet
+from typing import Optional
 
 
 class UserTransactions:
     """
     Return all transactions made by user in a list of dictionaries
     """
-    def __init__(self, user, one_usd_in_base, base_currency):
+    def __init__(self, user=None, one_usd_in_base=None, base_currency=None, query: Optional[QuerySet]=None):
         self.user = user
         self.one_usd_in_base = one_usd_in_base
         self.base_currency = base_currency
+        self.query = query
 
     def as_list(self):
         transactions = Transaction.objects.filter(user=self.user).order_by('-created_at')
@@ -43,7 +45,10 @@ class UserTransactions:
         return transactions
 
     def get_conversions(self):
-        conversions = Conversion.objects.filter(user=self.user).order_by('-created_at')
+        if self.query:
+            conversions = self.query
+        else:
+            conversions = Conversion.objects.filter(user=self.user).order_by('-created_at')
         history = [
             {
                 'status': tx.status,

@@ -157,7 +157,7 @@
                 <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
                     <span class="left" data-bs-dismiss="modal" aria-hidden="true"><i class="icon-left-btn"></i></span>
                     <h3>Conversions</h3>
-                    <span class="right text-white btn-filter-history"><i class="icon-funnel"></i></span>
+                    <span class="right text-white btn-filter-history" ><i class="icon-funnel"></i></span>
                 </div>
                 <div class="overflow-auto pt-45 pb-16">
                     <div class="tf-container">
@@ -171,7 +171,7 @@
 
 
     <!-- filter history -->
-    <div class="modal fade action-sheet" id="filterModal">
+    <div class="modal fade action-sheet" id="filterHistory">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -181,35 +181,27 @@
                 <div class="modal-body">
                     <div class="text-button fw-6 text-white">Time</div>
                     <ul class="grid-2 rcg-12-16 mt-16">
-                        <li><a href="javascript:void(0);" class="tf-btn xs line active text-secondary item-time">All</a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line active text-secondary item-time filter-duration" data-value="0">All</a>
                         </li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">24 Hours</a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time filter-duration" data-value="1">24 Hours</a>
                         </li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">7 Days</a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time filter-duration" data-value="7">7 Days</a>
                         </li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">12 Days </a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time filter-duration" data-value="12">12 Days </a>
                         </li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">30 Days</a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time filter-duration" data-value="30">30 Days</a>
                         </li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">3 Month</a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time filter-duration" data-value="90">3 Month</a>
                         </li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">6 Month</a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time filter-duration" data-value="180">6 Month</a>
                         </li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time">12 Month</a>
+                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-time filter-duration" data-value="360">12 Month</a>
                         </li>
                     </ul>
-                    <div class="text-button fw-6 text-white mt-16">Categories</div>
-                    <ul class="grid-2 rcg-12-16 mt-16">
-                        <li><a href="javascript:void(0);"
-                               class="tf-btn xs line active text-secondary item-category">All</a></li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-category">Transfer
-                            money</a></li>
-                        <li><a href="javascript:void(0);" class="tf-btn xs line text-secondary item-category">Receive
-                            money</a></li>
-                    </ul>
+                    
                     <div class="mt-16 pt-16 line-t grid-2 gap-16">
-                        <a href="javascript:void(0);" class="tf-btn sm secondary" data-bs-dismiss="modal">Delete</a>
-                        <a href="javascript:void(0);" class="tf-btn sm primary" data-bs-dismiss="modal">Apply</a>
+                        <a href="javascript:void(0);" class="tf-btn sm secondary" data-bs-dismiss="modal">Reset</a>
+                        <a href="javascript:void(0);" class="tf-btn sm primary filter-apply" data-bs-dismiss="modal" onclick="apply_filter()">Apply</a>
                     </div>
                 </div>
             </div>
@@ -463,6 +455,37 @@
                 }
             }, 1000);
         }
+
+        function apply_filter(){
+            const duration = $('.filter-duration').each(function(){if ($(this).hasClass('active')) return $(this).data('value')})
+
+            showPreloader()
+            $.ajax({
+                url: convert_base_url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'action': 'filter',
+                    'duration': duration,
+                    'category': ''
+                },
+                success: function (data) {
+                    hidePreloader()
+                    if (data.status === "success") {
+                        populate_recent_convs(data.data, 'bg-menuDark', 10000)
+                        
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    hidePreloader()
+                    notify('error', xhr.status + ': ' + xhr.statusText)
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+        
 
     </script>
 

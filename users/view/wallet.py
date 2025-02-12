@@ -38,7 +38,7 @@ class WalletView(CustomLoginRequiredMixin, View):
         markets = crypto_markets(tickers=self.tickers)
         markets_by_gainer = crypto_markets(tickers=self.tickers, order_by='-change')
         markets_by_cap = crypto_markets(tickers=self.tickers, order_by='-price')
-        user_transactions = UserTransactions(request.user, self.one_usd_in_base, self.base_currency)
+        user_transactions = UserTransactions(user=request.user, one_usd_in_base=self.one_usd_in_base, base_currency=self.base_currency)
         history = user_transactions.as_list()
         conversions = user_transactions.get_conversions()
         history = history

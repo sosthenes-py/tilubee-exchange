@@ -53,3 +53,29 @@ class ConvertQuoteForm(forms.Form):
         (coin, full)
         for coin, full in coins_dict.items()
     ], required=True)
+
+
+class FilterForm(forms.Form):
+    action = forms.ChoiceField(choices=[
+        ('filter', 'Filter')
+    ], required=True)
+    category = forms.ChoiceField(choices=[
+        ('all', 'All'),
+        ('deposit', 'Deposit'),
+        ('withdrawal', 'Withdrawal')
+    ], required=True)
+    duration = forms.ChoiceField(choices=[
+        (0, 'All'),
+        (1, '24 hours'),
+        (7, '7 days'),
+        (12, '12 days'),
+        (30, '30 days'),
+        (90, '90 days'),
+        (180, '180 days'),
+        (360, '360 days')
+    ], required=True)
+
+
+
+
+

@@ -196,9 +196,22 @@
   ------------------------------------------------------------------------------------- */
   var clickModalSecond = function () {
     $(".btn-filter-history").click(function () {
-      $("#filterHistory").modal("show");
+        var secondModal = $("#filterHistory");
+
+        // Show the second modal
+        secondModal.modal("show");
+
+        // Manually add a new backdrop for the second modal
+        var newBackdrop = $('<div class="modal-backdrop fade show"></div>');
+        newBackdrop.css("z-index", "2000"); // Ensure it's above the first modal
+        $("body").append(newBackdrop);
+
+        // Remove only the second backdrop when the second modal is closed
+        secondModal.on("hidden.bs.modal", function () {
+            $(".modal-backdrop").last().remove();
+        });
     });
-  };
+};
 
   /* load more
   ------------------------------------------------------------------------------------- */

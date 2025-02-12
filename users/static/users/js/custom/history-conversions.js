@@ -16,9 +16,9 @@ function populate_recent_convs(history, bg, limit) {
                                    <p class="mb-4 text-danger">${fmtNum(details.qty_from)} ${details.currency_from.toUpperCase()}</p>
                                    <span class="text-success">${fmtNum(details.qty_to)} ${details.currency_to.toUpperCase()}</span>
                                </div>
-                               <div class="d-flex align-items-center gap-12">
+                               <div class="title gap-12" style='text-align: right'>
                                    <span class="text-secondary">${details.created_at}</span>
-                                   <span class="coin-btn increase">Done</span>
+                                   <span class="text-success" style='display: block'>Completed</span>
                                </div>
                            </div>
                        </a>

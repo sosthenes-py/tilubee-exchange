@@ -2,9 +2,13 @@ from django.views import View
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from users.view.wallet import WalletView
-from users.forms import ConvertQuoteForm
+from users.forms import ConvertQuoteForm, FilterForm
 from transactions.view.crypto import markets as crypto_market, bcdiv
 from transactions.models import Conversion
+import datetime as dt
+from django.db.models import Q
+from transactions.view.user_transactions import UserTransactions
+
 
 
 class ConvertView(WalletView):
@@ -24,8 +28,10 @@ class ConvertView(WalletView):
                 if getattr(self.user.wallet, from_coin) >= qf.cleaned_data['from_qty']:
                     if qf.cleaned_data['action2'] == 'quote':
                         return self.quote(quoted, from_coin, to_coin)
-                    else:
+                    elif qf.cleaned_data['action2'] == 'confirm':
                         return self.confirm(quoted, qf)
+                    elif qf.cleaned_data['action2'] == 'filter':
+                        return self.filter(request)
                 return JsonResponse({
                     'status': 'error',
                     'message': 'Invalid input'
@@ -74,5 +80,27 @@ class ConvertView(WalletView):
             'status': 'success',
             'message': 'Conversion completed',
             'amount': f'{bcdiv(quoted["qty"]):,} {to_coin.upper()}'
+        })
+    
+    def filter(self, request):
+        ff = FilterForm(request.POST)
+        if ff.is_valid():
+            duration = ff.cleaned_data['duration']
+            if duration > 0:
+                conversions = Conversion.objects.filter(user=self.user)
+            else:
+                conversions = Conversion.objects.filter(
+                    Q(created_at__gte=dt.date.today() - dt.timedelta(days=duration))
+                )
+            user_transactions = UserTransactions(user=self.user, query=conversions)
+            conversions = user_transactions.get_conversions()
+            return JsonResponse({
+                'status': 'success',
+                'data': conversions,
+            })
+
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid input'
         })
                 
