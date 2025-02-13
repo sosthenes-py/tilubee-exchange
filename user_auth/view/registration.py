@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views import View
 from user_auth.forms import RegistrationForm
 from django.http import JsonResponse
-from users.models import AppUser
+from users.models import AppUser, Notification
 import random
 from string import digits
 from users.email_sender import EmailSender
@@ -42,6 +42,8 @@ class RegistrationView(View):
             Wallet.objects.create(user=user)
 
             EmailSender(reason='registration', email=user.email, name=user.first_name, code=code).send_email()
+
+            Notification.objects.create(user=user, title='Welcome To PROJECT_NAME', body='Your account on PROJECT_NAME has been created successfully. Welcome to limitless possibilities with us.')
 
             return JsonResponse({
                 'status': 'success',

@@ -11,7 +11,7 @@ from transactions.models import Transaction
 from users.forms import WithdrawalForm
 from decimal import Decimal
 from transactions.view.crypto import markets as crypto_markets, coins_dict, bcdiv
-from users.models import UserBankAccount
+from users.models import UserBankAccount, Notification
 
 
 class WithdrawalView(View):
@@ -56,6 +56,8 @@ class WithdrawalView(View):
                     setattr(self.user.wallet, d['currency'], d['diff'])  # set new balance for wallet
                     self.user.wallet.save()
                     Transaction.objects.create(user=self.user, currency=d['currency'], qty=d['qty'], address=d['address'], transaction_type='withdrawal', medium=action, reference=d['platform'])
+
+                    Notification.objects.create(user=self.user, title='Withdrawal Has Been Created', body=f'You have initiated a {action.upper()} withdrawal of {d["qty"]:,} {d["currency"].upper()}, which is being processed.')
 
                     return self.prepared_response(action, d)
             return JsonResponse(d)

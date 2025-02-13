@@ -8,6 +8,8 @@ from transactions.view.crypto import markets as crypto_markets, bcdiv
 from transactions.models import Ticker, Transaction
 from transactions.view.user_transactions import UserTransactions
 from users.models import UserBankAccount
+from django.db.models import CharField
+from django.db.models.functions import Cast
 
 
 class WalletView(CustomLoginRequiredMixin, View):
@@ -20,7 +22,7 @@ class WalletView(CustomLoginRequiredMixin, View):
         self.action = ''
 
     def get(self, request):
-        return render(request, 'users/wallet.html')
+        return render(request, 'users/wallet.html', {'page': 'home'})
 
     def post(self, request):
         self.user = request.user
@@ -44,6 +46,9 @@ class WalletView(CustomLoginRequiredMixin, View):
         history = history
         recent_conv = conversions[-20:] if conversions else []
         user_banks = UserBankAccount.objects.filter(user=self.user).order_by('-created_at').values()
+        notifications = list(self.user.notifications.order_by('-created_at').values())
+        for notif in notifications:
+            notif['created_at'] = f'{notif["created_at"]:%m-%d %H:%M}'
         return JsonResponse({
             'status': 'success',
             'total_balance': total_balance,
@@ -53,6 +58,7 @@ class WalletView(CustomLoginRequiredMixin, View):
             'recent_conv': recent_conv,
             'history': history,
             'user_banks': list(user_banks),
+            'notifications': notifications,
             'markets': {
                 'general': markets,
                 'gainer': markets_by_gainer,

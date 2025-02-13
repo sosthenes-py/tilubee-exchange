@@ -56,6 +56,13 @@
         #historyModal {
             z-index: 2000;
         }
+
+        #infoModal .modal-dialog {
+            margin-top: 30vh; /* Adjust this value as needed */
+        }
+        .noti-item{
+            min-width: 100%
+        }
     </style>
 </head>
 
@@ -83,6 +90,19 @@
                  <a href="#" class="line-r text-center text-button fw-6 p-10 text-secondary btn-hide-modal confirm-cancel" data-bs-dismiss="modal" >Cancels in <span id='confirm-cd'></span></a>
                  <a href="#" class="text-center text-button fw-6 p-10 text-primary btn-hide-modal confirm-proceed"> Proceed</a>
               </a>
+              </div>
+           </div>
+        </div>
+    </div>
+
+
+
+    <!-- Info popup -->
+    <div class="modal fade modalCenter" id="infoModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+           <div class="modal-content modal-sm">
+              <div class="p-16 text-center">
+                  <p class="text-large info-message text-light"></p>
               </div>
            </div>
         </div>
@@ -145,20 +165,20 @@
 
      <div class="menubar-footer footer-fixed">
         <ul class="inner-bar">
-            <li class="active">
+            <li class="{% if page == 'home' %}active{% endif %}">
                 <a href="{% url 'users:wallet' %}">
                     <i class="icon icon-home2"></i>
                     Home
                 </a>
             </li>
-            <li>
+            <li class="{% if page == 'convert' %}active{% endif %}">
                 <a href="{% url 'users:convert' %}">
                     <i class="icon icon-exchange"></i>
                     Convert
                 </a>
             </li>
             <li>
-                <a href="earn.html">
+                <a href="#0" onclick="info('Coming soon...')">
                     <i class="icon icon-earn"></i>
                     Earn
                 </a>
@@ -388,7 +408,19 @@
             })
             $('.confirm-proceed').click(function(){
                 $('#confirmModal').modal('hide')
+                if(typeof callback === 'function')
                 callback()
+            })
+        }
+
+        function info(message, bd){
+            $('.info-message').text(message)
+            $('#infoModal').modal('show')
+            if(bd !== null && bd === false){
+                $('.modal-backdrop').remove();
+            }
+            countdown(1, '0', null, function(){
+                $('#infoModal').modal('hide')
             })
         }
 

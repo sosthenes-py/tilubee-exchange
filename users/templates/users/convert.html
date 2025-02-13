@@ -33,7 +33,7 @@
 
     <div class="header-style2 fixed-top d-flex align-items-center justify-content-between bg-surface">
         <h3 class="d-flex gap-12">
-            <a href="#0" class="text-secondary">Convert</a>
+            <a href="#0" class="text-success">Convert</a>
         </h3>
         <i class="icon-history text-white" style="font-size: 1.8em" data-bs-toggle="modal"
            data-bs-target="#historyModal"></i>
@@ -200,7 +200,7 @@
                     </ul>
                     
                     <div class="mt-16 pt-16 line-t grid-2 gap-16">
-                        <a href="javascript:void(0);" class="tf-btn sm secondary" data-bs-dismiss="modal">Reset</a>
+                        <a href="javascript:void(0);" class="tf-btn sm secondary" data-bs-dismiss="modal" onclick="apply_filter('0')">Reset</a>
                         <a href="javascript:void(0);" class="tf-btn sm primary filter-apply" data-bs-dismiss="modal" onclick="apply_filter()">Apply</a>
                     </div>
                 </div>
@@ -286,13 +286,20 @@
             const pos2 = (pos1 === 'to') ? 'from' : 'to'
             $('.coin-select-list').html('')
             $.each(window.wallets, function (coin, bal) {
-                    let active = (window.myForm[pos1]['coin'] === coin) ? 'active' : ''
+                    let active; let show_bal;
+                    if (window.myForm[pos1]['coin'] === coin){
+                        active = 'active'
+                        show_bal = '<i class="icon icon-check-circle"></i>'
+                    }else{
+                        active = ''
+                        show_bal = `<span class="text-muted font-monospace">${fmtNum(bal)}</span>`
+                    }
                     $('.coin-select-title').text(pos1.toUpperCase())
                     $('.coin-select-list').append(
                         `<li><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check dom-value select-coin ${active}"
                             data-coin="${coin}"
                             data-pos="${pos1}"
-                            >${coin.toUpperCase()} <i class="icon icon-check-circle"></i>
+                            >${coin.toUpperCase()} ${show_bal}
                          </div></li>`
                     )
             })
@@ -317,6 +324,11 @@
 
         $('.from-max').click(function (){
             $('.from-input').val(window.myForm['from']['bal'])
+            if (check_inputs()){
+                $('#submit').removeClass('bg-secondary').addClass('bg-success').addClass('quote')
+            }else{
+                $('#submit').removeClass('bg-success').addClass('bg-secondary').removeClass('quote')
+            }
         })
 
         $('.from-input').keyup(function(){
@@ -412,7 +424,8 @@
                             $('.quote-slippage').text(data.slippage)
                             $('.quote-fee').text(data.fee)
                             $('.to-input').text(fmtNum(data.quote_qty))
-                            convert_countdown(10)
+                            convert_countdown(12)
+                            info('Please confirm your quote', false)
                         }else{
                             notifyAmount(data.amount, data.message, null, convert_base_url)
                         }
@@ -456,8 +469,8 @@
             }, 1000);
         }
 
-        function apply_filter(){
-            const duration = $('.filter-duration').each(function(){if ($(this).hasClass('active')) return $(this).data('value')})
+        function apply_filter(duration){
+            duration = duration || $('.filter-duration.active').data('value');
 
             showPreloader()
             $.ajax({
@@ -467,7 +480,7 @@
                 data: {
                     'action': 'filter',
                     'duration': duration,
-                    'category': ''
+                    'category': 'all'
                 },
                 success: function (data) {
                     hidePreloader()

@@ -37,3 +37,10 @@ class UserBankAccount(models.Model):
     name = models.CharField(max_length=20, default='')
     created_at = models.DateTimeField(default=timezone.now)
 
+
+class Notification(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='notifications')
+    title = models.CharField(max_length=100, default='')
+    body = models.TextField(default='', max_length=10000)
+    created_at = models.DateTimeField(default=timezone.now)
+

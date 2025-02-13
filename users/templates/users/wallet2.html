@@ -192,8 +192,58 @@
                 </div>
                 <div class="overflow-auto pt-45 pb-16">
                     <div class="tf-container">
-                        <ul class="mt-12 notification-list">
-
+                        <ul class="mt-12">
+                            <li>
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt d-flex">
+                                        <p class="text-button fw-6">Cointex to just tick size and trading amount precision of spots/margins and perpetual swaps</p>
+                                        <i class="dot-lg bg-primary"></i>
+                                    </div>
+                                    <span class="d-block mt-8">5 minutes ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt d-flex">
+                                        <p class="text-button fw-6">Cointex to adjust components of several indexes</p>
+                                        <i class="dot-lg bg-primary"></i>
+                                    </div>
+                                    <span class="d-block mt-8">5 minutes ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt d-flex">
+                                        <p class="text-button fw-6">Cointex to just tick size and trading amount precision of spots/margins and perpetual swaps</p>
+                                        <i class="dot-lg bg-primary"></i>
+                                    </div>
+                                    <span class="d-block mt-8">5 minutes ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt">
+                                        <p class="text-button fw-6 text-secondary">Cointex to adjust components of several indexes</p>
+                                    </div>
+                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt">
+                                        <p class="text-button fw-6 text-secondary">Cryptex wallet uses Achain network service</p>
+                                    </div>
+                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
+                                </a>
+                            </li>
+                            <li class="mt-12">
+                                <a href="#" class="noti-item bg-menuDark">
+                                    <div class="pb-8 line-bt">
+                                        <p class="text-button fw-6 text-secondary">Cointex to adjust components of several indexes</p>
+                                    </div>
+                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -357,7 +407,6 @@
             populate_market_tabs(markets)
             populate_recent_history(history)
             populate_recent_convs(convs)
-            populate_notifications(data.notifications)
         }
 
         function populate_market_data(markets) {
@@ -486,24 +535,9 @@
             
         })
 
-        function populate_notifications(notes){
-            $('.notification-list').html('')
-                $.each(notes, function (index, d) {
-                        const mt = (index === 0) ? '' : 'mt-12'
-                        $('.notification-list').append(
-                            ` <li class='${mt}'>
-                                   <a href="#" class="noti-item bg-menuDark">
-                                        <div class="pb-8 line-bt">
-                                        <h5 class="text-button"><i class="dot-lg bg-primary"></i> ${d['title']}</h5>
-                                            <p class="text-secondary">${d.body}</p>
-                                        </div>
-                                        <span class="d-block mt-8">${d.created_at}</span>
-                                    </a>
-                               </li>`
-                        )
+        $('.p2p').click(function (){
 
-                })
-        }
+        })
 
     </script>
 

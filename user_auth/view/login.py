@@ -5,7 +5,7 @@ from user_auth.forms import LoginForm
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 import uuid
-from users.models import Session, AppUser
+from users.models import Session, AppUser, Notification
 from django.contrib.auth.hashers import check_password
 
 
@@ -52,6 +52,9 @@ class LoginView(View):
                 if check_password(form.cleaned_data['password'], user.password):
                     login(request, user)
                     update_session(request)
+
+                    Notification.objects.create(user=user, title='Login Attempt', body=f'There was a successful login action on your account from the IP: {get_client_ip(request)}')
+
                     return JsonResponse({
                         'status': 'success',
                         'message': f'Welcome back, {user.first_name}',

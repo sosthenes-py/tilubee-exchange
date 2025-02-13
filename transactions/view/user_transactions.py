@@ -46,7 +46,7 @@ class UserTransactions:
 
     def get_conversions(self):
         if self.query:
-            conversions = self.query
+            conversions = self.query.order_by('-created_at')
         else:
             conversions = Conversion.objects.filter(user=self.user).order_by('-created_at')
         history = [

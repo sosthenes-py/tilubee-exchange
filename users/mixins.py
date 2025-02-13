@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.contrib.auth import logout
+from users.models import Notification
 
 
 class CustomLoginRequiredMixin(LoginRequiredMixin):
@@ -18,6 +19,9 @@ class CustomLoginRequiredMixin(LoginRequiredMixin):
             #     logout(request)
             #     url = reverse('user_auth:login')
             #     query_param = "?flash=duplicate"
+            #
+            #     Notification.objects.create(user=request.user, title='Duplicate Session Detected', body='The system has detected a duplicate session on your account. For security reasons, previous device has been logged out automatically.')
+            #
             #     return redirect(f"{url}{query_param}")
             if not request.user.email_verification.is_verified:
                 return redirect('user_auth:verify_email')

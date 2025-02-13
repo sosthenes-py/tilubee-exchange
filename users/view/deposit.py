@@ -8,6 +8,7 @@ from transactions.view.crypto import create_user_wallet
 from django.db.models import Q
 from transactions.models import Transaction
 from users.forms import DepositForm
+from users.models import Notification
 
 
 class DepositView(View):
@@ -80,15 +81,16 @@ class DepositView(View):
         })
 
     def create_deposit(self, action, form):
-        print(form.cleaned_data)
         if action in ('crypto', 'uid', 'bank'):
             currency = form.cleaned_data.get('currency')
             qty = form.cleaned_data.get('qty')
             reference = form.cleaned_data.get('ref') or form.cleaned_data.get('platform')
             address = form.cleaned_data.get('uid') or form.cleaned_data.get('wallet')
             if currency != '' and qty != '' and reference != '' and address != '':
-                Transaction.objects.create(user=self.user, currency=currency, qty=qty, reference=reference,
-                                           address=address, transaction_type='deposit', medium=action)
+                Transaction.objects.create(user=self.user, currency=currency, qty=qty, reference=reference, address=address, transaction_type='deposit', medium=action)
+                if action in ('uid', 'bank'):
+                    Notification.objects.create(user=self.user, title='Deposit Confirmation in Progress', body=f'You have initiated a deposit of {qty:,} {currency.upper()}, which is in the process of being confirmed')
+
                 return JsonResponse({
                     'status': 'success',
                     'message': 'Your account will be updated as soon as your deposit is confirmed'
