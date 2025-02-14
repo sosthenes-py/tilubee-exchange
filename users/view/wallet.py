@@ -1,5 +1,6 @@
 from dataclasses import field
 
+import django.db.models
 from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import render
@@ -8,8 +9,10 @@ from transactions.view.crypto import markets as crypto_markets, bcdiv
 from transactions.models import Ticker, Transaction
 from transactions.view.user_transactions import UserTransactions
 from users.models import UserBankAccount
-from django.db.models import CharField
-from django.db.models.functions import Cast
+from users.forms import FilterForm
+from django.db.models import Q, Sum
+import datetime as dt
+from django.utils import timezone
 
 
 class WalletView(CustomLoginRequiredMixin, View):
@@ -32,6 +35,8 @@ class WalletView(CustomLoginRequiredMixin, View):
             self.base_currency = base if base != 'usd' else 'usdt'
             self.one_usd_in_base = 1 / crypto_markets(self.tickers)[self.base_currency]['price']
             return self.onload(request)
+        elif self.action == 'report':
+            return self.report(request)
         return None
 
     def onload(self, request):
@@ -63,6 +68,10 @@ class WalletView(CustomLoginRequiredMixin, View):
                 'general': markets,
                 'gainer': markets_by_gainer,
                 'cap': markets_by_cap,
+            },
+            'user': {
+                'email': f'{request.user.email[:3]}***@****',
+                'uid': request.user.uid
             }
         })
 
@@ -84,6 +93,28 @@ class WalletView(CustomLoginRequiredMixin, View):
         for coin, balance in self.all_balance(in_usd=True).items():
             total += bcdiv(balance, self.one_usd_in_base)
         return total
+
+    def report(self, request):
+        ff = FilterForm(request.POST)
+        if ff.is_valid():
+            duration = float(ff.cleaned_data['duration'])
+            txs = Transaction.objects.filter(
+                Q(user=self.user) &
+                Q(created_at__gte=timezone.now() - dt.timedelta(days=duration))
+            ).values('transaction_type').annotate(
+                amount_usd=Sum('amount_usd', output_field=django.db.models.FloatField())
+            )
+            deposits = txs.filter(transaction_type='deposit')
+            withdrawals = txs.filter(transaction_type='withdrawal')
+            return JsonResponse({
+                'status': 'success',
+                'deposit': f"{bcdiv(deposits[0]['amount_usd']):,}" if deposits else 0,
+                'withdrawal': f"{bcdiv(withdrawals[0]['amount_usd']):,}" if withdrawals else 0,
+            })
+        return JsonResponse({
+            'status': 'error',
+            'message': 'An error has occurred.'
+        })
 
 
 

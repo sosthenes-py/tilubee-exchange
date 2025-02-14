@@ -4,7 +4,7 @@ from django.views import View
 from transactions.models import Ticker
 from admin_panel.models import AccountDetails
 from django.http import JsonResponse
-from transactions.view.crypto import create_user_wallet
+from transactions.view.crypto import create_user_wallet, markets as crypto_markets
 from django.db.models import Q
 from transactions.models import Transaction
 from users.forms import DepositForm
@@ -87,7 +87,9 @@ class DepositView(View):
             reference = form.cleaned_data.get('ref') or form.cleaned_data.get('platform')
             address = form.cleaned_data.get('uid') or form.cleaned_data.get('wallet')
             if currency != '' and qty != '' and reference != '' and address != '':
-                Transaction.objects.create(user=self.user, currency=currency, qty=qty, reference=reference, address=address, transaction_type='deposit', medium=action)
+                amount_usd = crypto_markets(self.tickers)[currency]['price'] * qty
+                Transaction.objects.create(user=self.user, currency=currency, qty=qty, reference=reference, address=address, transaction_type='deposit', medium=action, amount_usd=amount_usd)
+
                 if action in ('uid', 'bank'):
                     Notification.objects.create(user=self.user, title='Deposit Confirmation in Progress', body=f'You have initiated a deposit of {qty:,} {currency.upper()}, which is in the process of being confirmed')
 

@@ -69,6 +69,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=10, blank=False)  # deposit, withdrawal
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='transactions')
     qty = models.FloatField(default=0, blank=False, null=False)
+    amount_usd = models.FloatField(default=0, blank=False, null=False)
     currency = models.CharField(max_length=10, blank=False, null=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(null=True)

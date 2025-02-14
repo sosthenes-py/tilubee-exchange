@@ -4,6 +4,7 @@ from users.view.convert import ConvertView
 from users.view.deposit import DepositView
 from users.view.withdrawal import WithdrawalView
 from users.view.wallet import WalletView
+from users.view.wallet2 import Wallet2View
 from users.view.settings import SettingsView
 
 
@@ -11,6 +12,7 @@ app_name = 'users'
 
 urlpatterns = [
     path('', WalletView.as_view(), name='wallet'),
+    path('wallet/', Wallet2View.as_view(), name='wallet2'),
     path('deposit/', DepositView.as_view(), name='deposit'),
     path('withdrawal/', WithdrawalView.as_view(), name='withdrawal'),
     path('settings/', SettingsView.as_view(), name='settings'),

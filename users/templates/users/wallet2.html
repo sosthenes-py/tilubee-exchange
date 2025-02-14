@@ -6,19 +6,16 @@
 
 
     <div class="header-style2 fixed-top bg-menuDark">
-        <div class="d-flex justify-content-between align-items-center gap-14">
-            <div class="box-account style-2">
-                <a href="user-info.html">
-                    <img src="images/avt/avt2.jpg" alt="img" class="avt">
-                </a>
-                <div class="search-box box-input-field style-2">
-                    <a href="home-search.html" class="icon-search"></a>
-                    <input type="text" placeholder="Looking for crypto" required class="clear-ip">
-                    <i class="icon-close"></i>
+        <div class="d-flex justify-content-between align-items-center">
+            <a class="box-account" href="user-info.html">
+                <img src="images/avt/avt2.jpg" alt="img" class="avt">
+                <div class="info">
+                    <p class="text-xsmall text-secondary user-uid"></p>
+                    <h5 class="mt-4 user-email"></h5>
+
                 </div>
-            </div>
+            </a>
             <div class="d-flex align-items-center gap-8">
-                <a href="list-blog.html" class="icon-gift"></a>
                 <a href="#notification" class="icon-noti box-noti" data-bs-toggle="modal"></a>
             </div>
         </div>
@@ -29,7 +26,7 @@
     <div class="pt-68 pb-80">
         <div class="bg-menuDark tf-container">
             <div class="pt-12 pb-12 mt-4">
-                <h5><span class="text-primary">My Wallet</span> - <a href="#" class="choose-account" data-bs-toggle="modal" data-bs-target="#accountWallet"><span class="dom-text base-currency">USD </span> &nbsp;<i class="icon-select-down"></i></a> </h5>
+                <h5><span class="text-primary">Total Assets</span> - <a href="#" class="choose-account" data-bs-toggle="modal" data-bs-target="#accountWallet"><span class="dom-text base-currency">USD </span> &nbsp;<i class="icon-select-down"></i></a> </h5>
                 <h1 class="mt-16"><a href="#"><span class="total-balance">0.00</span> <span class="text-small base-currency">USD</span></a></h1>
                 <ul class="mt-16 grid-4 m--16">
                     <li>
@@ -62,97 +59,59 @@
 
 
 
-{#        MAIN MARKETS#}
-
-
-
-        <div class="bg-menuDark tf-container">
-            <div class="pt-12 pb-12 mt-4">
-                <h5>Market</h5>
-
-                <div class="swiper tf-swiper swiper-wrapper-r mt-16" data-space-between="16" data-preview="2.8" data-tablet="2.8" data-desktop="3">
-                    <div class="swiper-wrapper market-data">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
 
 
 
         <div class="bg-menuDark tf-container">
             <div class="pt-12 pb-12 mt-4">
                 <div class="wrap-filter-swiper">
-                    <h5><a href="#0" class="cryptex-rating"><i class="icon-star"></i>Market Rating</a></h5>
-                    <!-- <div class="swiper swiper-wrapper-r market-swiper" data-space-between="20" data-preview="auto"> -->
                         <div class="swiper-wrapper1 menu-tab-v3 mt-12" role="tablist">
-                            <div class="swiper-slide1 nav-link active" data-bs-toggle="tab" data-bs-target="#market_by_general"  role="tab" aria-controls="favorites" aria-selected="true">
-                                All Markets
+                            <div class="swiper-slide1 nav-link active" data-bs-toggle="tab" data-bs-target="#market_by_general"  role="tab" aria-controls="favorites" aria-selected="true" style="font-size: 18px">
+                                Account
                             </div>
-                            <div class="swiper-slide1 nav-link" data-bs-toggle="tab" data-bs-target="#market_by_gainer" role="tab" aria-controls="top" aria-selected="false">
-                                Top Gainers
+                            <div class="swiper-slide1 nav-link h5" data-bs-toggle="tab" data-bs-target="#assets" role="tab" aria-controls="top" aria-selected="false" style="font-size: 18px">
+                                Assets
                             </div>
-                            <div class="swiper-slide1 nav-link" data-bs-toggle="tab" data-bs-target="#market_by_cap" role="tab" aria-controls="popular" aria-selected="false">
-                                High Cap
-                            </div>
-                            <div class="swiper-slide1 nav-link" data-bs-toggle="tab" data-bs-target="#market_by_favorites" role="tab" aria-controls="popular" aria-selected="false">
-                                Favorites
-                            </div>
+
                         </div>
                     <!-- </div> -->
                 </div>
-                <div class="tab-content mt-8" style="min-height: 40vh">
+                <div class="tab-content mt-8" style="min-height: 60vh">
                     <div class="tab-pane fade show active" id="market_by_general" role="tabpanel">
-                        <div class="d-flex justify-content-between">
-                            Name
-                            <p class="d-flex gap-8">
-                                <span>Last price</span>
-                                <span>Change</span>
-                            </p>
-                        </div>
-                        <ul class="mt-16 market_by_general_list">
-
-
+                        <ul class="mt-16 d-flex gap-16">
+                            <li class="flex-1">
+                                <a href="#" class="accent-box-v6 bg-surface d-flex justify-content-between align-items-center">
+                                    <div class="content">
+                                        <p style="font-size: 17px">Funding</p>
+                                        <span class="d-inline-block mt-8 bg-secondary p-1 rounded" style="font-size: 16px">20.32 USD</span>
+                                    </div>
+                                    <span class="icon-arr-right fs-12 report-show"></span>
+                                </a>
+                            </li>
+                            <li class="flex-1">
+                                <a href="#" class="accent-box-v6 bg-surface d-flex justify-content-between align-items-center">
+                                    <div class="content">
+                                        <p style="font-size: 17px">Locked</p>
+                                        <span class="d-inline-block mt-8 bg-danger p-1 rounded" style="font-size: 16px">0.00 USD</span>
+                                    </div>
+                                    <span class="icon-arr-right fs-12" onclick="info('No locked funds')"></span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
-                    <div class="tab-pane fade" id="market_by_gainer" role="tabpanel">
-                        <div class="d-flex justify-content-between">
-                            Name
-                            <p class="d-flex gap-8">
-                                <span>Last price</span>
-                                <span>Change</span>
-                            </p>
-                        </div>
-                        <ul class="mt-16 market_by_gainer_list">
 
-                        </ul>
-                    </div>
-                    <div class="tab-pane fade" id="market_by_cap" role="tabpanel">
+                    <div class="tab-pane fade" id="assets" role="tabpanel">
                         <div class="d-flex justify-content-between">
-                            Name
+                            Currency
                             <p class="d-flex gap-8">
-                                <span>Last price</span>
-                                <span>Change</span>
+                                <span>Balance</span>
                             </p>
                         </div>
-                        <ul class="mt-16 market_by_cap_list">
+                        <ul class="mt-16 assets_list">
 
                         </ul>
                     </div>
 
-                     <div class="tab-pane fade" id="market_by_favorite" role="tabpanel">
-                        <div class="d-flex justify-content-between">
-                            Name
-                            <p class="d-flex gap-8">
-                                <span>Last price</span>
-                                <span>Change</span>
-                            </p>
-                        </div>
-                        <ul class="mt-16">
-
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -192,58 +151,8 @@
                 </div>
                 <div class="overflow-auto pt-45 pb-16">
                     <div class="tf-container">
-                        <ul class="mt-12">
-                            <li>
-                                <a href="#" class="noti-item bg-menuDark">
-                                    <div class="pb-8 line-bt d-flex">
-                                        <p class="text-button fw-6">Cointex to just tick size and trading amount precision of spots/margins and perpetual swaps</p>
-                                        <i class="dot-lg bg-primary"></i>
-                                    </div>
-                                    <span class="d-block mt-8">5 minutes ago</span>
-                                </a>
-                            </li>
-                            <li class="mt-12">
-                                <a href="#" class="noti-item bg-menuDark">
-                                    <div class="pb-8 line-bt d-flex">
-                                        <p class="text-button fw-6">Cointex to adjust components of several indexes</p>
-                                        <i class="dot-lg bg-primary"></i>
-                                    </div>
-                                    <span class="d-block mt-8">5 minutes ago</span>
-                                </a>
-                            </li>
-                            <li class="mt-12">
-                                <a href="#" class="noti-item bg-menuDark">
-                                    <div class="pb-8 line-bt d-flex">
-                                        <p class="text-button fw-6">Cointex to just tick size and trading amount precision of spots/margins and perpetual swaps</p>
-                                        <i class="dot-lg bg-primary"></i>
-                                    </div>
-                                    <span class="d-block mt-8">5 minutes ago</span>
-                                </a>
-                            </li>
-                            <li class="mt-12">
-                                <a href="#" class="noti-item bg-menuDark">
-                                    <div class="pb-8 line-bt">
-                                        <p class="text-button fw-6 text-secondary">Cointex to adjust components of several indexes</p>
-                                    </div>
-                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
-                                </a>
-                            </li>
-                            <li class="mt-12">
-                                <a href="#" class="noti-item bg-menuDark">
-                                    <div class="pb-8 line-bt">
-                                        <p class="text-button fw-6 text-secondary">Cryptex wallet uses Achain network service</p>
-                                    </div>
-                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
-                                </a>
-                            </li>
-                            <li class="mt-12">
-                                <a href="#" class="noti-item bg-menuDark">
-                                    <div class="pb-8 line-bt">
-                                        <p class="text-button fw-6 text-secondary">Cointex to adjust components of several indexes</p>
-                                    </div>
-                                    <span class="d-block mt-8 text-secondary">1 day ago</span>
-                                </a>
-                            </li>
+                        <ul class="mt-12 notification-list">
+
                         </ul>
                     </div>
                 </div>
@@ -310,6 +219,90 @@
 
 
 
+
+    <!--Report detail  -->
+    <div class="modal fade action-sheet" id="reportModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="box-detail-chart">
+                    <div class="top">
+                        <h3 class="d-flex align-items-center gap-8">Activity Report <i class="icon-clockwise2 fs-16 text-secondary"></i></h3>
+                        <h2 class="mt-4 report-deposit">$0.00</h2>
+                    </div>
+                    <div class="content">
+                        <div class="tab-content mt-8 mb-16">
+                            <div class="tab-pane fade" id="1h" role="tabpanel">
+                                <div class="area-chart-1"></div>
+                            </div>
+                            <div class="tab-pane fade show active" id="1d" role="tabpanel">
+                                <div class="area-chart-2"></div>
+                            </div>
+                            <div class="tab-pane fade" id="1w" role="tabpanel">
+                                <div class="area-chart-3"></div>
+                            </div>
+                            <div class="tab-pane fade" id="1m" role="tabpanel">
+                                <div class="area-chart-4"></div>
+                            </div>
+                            <div class="tab-pane fade" id="6m" role="tabpanel">
+                                <div class="area-chart-5"></div>
+                            </div>
+                            <div class="tab-pane fade" id="1y" role="tabpanel">
+                                <div class="area-chart-6"></div>
+                            </div>
+                        </div>
+                        <ul class="tab-time" role="tablist">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link report-duration" data-value="0.04167" data-bs-toggle="tab" data-bs-target="#1h"  role="tab" aria-controls="1h" aria-selected="false">1H</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a href="#" class="nav-link report-duration active"  data-value="1" data-bs-toggle="tab" data-bs-target="#1d" role="tab" aria-controls="1d" aria-selected="true">1D</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link report-duration" data-value="7" data-bs-toggle="tab" data-bs-target="#1w" role="tab" aria-controls="1w" aria-selected="false">1W</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link report-duration" data-value="30" data-bs-toggle="tab" data-bs-target="#1m" role="tab" aria-controls="1m" aria-selected="false">1M</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link report-duration" data-value="180" data-bs-toggle="tab" data-bs-target="#6m" role="tab" aria-controls="6m" aria-selected="false">6M</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link report-duration" data-value="360" data-bs-toggle="tab" data-bs-target="#1y" role="tab" aria-controls="1y" aria-selected="false">1Y</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom">
+                        <h6 class="text-button">Activity Info</h6>
+                        <ul class="mt-16 d-flex gap-16">
+                            <li class="flex-1">
+                                <a href="#" class="accent-box-v6 bg-surface d-flex justify-content-between align-items-center">
+                                    <div class="content">
+                                        <p style="font-size: 17px">Deposit</p>
+                                        <span class="d-inline-block mt-8 bg-success p-1 rounded report-deposit" style="font-size: 16px">$0.00</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="flex-1">
+                                <a href="#" class="accent-box-v6 bg-surface d-flex justify-content-between align-items-center">
+                                    <div class="content">
+                                        <p style="font-size: 17px">Withdrawal</p>
+                                        <span class="d-inline-block mt-8 bg-danger p-1 rounded report-withdrawal" style="font-size: 16px">$0.00</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
     {% include 'users/deposit.html' %}
     {% include 'users/withdrawal.html' %}
     {% include 'users/otp.html' %}
@@ -322,40 +315,8 @@
     <script>
         $(function (){
             loadPage()
-            start_market_slider()
         })
 
-        function start_market_slider(){
-            var direction = 1; // 1 for forward, -1 for backward
-            var swiper = new Swiper(".tf-swiper", {
-                slidesPerView: 2.8,
-                spaceBetween: 16,
-                speed: 800,  // Adjust speed for smooth effect
-                autoplay: {
-                    delay: 2000,  // Delay before auto-sliding
-                    disableOnInteraction: false,
-                },
-                loop: false, // No infinite loop (to allow back-and-forth)
-                allowTouchMove: true, // Users can still swipe manually
-                breakpoints: {
-                    768: { slidesPerView: 2.8 },
-                    1024: { slidesPerView: 3 },
-                }
-            });
-
-            function autoSlide() {
-                if (swiper.isEnd) {
-                    direction = -1; // Reverse direction at last slide
-                } else if (swiper.isBeginning) {
-                    direction = 1; // Forward direction at first slide
-                }
-
-                swiper.slideTo(swiper.activeIndex + direction); // Move in correct direction
-            }
-
-            // Run autoSlide every 2 seconds
-            setInterval(autoSlide, 2000);
-        }
 
         function loadPage(){
             showPreloader()
@@ -389,6 +350,8 @@
             const history = data.history
             const convs = data.recent_conv
             $('.total-balance').text(fmtNum(data.total_balance))
+            $('.user-email').text(data.user.email)
+            $('.user-uid').text(data.user.uid)
             window.wallets = wallets
             window.markets = markets.general
             window.user_banks = data.user_banks
@@ -404,9 +367,10 @@
                 }
             })
             populate_market_data(markets.general)
-            populate_market_tabs(markets)
+            populate_assets(wallets)
             populate_recent_history(history)
             populate_recent_convs(convs)
+            populate_notifications(data.notifications)
         }
 
         function populate_market_data(markets) {
@@ -419,7 +383,7 @@
                 let display = ($.inArray(coin, main_wallets) !== -1) ? 'block' : 'none'
                 if($.inArray(coin, main_wallets) !== -1){
                     count ++;
-                    
+
                 }
                 $('.market-data').append(
                     ` <div class="swiper-slide d-${display}">
@@ -448,41 +412,32 @@
             })
         }
 
-        function populate_market_tabs(markets) {
-            let market_obj = {
-                'market_by_general_list': markets.general,
-                'market_by_gainer_list': markets.gainer,
-                'market_by_cap_list': markets.cap,
-            }
-            $.each(market_obj, function (elem_class, data_obj) {
-                $(`.${elem_class}`).html('')
-                $.each(data_obj, function (coin, details) {
-                    let change_dir = (details['change'] >= 0) ? 'increase' : 'decrease'
-                    let change_class = (details['change'] >= 0) ? 'success' : 'danger'
-                    let display = ($.inArray(coin, main_wallets) !== -1) ? 'block' : 'none'
-                    if ($.inArray(coin, main_wallets) !== -1) {
-                    }
-                    $(`.${elem_class}`).append(
-                        ` <li class="mt-16">
-                                <a href="#0" class="coin-item style-2 gap-12">
-                                    <img src="{% static 'transactions/images/tokens' %}/${coin}.png" alt="img" class="img">
-                                    <div class="content">
-                                        <div class="title">
-                                            <p class="mb-4 text-button">${coin.toUpperCase()}</p>
-                                            <span class="text-secondary">${details.long}</span>
+        function populate_assets(wallets) {
+            $(`.assets_list`).html('')
+                $.each(wallets, function (coin, bal) {
+                    let details = window.markets[coin]
+                    if(bal > 0){
+                        $(`.assets_list`).append(
+                            ` <li class="mt-16">
+                                    <a href="#0" class="coin-item style-2 gap-12">
+                                        <img src="{% static 'transactions/images/tokens' %}/${coin}.png" alt="img" class="img">
+                                        <div class="content">
+                                            <div class="title">
+                                                <p class="mb-4 text-button">${coin.toUpperCase()}</p>
+                                                <span class="text-secondary">${details.long}</span>
+                                            </div>
+                                            <div class="gap-12" style="text-align: right">
+                                                <span style="display:block; font-size: 18px; font-family: monospace">${fmtNum(bal)}</span>
+                                                <span class="text-secondary" style="font-size: 14px; line-height: 1.6">&asymp;${fmtNum(details.price * bal)} USD</span>
+                                            </div>
                                         </div>
-                                        <div class="d-flex align-items-center gap-12">
-                                            <span class="text-small">$${fmtNum(details.price)}</span>
-                                            <span class="coin-btn ${change_dir}">${details.change}%</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>`
+                                    </a>
+                                </li>`
 
-                    )
+                        )
+                    }
 
                 })
-            })
         }
 
 
@@ -532,539 +487,44 @@
                 $('.history-medium-value').text(trim($(this).data('address')))
             }
 
-            
-        })
-
-        $('.p2p').click(function (){
 
         })
 
-    </script>
+        function populate_notifications(notes){
+            $('.notification-list').html('')
+                $.each(notes, function (index, d) {
+                        const mt = (index === 0) ? '' : 'mt-12'
+                        $('.notification-list').append(
+                            ` <li class='${mt}'>
+                                   <a href="#" class="noti-item bg-menuDark">
+                                        <div class="pb-8 line-bt">
+                                        <h5 class="text-button"><i class="dot-lg bg-primary"></i> ${d['title']}</h5>
+                                            <p class="text-secondary">${d.body}</p>
+                                        </div>
+                                        <span class="d-block mt-8">${d.created_at}</span>
+                                    </a>
+                               </li>`
+                        )
 
-
-{#    DEPOSIT SCRIPT#}
-    <script>
-
-        function create_crypto(amount){
-            console.log(`Amount: ${amount}`)
-            if(amount !== '' && amount > 0){
-                $('#cryptoAmountModal').modal('hide')
-                const currency = window.myForm['currency']
-                let qty;
-                qty = (1 / window.markets[currency]['price']) * parseFloat(amount);
-                window.myForm['qty'] = qty
-                showPreloader()
-                $.ajax({
-                    url: "{% url 'users:deposit' %}",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        'action': 'retrieve_crypto_wallet',
-                        'currency': currency
-                    },
-                    success: function (data) {
-                        hidePreloader()
-                        if (data.status === "success") {
-                            set_deposit_modal_crypto(data)
-                        }else{
-                            notify(data.status, data.message)
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        hidePreloader()
-                        notify('error', xhr.status + ': ' + xhr.statusText)
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
                 })
-            }else{
-                notify('warning', 'Amount is required to proceed')
-            }
         }
 
-        function create_ngn(amount){
-            if(amount !== '' && amount > 0){
-                $('#bankAmountModal').modal('hide')
-                window.myForm['qty'] = Number(amount)
-                showPreloader()
-                $.ajax({
-                    url: "{% url 'users:deposit' %}",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        'action': 'retrieve_bank_account'
-                    },
-                    success: function (data) {
-                        hidePreloader()
-                        if (data.status === "success") {
-                            set_deposit_modal_bank(data)
-                        }else{
-                            notify(data.status, data.message)
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        hidePreloader()
-                        notify('error', xhr.status + ': ' + xhr.statusText)
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            }else{
-                notify('warning', 'Amount is required to proceed')
-            }
-        }
-
-        function create_uid(amount){
-            if(amount !== '' && amount > 0){
-                $('#uidAmountModal').modal('hide')
-                const curr = window.myForm['currency']
-                let qty;
-                qty = (1 / window.markets[curr]['price']) * parseFloat(amount);
-                window.myForm['qty'] = qty
-                showPreloader()
-                $.ajax({
-                    url: "{% url 'users:deposit' %}",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        'action': 'retrieve_uid',
-                        'platform': window.myForm['platform']
-                    },
-                    success: function (data) {
-                        hidePreloader()
-                        if (data.status === "success") {
-                            set_deposit_modal_uid(data)
-                        }else{
-                            notify(data.status, data.message)
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        hidePreloader()
-                        notify('error', xhr.status + ': ' + xhr.statusText)
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            }else{
-                notify('warning', 'Amount is required to proceed')
-            }
-        }
-
-
-        function set_storage(action, key, value){
-            window.myForm['action'] = action
-            window.myForm[key] = value
-        }
-
-        function reset_storage(){
-            window.myForm = {}
-        }
-
-
-
-        function populate_cryptos(){
-            $('.cryptos-list').html('')
-            $.each(window.wallets, function(coin, balance){
-                if($.inArray(coin, main_wallets) !== -1 && coin !== 'ngn') {
-                    $('.cryptos-list').append(
-                        `<li data-bs-dismiss='modal'><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check"
-                         data-bs-target="#cryptoAmountModal" data-bs-toggle="modal"
-                            onclick="
-                                set_storage('crypto', 'currency', '${coin}');
-                                $('.crypto-bal').text(fmtNum(window.wallets['${coin}']));
-                                $('.crypto-curr').text('${coin.toUpperCase()}');
-                                $('.crypto-bal-after').text(fmtNum(window.wallets['${coin}']));
-                                $('#crypto-amount').val(0)
-                                    "
-                        data-currency="${coin}">${coin.toUpperCase()} <span class="text-muted font-monospace">${fmtNum(balance)}</span> </div></li>`
-                    )
-                }
-            })
-        }
-
-        function populate_crypto_for_uid(){
-            $('.cryptos-list').html('')
-            $.each(window.wallets, function(coin, balance){
-                if($.inArray(coin, main_wallets) !== -1 && coin !== 'ngn') {
-                    $('.cryptos-list').append(
-                        `<li data-bs-dismiss='modal'><div
-                            class="d-flex justify-content-between align-items-center gap-8 text-large item-check"
-                            data-bs-target="#uidAmountModal" data-bs-toggle="modal"
-                            onclick="
-                                set_storage('uid', 'currency', '${coin}');
-                                $('.uid-bal').text(fmtNum(window.wallets['${coin}']));
-                                $('.uid-curr').text('${coin.toUpperCase()}');
-                                $('.uid-bal-after').text(fmtNum(window.wallets['${coin}']));
-                                $('#uid-amount').val(0)
-                                    "
-                            data-currency="${coin}">${coin.toUpperCase()} <span class="text-muted font-monospace">${fmtNum(balance)}</span> </div></li>`
-                    )
-                }
-            })
-        }
-
-        function set_for_bank(){
-            set_storage('bank', 'currency', 'ngn');
-            $('.bank-bal').text(fmtNum(window.wallets['ngn']));
-            $('.bank-curr').text('NGN');
-            $('.bank-bal-after').text(fmtNum(window.wallets['ngn']));
-            $('#bank-amount').val(0)
-        }
-
-
-
-        function tag_money(amount, $paste_elem){
-            const uid_curr = window.myForm['currency']
-            const to_curr = (1/window.markets[uid_curr]['price']) * parseFloat(amount)
-            $paste_elem.text(fmtNum(to_curr + window.wallets[uid_curr]))
-        }
-        function tag_direct_money(amount, $paste_elem){
-            const uid_curr = window.myForm['currency']
-            $paste_elem.text(fmtNum(Number(amount) + window.wallets[uid_curr]))
-        }
-
-        $('#uid-amount').keyup(function(){
-            if($(this).val() === ""){
-                tag_money(0, $('.uid-bal-after'))
-            }else{
-                tag_money($(this).val(), $('.uid-bal-after'))
-            }
-        })
-        $('#bank-amount').keyup(function(){
-            if($(this).val() === ""){
-                tag_direct_money(0, $('.bank-bal-after'))
-            }else{
-                tag_direct_money($(this).val(), $('.bank-bal-after'))
-            }
-        })
-        $('#crypto-amount').keyup(function(){
-            if($(this).val() === ""){
-                tag_money(0, $('.crypto-bal-after'))
-            }else{
-                tag_money($(this).val(), $('.crypto-bal-after'))
-            }
-        })
-
-        $('.uid-tag').click(function(){
-            tag_money($(this).data('value'), $('.uid-bal-after'))
-        })
-        $('.bank-tag').click(function(){
-            tag_direct_money($(this).data('value'), $('.bank-bal-after'))
-        })
-        $('.crypto-tag').click(function(){
-            tag_money($(this).data('value'), $('.crypto-bal-after'))
-        })
-
-
-
-        function set_deposit_modal_bank(data){
-            {#storage::: currency, qty, ref#}
-            $('#actionModal').modal('show')
-            $('.action-title').text('Buy with NGN')
-            $('.action-body').html(
-                `
-                <p class="text-center text-small mt-4 action-type">Bank Transfer</p>
-                        <h1 class="mt-8 text-center"></h1>
-                        <p class="text-center text-small mt-1 text-capitalize">Complete action below to fund your account</p>
-
-                        <ul class="mt-40 accent-box-v4 bg-menuDark action-body">
-                            <li class="d-flex align-items-center justify-content-between pb-8 line-bt">
-                                <span class="text-small">Account Number</span>
-                                <span class="text-large text-white"><i class="icon icon-copy text-muted copy" data-item="${data.number}"></i> ${data.number}</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                 <span class="text-small">Account Bank </span>
-                                 <span class="text-large text-white text-end">${data.bank}</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                <span class="text-small">Account Name</span>
-                                 <span class="text-large text-white text-uppercase"><i class="icon icon-copy text-muted copy" data-item="${data.name}"></i> ${data.name}</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                <span class="text-small">Amount</span>
-                                 <span class="text-large text-white text-uppercase"><i class="icon icon-copy text-muted copy" data-item="${window.myForm['qty']}"></i> &#8358;${fmtNum(window.myForm['qty'])}</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8">
-                                <span class="text-small">Transfer Narration</span>
-                                <span class="text-large text-white"><i class="icon icon-copy text-muted copy" data-item="${data.narration}"></i> ${data.narration}</span>
-                            </li>
-                        </ul>
-
-                        <ul class='p-1 info-list mt-18'>
-                            <li>Ensure to enter the code above in your transfer narration to enable the system confirm your transaction automatically.</li>
-                            <li>Ensure to send from a bank account that bears your name as on your profile</li>
-                            <li>Ensure to click the button below when transaction is completed</li>
-                        </ul>
-              
-                `
-            )
-            window.myForm['ref'] = data.narration
-        }
-
-        function set_deposit_modal_uid(data){
-            {#storage::: currency, qty, platform, uid#}
-            $('#actionModal').modal('show')
-            $('.action-title').html(`Deposit using UID`)
-            $('.action-body').html(
-                `
-                <p class="text-center text-small mt-4 text-capitalize">${data.platform}</p>
-                        <h1 class="mt-8 text-center"></h1>
-                        <p class="text-center text-small mt-1 text-capitalize">Complete action below to fund your account</p>
-
-                        <ul class="mt-40 accent-box-v4 bg-menuDark action-body">
-                            <li class="d-flex align-items-center justify-content-between pb-8 line-bt">
-                                <span class="text-small">Account UID</span>
-                                <span class="text-large text-white"><i class="icon icon-copy text-muted copy" data-item="${data.uid}"></i> ${data.uid}</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8">
-                                <span class="text-small">Quantity</span>
-                                <span class="text-large text-white"><i class="icon icon-copy text-muted copy" data-item="${window.myForm['qty']}"></i> ${fmtNum(window.myForm['qty'])} ${window.myForm['currency'].toUpperCase()}</span>
-                            </li>
-
-                        </ul>
-               
-                <ul class='p-1 info-list mt-18'>
-                            <li>Ensure to send the exact amount entered previously for quicker confirmation.</li>
-                            <li>Ensure to click the button below when transaction is completed</li>
-                        </ul>
-                `
-            )
-            window.myForm['uid'] =  data.uid
-        }
-
-        function set_deposit_modal_crypto(data){
-            {#storage::: currency, qty, wallet#}
-            $('#actionModal').modal('show')
-            $('.action-title').text('Deposit Crypto')
-            $('.action-body').html(
-                `
-                <p class="text-center text-small mt-4">Crypto Direct Deposit</p>
-                        <p class="text-center text-small mt-1 text-capitalize"> Please complete action below to fund your account</p>
-
-                        <ul class="mt-40 accent-box-v4 bg-menuDark action-body">
-                            <li class="d-flex align-items-center justify-content-between pb-8 line-bt">
-                                <span class="text-small">Crypto</span>
-                                <span class="text-large text-white">${data.currency_name} (${data.currency.toUpperCase()})</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                 <span class="text-small">Chain Type </span>
-                                 <span class="text-large text-white text-end">${data.network}</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8 pb-8 line-bt">
-                                <span class="text-small">Wallet Address</span>
-                                 <span class="text-large text-white long-line"><i class="icon icon-copy text-muted copy" data-item="${data.address}"></i> ${trim(data.address)}</span>
-                            </li>
-                            <li class="d-flex align-items-center justify-content-between pt-8">
-                                <span class="text-small">Quantity</span>
-                                <span class="text-large text-white"><i class="icon icon-copy text-muted copy" data-item="${window.myForm['qty']}"></i> ${fmtNum(window.myForm['qty'])} ${window.myForm['currency'].toUpperCase()}</span>
-                            </li>
-                        </ul>
-                `
-            )
-            window.myForm['wallet'] =  data.address
-        }
-
-        function deposit_complete(){
-            const myForm = window.myForm
-            if(myForm.qty > 0 && myForm.currency !== ''){
-                showPreloader()
-                $.ajax({
-                    url: "{% url 'users:deposit' %}",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: myForm,
-                    success: function (data) {
-                        hidePreloader()
-                        if (data.status === "success") {
-                            notifyAmount(`${fmtNum(myForm.qty)} ${myForm.currency.toUpperCase()}`, data.message, null, '{% url "users:wallet" %}')
-                        }else{
-                            notify(data.status, data.message)
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        hidePreloader()
-                        notify('error', xhr.status + ': ' + xhr.statusText)
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            }else{
-                notify('warning', 'Quantity or currency not found')
-            }
-        }
-    </script>
-
-
-
-    {#    WITHDRAWAL SCRIPT#}
-    <script>
-
-        function set_storage(action=null, key, value){
-            if(action) {
-                window.myForm['action'] = action
-            }
-            window.myForm[key] = value
-        }
-
-        function reset_storage(){
-            $('.w-bank-conf').css('display', 'none')
-            $('.w-notbank-wallet').css('display', 'none')
-            window.myForm = {}
-        }
-
-
-
-        function w_populate_cryptos(){
-            $('.cryptos-list').html('')
-            $.each(window.wallets, function(coin, balance){
-                if($.inArray(coin, main_wallets) !== -1 && coin !== 'ngn') {
-                    $('.cryptos-list').append(
-                        `<li data-bs-dismiss='modal'><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check"
-                         data-bs-target="#amountModal" data-bs-toggle="modal"
-                            onclick="
-                                set_storage('crypto', 'currency', '${coin}');
-                                set_amount_modal('${coin}', window.wallets['${coin}'])
-                                    "
-                        data-currency="${coin}">${coin.toUpperCase()} <span class="text-muted font-monospace">${fmtNum(balance)}</span> </div></li>`
-                    )
-                }
-            })
-        }
-
-        function w_populate_crypto_for_uid(){
-            $('.cryptos-list').html('')
-            $.each(window.wallets, function(coin, balance){
-                if($.inArray(coin, main_wallets) !== -1 && coin !== 'ngn') {
-                    $('.cryptos-list').append(
-                        `<li data-bs-dismiss='modal'><div
-                            class="d-flex justify-content-between align-items-center gap-8 text-large item-check"
-                            data-bs-target="#amountModal" data-bs-toggle="modal"
-                            onclick="
-                                set_storage('uid', 'currency', '${coin}');
-                                set_amount_modal('${coin}', window.wallets['${coin}'])
-                                    "
-                            data-currency="${coin}">${coin.toUpperCase()} <span class="text-muted font-monospace">${fmtNum(balance)}</span> </div></li>`
-                    )
-                }
-            })
-        }
-
-        function w_populate_banks() {
-            $('.banks-list').html('')
-            $.each(window.user_banks, function (index, details) {
-                $('.banks-list').append(
-                    `<li data-bs-dismiss='modal'><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check bank-list-item"
-                         data-bs-target="#amountModal" data-bs-toggle="modal"
-                         data-bank_obj='${JSON.stringify(details)}'
-                            onclick="
-                                    "
-                        data-bank_id="${details.id}">${details.number} (${details.bank}) <i class="icon icon-check-circle" style="display: block"></i> </div></li>`
-                )
-            })
-        }
-
-        function set_amount_modal(curr, bal){
-            let action = window.myForm['action']
-            let myForm = window.myForm
-            $('.w-bal').text(fmtNum(bal));
-            $('.w-curr').text(curr.toUpperCase());
-            $('.w-bal-after').text(`${fmtNum(bal)} ${curr.toUpperCase()}`);
-            $('#w-amount').val(0)
-            $('.w-title').text(`${action.toUpperCase()} Withdrawal`)
-            $('.w-img').attr('src', `{% static "transactions/images/tokens" %}/${curr}.png`)
-            if(curr === 'ngn') {
-                w_populate_conf_box()
-            }else{
-                $('.w-notbank-wallet').css('display', 'block')
-                if(action === 'uid'){
-                    $('#w-wallet').attr('placeholder', `Enter ${myForm.platform.toUpperCase()} UID`)
-                }else{
-                    $('#w-wallet').attr('placeholder', `Enter ${myForm.currency.toUpperCase()} (${window.markets[curr]['network']}) Wallet`)
-                }
-            }
-        }
-
-        $('body').on('click', '.bank-list-item', function(){
-            set_storage('bank', 'currency', 'ngn');
-            window.myForm['bank_obj'] = $(this).attr('data-bank_obj');
-            window.myForm['bank_id'] = JSON.parse($(this).attr('data-bank_obj'))['id']
-            set_amount_modal('ngn', window.wallets['ngn']);
-        })
-
-        function w_populate_conf_box(){
-            $('.w-bank-conf').css('display', 'block')
-            const bank = JSON.parse(window.myForm.bank_obj)
-            $('.w-bank-name').text(bank.name)
-            $('.w-bank-number').text(bank.number)
-            $('.w-bank-bank').text(bank.bank)
-        }
-
-        function w_tag_money(amount, $paste_elem){
-            const curr = window.myForm['currency']
-            let diff = (window.wallets[curr] - Number(amount)) >= 0 ? window.wallets[curr] - Number(amount) : 0
-                if(diff === 0){
-                    $('#w-amount').val(window.wallets[curr])
-                }
-                $paste_elem.text(fmtNum(diff))
-        }
-
-
-        $('#w-amount').keyup(function(){
-            if($(this).val() === ""){
-                w_tag_money(0, $('.w-bal-after'))
-            }else{
-                let value = $(this).val()
-                if(/^0+/.test(value)){
-                    $(this).val(value.replace(/^0+/, ''))
-                }
-                w_tag_money(value, $('.w-bal-after'))
-            }
-        })
-
-
-
-        function w_final_checks(amount, wallet){
-            window.myForm['amount'] = amount
-            window.myForm['wallet'] = wallet
-            const myForm = window.myForm
-            const action = myForm['action']
-            const curr = myForm['currency']
-            if(window.wallets[curr] - Number(amount) >= 0 && amount > 0){
-                if(action !== 'bank' && wallet !== '' || action === 'bank'){
-                    if(amount >= window.markets[curr]['min']) {
-                        launch_otp('w-confirm-otp')
-                        $('#amountModal').modal('hide')
-                        $('.otp-title').text('Confirm Withdrawal')
-                    }else{
-                        notify('warning', `You cannot withdraw below ${window.markets[curr]['min']} ${curr.toUpperCase()}`)
-                    }
-                }else{
-                    notify('warning', 'Please refresh the page and try again')
-                }
-            }else{
-                notify('warning', 'Please check your inputs')
-            }
-        }
-
-        function withdrawal_complete() {
-            const myForm = window.myForm
+        function get_report(duration){
             showPreloader()
             $.ajax({
-                url: "{% url 'users:withdrawal' %}",
+                url: wallet_base_url,
                 type: 'POST',
                 dataType: 'json',
-                data: myForm,
+                data: {
+                    'action': 'report',
+                    'duration': duration,
+                    'category': 'all'
+                },
                 success: function (data) {
                     hidePreloader()
                     if (data.status === "success") {
-                        $('#amountModal').modal('hide')
-                        w_notify(data.amount, data.message, data.medium, '{% url "users:wallet" %}')
-                    } else {
-                        notify(data.status, data.message)
+                        $('.report-deposit').text(`$${data.deposit}`)
+                        $('.report-withdrawal').text(`$${data.withdrawal}`)
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -1077,87 +537,29 @@
             })
         }
 
-        $('.w-confirm-otp').click(function () {
-            confirm_otp(function () {
-                $('#amountModal').modal('show');
-                withdrawal_complete()
-            })
+        $('.report-duration').click(function(){
+            get_report($(this).data('value'))
         })
 
+        $('.report-show').click(function (){
+            const duration = $('.report-duration.active').data('value')
+            get_report(duration)
+            $('#reportModal').modal('show')
+        })
 
-        function w_notify(amount, message, medium, redirect=null){
-            $('.w-notify-amount').text(amount);
-            $('.w-notify-message').text(message);
-            $('.w-notify-medium').text(medium);
-            if(redirect){
-                $('.w-notify-done').attr('href', redirect).attr('data-bs-dismiss', '');
-            }
-            $('#wNotifyModal').modal('show')
-        }
 
     </script>
 
-
-
-    {% comment %} FOR SETTINGS - ADD BANK{% endcomment %}
-    <script>
-        $('body').on('click', '.addbank-confirm-otp', function(){
-            confirm_otp(function(){
-                add_new_bank()
-            })
-        })
-
-        $('.addbank-confirm').click(function(){
-            let isEmpty = false;
-            $('#add-bank-form input').each(function() {
-                if ($(this).val().trim() === '') {
-                    isEmpty = true;
-                }
-            });
-            if(!isEmpty){
-                confirm('Are you sure you want to add this account?', function(){
-                    launch_otp('addbank-confirm-otp')
-                    $('#addBankModal').modal('hide')
-                })
-            }
-        })
-
-        function add_new_bank(){
-            let myForm = $('#add-bank-form').serialize();
-            myForm += '&action=add_new_bank';
-            showPreloader()
-            $.ajax({
-                url: "{% url 'users:settings' %}",
-                type: 'POST',
-                dataType: 'json',
-                data: myForm,
-                success: function (data) {
-                    hidePreloader()
-                    if (data.status === "success") {
-                        $('#addBankModal').modal('hide')
-                        notify(data.status, data.message, null, '{% url "users:wallet" %}')
-                    } else {
-                        $('#addBankModal').modal('show')
-                        notify(data.status, data.message)
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    hidePreloader()
-                    notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
-        }
-    </script>
 
 
 
 {% endblock script %}
 {% block embedded_scripts %}
+    <script type="text/javascript" src="{% static 'users/js/custom/withdrawal.js' %}"></script>
+    <script type="text/javascript" src="{% static 'users/js/custom/deposit.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/history-transactions.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/history-conversions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'users/js/custom/settings-addbank.js' %}"></script>
 {% endblock embedded_scripts %}
 
 

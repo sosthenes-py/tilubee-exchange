@@ -55,7 +55,9 @@ class WithdrawalView(View):
                 with transaction.atomic():
                     setattr(self.user.wallet, d['currency'], d['diff'])  # set new balance for wallet
                     self.user.wallet.save()
-                    Transaction.objects.create(user=self.user, currency=d['currency'], qty=d['qty'], address=d['address'], transaction_type='withdrawal', medium=action, reference=d['platform'])
+
+                    amount_usd = crypto_markets(self.tickers)[d['currency']]['price'] * d['qty']
+                    Transaction.objects.create(user=self.user, currency=d['currency'], qty=d['qty'], address=d['address'], transaction_type='withdrawal', medium=action, reference=d['platform'], amount_usd=amount_usd)
 
                     Notification.objects.create(user=self.user, title='Withdrawal Has Been Created', body=f'You have initiated a {action.upper()} withdrawal of {d["qty"]:,} {d["currency"].upper()}, which is being processed.')
 

@@ -163,7 +163,7 @@
 
 
 
-     <div class="menubar-footer footer-fixed">
+     <div class="menubar-footer footer-fixed bg-surface">
         <ul class="inner-bar">
             <li class="{% if page == 'home' %}active{% endif %}">
                 <a href="{% url 'users:wallet' %}">
@@ -183,8 +183,8 @@
                     Earn
                 </a>
             </li>
-            <li>
-                <a href="wallet.html">
+            <li class="{% if page == 'wallet' %}active{% endif %}">
+                <a href="{% url 'users:wallet2' %}">
                     <i class="icon icon-wallet"></i>
                     Wallet
                 </a>
@@ -250,13 +250,19 @@
     <script type="text/javascript" src="{% static 'users/js/apexcharts.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/chart.bundle.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/line-chart.js' %}"></script>
+    <script type="text/javascript" src="{% static 'users/js/detail-chart.js' %}"></script>
 
     <script type="text/javascript" src="{% static 'users/js/main.js' %}"></script>
 
     <script type="application/javascript">
         const main_wallets = ['ngn', 'btc', 'usdt', 'eth', 'bnb', 'trx']
         const token_base_url = '{% static 'transactions/images/tokens' %}'
+        const wallet_base_url = '{% url "users:wallet" %}'
         const convert_base_url = "{% url 'users:convert' %}"
+        const deposit_base_url = "{% url 'users:deposit' %}"
+        const withdrawal_base_url = "{% url 'users:withdrawal' %}"
+        const settings_base_url = "{% url 'users:settings' %}"
+        const csrf_token = "{{ csrf_token }}"
 
         function showPreloader(){
             $(".preload").fadeIn("slow");

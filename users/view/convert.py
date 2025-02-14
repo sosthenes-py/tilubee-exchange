@@ -94,9 +94,10 @@ class ConvertView(WalletView):
                 conversions = Conversion.objects.filter(user=self.user)
             else:
                 conversions = Conversion.objects.filter(
+                    Q(user=self.user) &
                     Q(created_at__gte=dt.date.today() - dt.timedelta(days=duration))
                 )
-            user_transactions = UserTransactions(user=self.user, query=conversions)
+            user_transactions = UserTransactions(user=self.user, query=conversions)  # provides a better structure
             conversions = user_transactions.get_conversions()
             return JsonResponse({
                 'status': 'success',

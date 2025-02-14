@@ -57,7 +57,8 @@ class ConvertQuoteForm(forms.Form):
 
 class FilterForm(forms.Form):
     action = forms.ChoiceField(choices=[
-        ('filter', 'Filter')
+        ('filter', 'Filter'),
+        ('report', 'Report'),
     ], required=True)
     category = forms.ChoiceField(choices=[
         ('all', 'All'),
@@ -66,6 +67,7 @@ class FilterForm(forms.Form):
     ], required=True)
     duration = forms.ChoiceField(choices=[
         (0, 'All'),
+        (0.04167, '1 hr'),
         (1, '24 hours'),
         (7, '7 days'),
         (12, '12 days'),
