@@ -36,7 +36,13 @@ class NewBankForm(forms.Form):
 class SettingsForm(forms.Form):
     action = forms.ChoiceField(choices=[
         ('add_new_bank', 'add New Bank'),
-    ])
+        ('avatar', 'Avatar'),
+        ('trash_bank', 'Trash Bank'),
+        ('update_password', 'Update Password')
+    ], required=True)
+    value = forms.CharField(max_length=10, required=False)
+    current_pass = forms.CharField(max_length=30, required=False)
+    new_pass = forms.CharField(max_length=30, required=False)
 
 
 class ConvertQuoteForm(forms.Form):

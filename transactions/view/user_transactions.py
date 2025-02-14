@@ -9,7 +9,7 @@ class UserTransactions:
     """
     Return all transactions made by user in a list of dictionaries
     """
-    def __init__(self, user=None, one_usd_in_base=None, base_currency=None, query: Optional[QuerySet]=None):
+    def __init__(self, user=None, one_usd_in_base=None, base_currency=None, query=None):
         self.user = user
         self.one_usd_in_base = one_usd_in_base
         self.base_currency = base_currency
@@ -45,7 +45,7 @@ class UserTransactions:
         return transactions
 
     def get_conversions(self):
-        if self.query:
+        if self.query is not None:
             conversions = self.query.order_by('-created_at')
         else:
             conversions = Conversion.objects.filter(user=self.user).order_by('-created_at')

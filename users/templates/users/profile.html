@@ -1,0 +1,300 @@
+<div class="modal fade modalRight" id="userInfoModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                <span class="left" data-bs-dismiss="modal"  aria-hidden="true"><i class="icon-left-btn"></i></span>
+                <h3>User</h3>
+            </div>
+            
+            
+            <div class="pt-45 pb-16">
+                <div class="bg-menuDark tf-container">
+                    <a href="#0" class="pt-12 pb-12 mt-4 d-flex justify-content-between align-items-center">
+                        <div class="box-account">
+                            <img src="images/avt/avt2.jpg" alt="img" class="avt user-avatar">
+                            <div class="info">
+                                <h5 class='user-email'></h5>
+                                <p class="text-small text-secondary mt-8 mb-8 copy copy-uid" data-item=''>UID: <span class='user-uid'></span> <i class='icon icon-copy'></i></p>
+                                <span class='badge rounded bg-secondary' style='font-size: 10.8px; font-weight: normal'><i class='icon-user'></i>&nbsp;Main Account</span>
+                                <span class='badge rounded bg-secondary ms-1' style='font-size: 10.8px; font-weight: normal'><i class='icon-star text-success'></i>&nbsp;Verified</span>
+                            </div>
+                        </div>
+                        <span class="arr-right" onclick='overlay_modal("profileModal")'><i class="icon-arr-right"></i></span>    
+                    </a>
+                    
+                </div>
+                
+                <div class="bg-menuDark tf-container">
+                    <div class="pt-12 pb-12 mt-4">
+                        <h5>Exchange (coming soon..)</h5>
+                        <ul class="mt-16 grid-3 gap-12">
+                        
+                            <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center text-break text-center">
+                                    <i class="icon icon-fileText"></i>
+                                    Futures contract
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center text-break text-center">
+                                    <i class="icon icon-graph"></i>
+                                    Ageless
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center text-break text-center">
+                                    <i class="icon icon-grid-nine"></i>
+                                    Choice
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center text-break text-center">
+                                    <i class="icon icon-game-control"></i>
+                                    Simulated trading
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center text-break text-center">
+                                    <i class="icon icon-robot"></i>
+                                    Bot
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center text-break text-center">
+                                    <i class="icon icon-database"></i>
+                                    Copy
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-menuDark tf-container">
+                    <div class="pt-12 pb-12 mt-4">
+                        <h5>Help center</h5>
+                        <ul class="mt-16 grid-3 gap-12">
+                            {% comment %} <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center">
+                                    <i class="icon icon-globe"></i>
+                                    Community
+                                </a>
+                            </li> {% endcomment %}
+                            <li>
+                                <a href="#" class="tf-list-item d-flex flex-column gap-8 align-items-center">
+                                    <i class="icon icon-headset"></i>
+                                    Support
+                                </a>
+                            </li>
+                          
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-menuDark tf-container">
+                    <a href="#" data-bs-toggle='modal' data-bs-target='#aboutModal' class="pt-12 pb-12 mt-4 d-flex justify-content-between align-items-center">
+                        <h5>About PROJECT_NAME</h5>
+                        <span class="arr-right"><i class="icon-arr-right"></i></span>    
+                    </a>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade modalRight" id="aboutModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                <span class="left" data-bs-dismiss="modal"  aria-hidden="true"><i class="icon-left-btn"></i></span>
+                <h3>About Us</h3>
+            </div>
+            
+            
+            <div class="pt-45 pb-16">
+                <div class="bg-menuDark tf-container">
+                    <p>
+                        This is everything about PROJECT_NAME
+                    </p>
+                    
+                </div>
+            
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade modalRight" id="profileModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                <span class="left" data-bs-dismiss="modal"  aria-hidden="true"><i class="icon-left-btn"></i></span>
+                <h3>Profile</h3>
+            </div>
+            
+            
+            <div class="pt-45 pb-16">
+                <div class="tf-container">
+                    <a href="verification.html" class="mt-16 d-flex justify-content-between align-items-center">
+                        <div class="box-left">
+                            <h5 class="mb-8">Verification</h5>
+                            <span class="text-success">Verified</span>
+                        </div>
+                        {% comment %} <span class="icon-arr-right text-secondary fs-12"></span> {% endcomment %}
+                    </a>
+                    <a href="#" class="mt-16 pb-12 line-bt d-flex justify-content-between align-items-center">
+                        <p class="text-small">Account Tier</p>
+                        <span class="text-secondary d-flex gap-8 align-items-center">Level 1 
+                            {% comment %} <i class="icon-arr-right fs-12 text-secondary"></i> {% endcomment %}
+                        </span>
+                    </a>
+                    <a href="#" class="mt-16 pb-12 line-bt d-flex justify-content-between align-items-center">
+                        <p class="text-small">Security Level</p>
+                        <span class="text-success d-flex gap-8 align-items-center">High
+                            {% comment %} <i class="icon-arr-right fs-12 text-secondary"></i> {% endcomment %}
+                        </span>
+                    </a>
+
+                 
+
+                    <ul class="mt-16 pb-16 line-bt">
+                        <li>
+                            <h5>Setting</h5>
+                        </li>
+
+                        <li>
+                            <a href="#0" class="mt-20 d-flex justify-content-between align-items-center" onclick='overlay_modal("avatarModal")'>
+                                <p class="text-small">Change Avatar</p>
+                                <span class="text-secondary d-flex gap-8 align-items-center"> 
+                                    <i class="icon-arr-right fs-12 text-secondary"></i>
+                                </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#0" class="mt-20 d-flex justify-content-between align-items-center view-banks">
+                                <p class="text-small">Withdrawal Bank</p>
+                                <span class="icon-arr-right text-secondary fs-12"></span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#0" class="mt-20 d-flex justify-content-between align-items-center" onclick="overlay_modal('passwordModal')">
+                                <p class="text-small">Change Password</p>
+                                <span class="icon-arr-right text-secondary fs-12"></span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+
+
+                    
+                  
+                    <ul class="mt-16 pb-12 line-bt">
+                        <li class='logout'>
+                            <a href="#0" class="d-flex justify-content-between align-items-center">
+                                <h5 class='text-danger'>Logout</h5>
+                                <span class="icon-arr-right text-secondary fs-12"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade modalRight" id="avatarModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                <span class="left" data-bs-dismiss="modal" aria-hidden="true"><i class="icon-left-btn"></i></span>
+                <h3>Select Avatar</h3>
+            </div>
+            <div class="overflow-auto pt-45 pb-16">
+                <div class="tf-container">
+                    <ul class="mt-12 grid-4 rg-16 cg-25 avatar-list">
+                        
+                    </ul>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade action-sheet" id="viewBankModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="icon-cancel" data-bs-dismiss="modal" aria-hidden="true"></span>
+            </div>
+            <div class="modal-body text-center">
+                <span class="logo icon-bank text-primary" style="font-size: 80px"></span>
+                <h3 class="mt-4">Withdrawal Banks</h3>
+
+                <ul class="mt-20 pb-16 banks-list">
+
+                </ul>
+                <a href="javascript:void(0);" class="tf-btn secondary d-inline-flex" onclick="$('#viewBankModal').modal('hide')" data-bs-toggle="modal" data-bs-target="#addBankModal">Add New Bank</a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="modal fade modalRight" id="passwordModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="header fixed-top bg-surface d-flex justify-content-center align-items-center">
+                <span class="left" data-bs-dismiss="modal" aria-hidden="true"><i class="icon-left-btn"></i></span>
+                <h3>Change Password</h3>
+            </div>
+            
+            <div class="pt-45 pb-16">
+                <div class="tf-container">
+                    <form action="">
+                        <fieldset class="mt-4">
+                            <label class="mb-8">Current Password</label>
+                            <div class="box-auth-pass">
+                                <input type="password" required="" placeholder="" id="current_pass" class="password-field">
+                                <span class="show-pass">
+                                    <i class="icon-view"></i>
+                                    <i class="icon-view-hide"></i>
+                                </span>
+                            </div>
+                        </fieldset>
+                        <fieldset class="mt-16">
+                            <label class="mb-8">New Password</label>
+                            <div class="box-auth-pass">
+                                <input type="password" required="" placeholder="" id="new_pass" class="password-field">
+                                <span class="show-pass">
+                                    <i class="icon-view"></i>
+                                    <i class="icon-view-hide"></i>
+                                </span>
+                            </div>
+                        </fieldset>
+                      
+                        <button class="mt-40 tf-btn lg update-password">Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

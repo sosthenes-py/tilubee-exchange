@@ -8,8 +8,8 @@
     <div class="header-style2 fixed-top bg-menuDark">
         <div class="d-flex justify-content-between align-items-center gap-14">
             <div class="box-account style-2">
-                <a href="user-info.html">
-                    <img src="images/avt/avt2.jpg" alt="img" class="avt">
+                <a href="#0" data-bs-toggle='modal' data-bs-target='#userInfoModal'>
+                    <img src="{% static 'users/images/logo/logo.png' %}" alt="img" class="avt user-avatar">
                 </a>
                 <div class="search-box box-input-field style-2">
                     <a href="home-search.html" class="icon-search"></a>
@@ -260,6 +260,7 @@
 
 
 
+    {% include 'users/profile.html' %}
     {% include 'users/deposit.html' %}
     {% include 'users/withdrawal.html' %}
     {% include 'users/otp.html' %}
@@ -339,6 +340,10 @@
             const history = data.history
             const convs = data.recent_conv
             $('.total-balance').text(fmtNum(data.total_balance))
+            $('.user-email').text(data.user.email)
+            $('.user-uid').text(data.user.uid)
+            $('.copy-uid').data('item', data.user.uid)
+            $('.user-avatar').attr('src', `${images_base_url}/avt/avt${data.user.avatar_id}.jpg`)
             window.wallets = wallets
             window.markets = markets.general
             window.user_banks = data.user_banks
@@ -517,6 +522,7 @@
     <script type="text/javascript" src="{% static 'users/js/custom/history-transactions.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/history-conversions.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/settings-addbank.js' %}"></script>
+    <script type="text/javascript" src="{% static 'users/js/custom/profile.js' %}"></script>
 {% endblock embedded_scripts %}
 
 

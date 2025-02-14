@@ -71,7 +71,8 @@ class WalletView(CustomLoginRequiredMixin, View):
             },
             'user': {
                 'email': f'{request.user.email[:3]}***@****',
-                'uid': request.user.uid
+                'uid': request.user.uid,
+                'avatar_id': request.user.avatar_id
             }
         })
 

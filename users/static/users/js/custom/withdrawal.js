@@ -71,7 +71,7 @@
             $('.w-bal-after').text(`${fmtNum(bal)} ${curr.toUpperCase()}`);
             $('#w-amount').val(0)
             $('.w-title').text(`${action.toUpperCase()} Withdrawal`)
-            $('.w-img').attr('src', `{% static "transactions/images/tokens" %}/${curr}.png`)
+            $('.w-img').attr('src', `${token_base_url}/${curr}.png`)
             if(curr === 'ngn') {
                 w_populate_conf_box()
             }else{

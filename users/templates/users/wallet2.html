@@ -7,8 +7,8 @@
 
     <div class="header-style2 fixed-top bg-menuDark">
         <div class="d-flex justify-content-between align-items-center">
-            <a class="box-account" href="user-info.html">
-                <img src="images/avt/avt2.jpg" alt="img" class="avt">
+            <a class="box-account" href="#0" data-bs-toggle='modal' data-bs-target='#userInfoModal'>
+                <img src="{% static 'users/images/logo/logo.png' %}" alt="img" class="avt user-avatar">
                 <div class="info">
                     <p class="text-xsmall text-secondary user-uid"></p>
                     <h5 class="mt-4 user-email"></h5>
@@ -83,7 +83,7 @@
                                 <a href="#" class="accent-box-v6 bg-surface d-flex justify-content-between align-items-center">
                                     <div class="content">
                                         <p style="font-size: 17px">Funding</p>
-                                        <span class="d-inline-block mt-8 bg-secondary p-1 rounded" style="font-size: 16px">20.32 USD</span>
+                                        <span class="d-inline-block mt-8 bg-secondary p-1 rounded" style="font-size: 16px"><span class='total-balance'>0.00</span>&nbsp;<span class="text-small base-currency">USD</span>
                                     </div>
                                     <span class="icon-arr-right fs-12 report-show"></span>
                                 </a>
@@ -94,7 +94,7 @@
                                         <p style="font-size: 17px">Locked</p>
                                         <span class="d-inline-block mt-8 bg-danger p-1 rounded" style="font-size: 16px">0.00 USD</span>
                                     </div>
-                                    <span class="icon-arr-right fs-12" onclick="info('No locked funds')"></span>
+                                    <span class="icon-arr-right fs-12" onclick="info('No locked funds at the moment')"></span>
                                 </a>
                             </li>
                         </ul>
@@ -302,7 +302,7 @@
 
 
 
-
+    {% include 'users/profile.html' %}
     {% include 'users/deposit.html' %}
     {% include 'users/withdrawal.html' %}
     {% include 'users/otp.html' %}
@@ -352,6 +352,8 @@
             $('.total-balance').text(fmtNum(data.total_balance))
             $('.user-email').text(data.user.email)
             $('.user-uid').text(data.user.uid)
+            $('.copy-uid').data('item', data.user.uid)
+            $('.user-avatar').attr('src', `${images_base_url}/avt/avt${data.user.avatar_id}.jpg`)
             window.wallets = wallets
             window.markets = markets.general
             window.user_banks = data.user_banks
@@ -553,6 +555,8 @@
 
 
 
+
+
 {% endblock script %}
 {% block embedded_scripts %}
     <script type="text/javascript" src="{% static 'users/js/custom/withdrawal.js' %}"></script>
@@ -560,6 +564,7 @@
     <script type="text/javascript" src="{% static 'users/js/custom/history-transactions.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/history-conversions.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/settings-addbank.js' %}"></script>
+    <script type="text/javascript" src="{% static 'users/js/custom/profile.js' %}"></script>
 {% endblock embedded_scripts %}
 
 

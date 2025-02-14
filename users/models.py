@@ -13,6 +13,7 @@ class AppUser(AbstractUser):
     password = models.CharField(max_length=100)
     created_at = models.DateTimeField(default=timezone.now)
     uid = models.CharField(max_length=9, unique=True)
+    avatar_id = models.IntegerField(default=3)
 
 
 class Session(models.Model):

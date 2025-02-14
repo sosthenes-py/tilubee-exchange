@@ -58,10 +58,13 @@
         }
 
         #infoModal .modal-dialog {
-            margin-top: 30vh; /* Adjust this value as needed */
+            margin-top: 30vh; 
         }
         .noti-item{
             min-width: 100%
+        }
+        #confirmModal{
+            z-index: 999999;
         }
     </style>
 </head>
@@ -256,12 +259,15 @@
 
     <script type="application/javascript">
         const main_wallets = ['ngn', 'btc', 'usdt', 'eth', 'bnb', 'trx']
-        const token_base_url = '{% static 'transactions/images/tokens' %}'
+        const token_base_url = "{% static 'transactions/images/tokens' %}"
+        const images_base_url = "{% static 'users/images' %}"
         const wallet_base_url = '{% url "users:wallet" %}'
         const convert_base_url = "{% url 'users:convert' %}"
         const deposit_base_url = "{% url 'users:deposit' %}"
         const withdrawal_base_url = "{% url 'users:withdrawal' %}"
         const settings_base_url = "{% url 'users:settings' %}"
+        const logout_url = "{% url 'user_auth:logout' %}"
+        const verify_email_url = "{% url 'user_auth:verify_email' %}"
         const csrf_token = "{{ csrf_token }}"
 
         function showPreloader(){
@@ -419,10 +425,11 @@
             })
         }
 
-        function info(message, bd){
+        function info(message, duration, backdrop){
+            duration = duration || 1
             $('.info-message').text(message)
             $('#infoModal').modal('show')
-            if(bd !== null && bd === false){
+            if(backdrop !== null && backdrop === false){
                 $('.modal-backdrop').remove();
             }
             countdown(1, '0', null, function(){
@@ -430,14 +437,19 @@
             })
         }
 
+        function overlay_modal(id){
+            var modal = new bootstrap.Modal(document.getElementById(id));
+            modal.show();
+        }
 
         $('body').on('click', '.copy', function () {
             const item = $(this).data('item');
             navigator.clipboard.writeText(item);
+            const html = $(this).html()
             $(this).text(' copied!');
             const $elem = $(this);
             setTimeout(function (){
-                $elem.text('')
+                $elem.html(html)
             }, 1500)
         })
 
@@ -456,81 +468,10 @@
 
 
 
-     <!-- FOR OTP -->
-     <script>
 
-        function startCountdown(seconds){
-            countdown(seconds, 'countdown', function (){
-                $('.resend').html(`Resend in&nbsp;<span id="countdown" ></span>`).css('text-decoration', 'none');
-            } ,function (){
-                $('.resend').attr('id', 'resend').text('Resend').css('text-decoration', 'underline');
-            })
-        }
+    <script type="text/javascript" src="{% static 'users/js/custom/otp.js' %}"></script>
 
-        function confirm_otp(callback){
-            event.preventDefault();
-            let formData = $('#otp-form').serialize();
-            showPreloader()
-            $.ajax({
-              url : "{% url 'user_auth:verify_email' %}",
-              type: 'POST',
-              dataType: 'json',
-              data: formData,
-              success: function(data){
-                  if(data.status === "success"){
-                      $('#otpModal').modal('hide')
-                      callback()
-                  }else{
-                      hidePreloader()
-                      notify(data.status, data.message)
-                  }
-              },
-                error: function(xhr, ajaxOptions, thrownError){
-                  hidePreloader()
-                  notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings){
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
-        }
-
-        $('body').on('click', '#resend', function(){
-            showPreloader()
-            $.ajax({
-              url : "{% url 'user_auth:verify_email' %}",
-              type: 'POST',
-              dataType: 'json',
-              data: {'operation': 'resend'},
-              success: function(data){
-                  hidePreloader()
-                  notify_kwarg({status: data.status, message: data.message, timeout: 2500})
-                  $('.resend').removeAttr('id')
-                  startCountdown(100)
-              },
-                error: function(xhr, ajaxOptions, thrownError){
-                  hidePreloader()
-                  notify('error', xhr.status + ': ' + xhr.statusText)
-                },
-                beforeSend: function (xhr, settings){
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
-        })
-
-        
-
-        function launch_otp(add_class){
-            $('.otp-block-inputs input').each(function(){
-                $(this).val('')
-            })
-            $('#otpModal').modal('show')
-            $('#confirm-otp').addClass(add_class)
-        }
-
-        
-
-     </script>
+    
 
 
 

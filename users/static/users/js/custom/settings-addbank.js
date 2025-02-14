@@ -6,9 +6,11 @@
 
         $('.addbank-confirm').click(function(){
             let isEmpty = false;
+            let ee = ''
             $('#add-bank-form input').each(function() {
                 if ($(this).val().trim() === '') {
                     isEmpty = true;
+                    ee = $(this).attr('name')
                 }
             });
             if(!isEmpty){
@@ -16,6 +18,8 @@
                     launch_otp('addbank-confirm-otp')
                     $('#addBankModal').modal('hide')
                 })
+            }else{
+                console.log(`${ee} is empty`)
             }
         })
 

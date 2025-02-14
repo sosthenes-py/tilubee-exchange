@@ -9,6 +9,7 @@ import datetime as dt
 from django.db.models import Q
 from transactions.view.user_transactions import UserTransactions
 from users.models import Notification
+from django.utils import timezone
 
 
 
@@ -95,7 +96,7 @@ class ConvertView(WalletView):
             else:
                 conversions = Conversion.objects.filter(
                     Q(user=self.user) &
-                    Q(created_at__gte=dt.date.today() - dt.timedelta(days=duration))
+                    Q(created_at__gte=timezone.now() - dt.timedelta(days=duration))
                 )
             user_transactions = UserTransactions(user=self.user, query=conversions)  # provides a better structure
             conversions = user_transactions.get_conversions()
