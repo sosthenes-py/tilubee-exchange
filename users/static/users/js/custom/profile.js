@@ -119,7 +119,7 @@ function submit({s, e} = {}){
             notify('error', xhr.status + ': ' + xhr.statusText)
         },
         beforeSend: function (xhr, settings) {
-            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+            xhr.setRequestHeader("X-CSRFToken", csrf_token)
         }
     })
 }

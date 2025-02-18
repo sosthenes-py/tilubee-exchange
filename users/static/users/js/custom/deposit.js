@@ -1,6 +1,6 @@
 
         function create_crypto(amount){
-            if(amount !== '' && amount > 0){
+            if(amount !== ''){
                 $('#cryptoAmountModal').modal('hide')
                 const currency = window.myForm['currency']
                 let qty;
@@ -124,13 +124,13 @@
                 if($.inArray(coin, main_wallets) !== -1 && coin !== 'ngn') {
                     $('.cryptos-list').append(
                         `<li data-bs-dismiss='modal'><div class="d-flex justify-content-between align-items-center gap-8 text-large item-check"
-                         data-bs-target="#cryptoAmountModal" data-bs-toggle="modal"
                             onclick="
                                 set_storage('crypto', 'currency', '${coin}');
                                 $('.crypto-bal').text(fmtNum(window.wallets['${coin}']));
                                 $('.crypto-curr').text('${coin.toUpperCase()}');
                                 $('.crypto-bal-after').text(fmtNum(window.wallets['${coin}']));
                                 $('#crypto-amount').val(0)
+                                create_crypto(0)
                                     "
                         data-currency="${coin}">${coin.toUpperCase()} <span class="text-muted font-monospace">${fmtNum(balance)}</span> </div></li>`
                     )
@@ -322,30 +322,34 @@
 
         function deposit_complete(){
             const myForm = window.myForm
-            if(myForm.qty > 0 && myForm.currency !== ''){
-                showPreloader()
-                $.ajax({
-                    url: deposit_base_url,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: myForm,
-                    success: function (data) {
-                        hidePreloader()
-                        if (data.status === "success") {
-                            notifyAmount(`${fmtNum(myForm.qty)} ${myForm.currency.toUpperCase()}`, data.message, null, '{% url "users:wallet" %}')
-                        }else{
-                            notify(data.status, data.message)
+            if(myForm.action !== 'crypto'){
+                if(myForm.qty > 0 && myForm.currency !== ''){
+                    showPreloader()
+                    $.ajax({
+                        url: deposit_base_url,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: myForm,
+                        success: function (data) {
+                            hidePreloader()
+                            if (data.status === "success") {
+                                notifyAmount(`${fmtNum(myForm.qty)} ${myForm.currency.toUpperCase()}`, data.message, null, '{% url "users:wallet" %}')
+                            }else{
+                                notify(data.status, data.message)
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            hidePreloader()
+                            notify('error', xhr.status + ': ' + xhr.statusText)
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", csrf_token)
                         }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        hidePreloader()
-                        notify('error', xhr.status + ': ' + xhr.statusText)
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", csrf_token)
-                    }
-                })
+                    })
+                }else{
+                    notify('warning', 'Quantity or currency not found')
+                }
             }else{
-                notify('warning', 'Quantity or currency not found')
+                $('#actionModal').modal('hide')
             }
         }

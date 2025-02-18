@@ -12,13 +12,13 @@
                     <img src="{% static 'users/images/logo/logo.png' %}" alt="img" class="avt user-avatar">
                 </a>
                 <div class="search-box box-input-field style-2">
-                    <a href="home-search.html" class="icon-search"></a>
-                    <input type="text" placeholder="Looking for crypto" required class="clear-ip">
+                    <a href="#0" class="icon-search"></a>
+                    <input id="search_crypto" type="text" placeholder="Looking for crypto" required class="clear-ip">
                     <i class="icon-close"></i>
                 </div>
             </div>
             <div class="d-flex align-items-center gap-8">
-                <a href="list-blog.html" class="icon-gift"></a>
+                {% comment %} <a href="#0" class="icon-gift"></a> {% endcomment %}
                 <a href="#notification" class="icon-noti box-noti" data-bs-toggle="modal"></a>
             </div>
         </div>
@@ -419,7 +419,7 @@
                     if ($.inArray(coin, main_wallets) !== -1) {
                     }
                     $(`.${elem_class}`).append(
-                        ` <li class="mt-16">
+                        ` <li class="mt-16" data-coin="${coin}">
                                 <a href="#0" class="coin-item style-2 gap-12">
                                     <img src="{% static 'transactions/images/tokens' %}/${coin}.png" alt="img" class="img">
                                     <div class="content">
@@ -509,6 +509,22 @@
 
                 })
         }
+
+        function search(input){
+            input = input.toLowerCase()
+            $('market_by_general_list li').each(function(){
+                let coin = $(this).data('coin')
+                if(coin.startsWith(input)){
+                    $(this).show()
+                }else{
+                    $(this).hide()
+                }
+            })
+        }
+
+        $('#search_crypto').keyup(function(){
+            search($(this).val())
+        })
 
     </script>
 
