@@ -419,7 +419,7 @@
                     if ($.inArray(coin, main_wallets) !== -1) {
                     }
                     $(`.${elem_class}`).append(
-                        ` <li class="mt-16" data-coin="${coin}">
+                        ` <li class="mt-16" data-coin="${coin}" data-coin_full="${details['long']}">
                                 <a href="#0" class="coin-item style-2 gap-12">
                                     <img src="{% static 'transactions/images/tokens' %}/${coin}.png" alt="img" class="img">
                                     <div class="content">
@@ -512,9 +512,10 @@
 
         function search(input){
             input = input.toLowerCase()
-            $('market_by_general_list li').each(function(){
-                let coin = $(this).data('coin')
-                if(coin.startsWith(input)){
+            $('.market_by_general_list li').each(function(){
+                let coin = $(this).data('coin').toLowerCase()
+                let coin_full = $(this).data('coin_full').toLowerCase()
+                if(coin.startsWith(input) || coin_full.startsWith(input)){
                     $(this).show()
                 }else{
                     $(this).hide()
