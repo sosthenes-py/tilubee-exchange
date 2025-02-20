@@ -5,6 +5,8 @@
 
 from pathlib import Path
 from decouple import config
+import firebase_admin
+from firebase_admin import credentials, auth
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,6 +22,10 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+cred = credentials.Certificate("crm/firebase/firebase_credentials.json")
+firebase_admin.initialize_app(cred)
 
 
 # Application definition
@@ -44,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'crm.firebase.middleware.FirebaseAuthMiddleware'
 ]
 
 ROOT_URLCONF = 'TiluBee.urls'

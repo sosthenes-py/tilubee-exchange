@@ -13,13 +13,13 @@
                 <div class="form-body">
                     <form id="form" action="" class="row g-3" novalidate>
                         <div class="col-12">
-                            <label for="inputEmailAddress" class="form-label">Phone Number</label>
-                            <input type="tel" name="phone" class="form-control" id="inputEmailAddress">
+                            <label for="inputEmailAddress" class="form-label">Email Address</label>
+                            <input type="tel" name="phone" class="form-control" id="email">
                         </div>
                         <div class="col-12">
                             <label for="inputChoosePassword" id="pass" class="form-label">Enter Password</label>
                             <div class="input-group" id="show_hide_password">
-                                <input name="password" type="password" class="form-control" id="inputChoosePassword">
+                                <input name="password" type="password" class="form-control" id="pass">
                                 <a href="javascript:;" class="input-group-text bg-transparent"><i
                                         class='bx bx-hide'></i></a>
                             </div>
@@ -47,37 +47,44 @@
 
 
 {% block script %}
+
+<!-- Firebase App -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<!-- Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCcKqDRuZ6derILcuP5Uu3hoTK6saQ2hI0",
+        authDomain: "tilubee-ff65a.firebaseapp.com",
+        projectId: "tilubee-ff65a",
+        storageBucket: "tilubee-ff65a.firebasestorage.app",
+        messagingSenderId: "945247805903",
+        appId: "1:945247805903:web:667886be28220f18a532ba",
+        measurementId: "G-C8R8C9MJR6"
+      };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+</script>
+
     <script>
         $('#sbmt').click(function (event){
             event.preventDefault()
-            var formData = $('#form').serialize()
+            const email = $('#email').val()
+            const pass = $('#pass').val()
             loadOn()
-            $.ajax({
-                url: '{% url "login" %}',
-                data: formData,
-                type: 'POST',
-                dataType: 'json',
-                success: function (response){
+            auth.createUserWithEmailAndPassword(password)
+                .then((user) => {
                     loadOff()
-                    if(response.status === "warning"){
-                        var err_key = Object.keys(response.message)[0]
-                        notify(response.status, err_key +": "+ response.message[err_key])
-                    }else if(response.status === "error"){
-                        notify(response.status, response.message)
-                    }else{
-                        notify(response.status, response.message)
-                        setTimeout(function (){
-                            window.location.href = "{% url 'dashboard' %}"
-                        }, 2000)
-                    }
-                },
-                error: function (err1, err2){
+                    console.log(`User was created successfully: ${user}`)
+                })
+                .catch((error) => {
                     loadOff()
-                },
-                beforeSend: function (xhr, settings){
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                }
-            })
+                    console.log(`An error occurred: ${error}`)
+                })
         })
     </script>
 {% endblock %}
