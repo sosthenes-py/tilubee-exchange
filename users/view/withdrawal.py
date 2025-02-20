@@ -3,10 +3,7 @@ import random
 from django.db import transaction
 from django.views import View
 from transactions.models import Ticker
-from admin_panel.models import AccountDetails
 from django.http import JsonResponse
-from transactions.view.crypto import create_user_wallet
-from django.db.models import Q
 from transactions.models import Transaction
 from users.forms import WithdrawalForm
 from decimal import Decimal

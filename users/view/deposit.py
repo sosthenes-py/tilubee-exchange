@@ -2,7 +2,7 @@ import random
 
 from django.views import View
 from transactions.models import Ticker
-from admin_panel.models import AccountDetails
+# from admin_panel.models import AccountDetails
 from django.http import JsonResponse
 from transactions.view.crypto import create_user_wallet, markets as crypto_markets
 from django.db.models import Q
@@ -48,19 +48,20 @@ class DepositView(View):
         Doesn't make so much sense but this method handles both bank account and uid retrievals
         platform is required for uid retrieval : ('binance' or 'bybit')
         """
-        if account_type in ('bank', 'uid'):
-            account = AccountDetails.objects.filter(Q(account_type=account_type) | Q(account_type=account_type, platform=platform)).first()
-            return JsonResponse({
-                'status': 'success',
-                # for bank account
-                'number': account.number,
-                'bank': account.bank,
-                'name': account.name,
-                'narration': f'{self.user.id}{random.randint(100,999)}',
-                # and for uid
-                'uid': account.uid,
-                'platform': platform,
-            })
+        pass
+        # if account_type in ('bank', 'uid'):
+        #     account = AccountDetails.objects.filter(Q(account_type=account_type) | Q(account_type=account_type, platform=platform)).first()
+        #     return JsonResponse({
+        #         'status': 'success',
+        #         # for bank account
+        #         'number': account.number,
+        #         'bank': account.bank,
+        #         'name': account.name,
+        #         'narration': f'{self.user.id}{random.randint(100,999)}',
+        #         # and for uid
+        #         'uid': account.uid,
+        #         'platform': platform,
+        #     })
     
     def crypto_account(self, currency):
         wallet = self.user.user_wallets.filter(currency=currency).first()

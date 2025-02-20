@@ -66,6 +66,7 @@ class Ticker(models.Model):
 
 
 class Transaction(models.Model):
+    tx_id = models.CharField(max_length=20, default='1234')
     transaction_type = models.CharField(max_length=10, blank=False)  # deposit, withdrawal
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='transactions')
     qty = models.FloatField(default=0, blank=False, null=False)

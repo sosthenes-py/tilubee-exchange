@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'users',
     'user_auth',
     'transactions',
-    'admin_panel'
+    'crm',
 ]
 
 MIDDLEWARE = [

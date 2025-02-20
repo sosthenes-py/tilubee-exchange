@@ -1,5 +1,5 @@
 import uuid
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from django.utils import timezone
 
@@ -14,6 +14,11 @@ class AppUser(AbstractUser):
     created_at = models.DateTimeField(default=timezone.now)
     uid = models.CharField(max_length=9, unique=True)
     avatar_id = models.IntegerField(default=3)
+    status = models.BooleanField(default=False)
+    status_reason = models.CharField(max_length=100, default='')
+
+    groups = models.ManyToManyField(Group, related_name="appuser_set")
+    user_permissions = models.ManyToManyField(Permission, related_name="appuser_permissions_set")
 
 
 class Session(models.Model):
@@ -43,5 +48,13 @@ class Notification(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='notifications')
     title = models.CharField(max_length=100, default='')
     body = models.TextField(default='', max_length=10000)
+    created_at = models.DateTimeField(default=timezone.now)
+
+
+class VirtualAccount(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='virtual_accounts')
+    number = models.CharField(max_length=20, default='')
+    bank = models.CharField(max_length=20, default='')
+    name = models.CharField(max_length=20, default='')
     created_at = models.DateTimeField(default=timezone.now)
 
