@@ -157,13 +157,11 @@
                         <table class="table align-middle mb-0" id="example2">
                             <thead class="table-light">
                             <tr>
-                                <th>Status</th>
                                 <th>User ID</th>
                                 <th>Full Name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Date Joined</th>
-                                <th>Address</th>
                                 <th>Last Access</th>
 
                             </tr>
@@ -228,38 +226,19 @@
                                                 class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split">
                                             <span class="visually-hidden">Toggle Dropdown</span></button>
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                                            <a href="#" class="dropdown-item view_loan_history text-primary"
-                                               data-bs-toggle='modal' data-bs-target='#LoanModal'><i
-                                                    class="lni lni-cloud-sync"></i> Loans <span
-                                                    class="badge rounded-pill bg-primary m-1 loan_count">0</span></a>
 
                                             <a href="#0" class="dropdown-item view_transaction_history text-dark"
                                                data-bs-toggle='modal' data-bs-target='#transactionModal'><i
                                                     class="lni lni-cloud-upload"></i> transactions <span
-                                                    class="badge rounded-pill bg-dark m-1 transaction_count count">0</span></a>
-
-
-                                            <a href="#" class="dropdown-item view_timeline text-info-emphasis"
-                                               data-bs-toggle='modal' data-bs-target='#TimelineModal'><i
-                                                    class="lni lni-video"></i> Timeline</a>
-
+                                                    class="badge rounded-pill bg-dark m-1 tx_count count">0</span></a>
 
                                             <div class="dropdown-divider"></div>
-
-
-                                            <a href="#0" class="dropdown-item text-primary generate_transaction_link"
-                                               style="font-weight: bold"><i class="lni lni-link"></i> Generate transaction
-                                                Link</a>
 
 
                                             <div class="dropdown-divider"></div>
                                             <a href="#0" class="dropdown-item text-warning blacklist"
                                                style="font-weight: bold"><i class="lni lni-ban"></i>
                                                 Blacklist</a>
-
-                                             <a href="#0" class="dropdown-item text-warning whitelist" data-item="perm"
-                                               style="font-weight: bold"><i class="lni lni-hand"></i>
-                                                Permanent Whitelist</a>
 
                                             <a href="#" class="dropdown-item" style="color: red; font-weight: bold"
                                                data-bs-toggle='modal' data-bs-target='#EraseUserModal'><i
@@ -307,26 +286,7 @@
                                                     <hr class="my-4">
 
 
-                                                    <!--------------------MINI TRANSACTION HISTORY---------------------->
-                                                    <div class="d-flex flex-column align-items-center text-center">
-                                                        <h5 style="font-size:1.2em; font-weight: bold">Quick
-                                                            Actions</h5>
-
-
-                                                        <div class="col mt-3">
-                                                            <div class="btn-group" role="group" aria-label="Basic example">
-                                                                <button type="button" class="btn btn-outline-primary px-3" onclick="check_eligibility()">
-                                                                    Check Eligibility
-                                                                </button>
-                                                                <button type="button" class="btn btn-outline-primary px-3" data-bs-toggle='modal' data-bs-target='#PhoneModal' onclick="load_sms()">
-                                                                    Phone Book
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-
+                                                   
 
                                                 </div>
                                             </div>
@@ -378,17 +338,7 @@
                                                             </a>
                                                         </li>
 
-                                                         <li class="nav-item" role="presentation">
-                                                            <a class="nav-link" data-bs-toggle="tab" href="#loandetails"
-                                                               role="tab" aria-selected="false" tabindex="-1">
-                                                                <div class="d-flex align-items-center">
-                                                                    <div class="tab-icon"><i
-                                                                            class="bx bxs-bank font-18 me-1"></i>
-                                                                    </div>
-                                                                    <div class="tab-title">Loan Details</div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
+                                                        
                                                     </ul>
 
 
@@ -442,27 +392,6 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-user"></i>
-                                                                            Middle Name</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" placeholder="Middle Name"
-                                                                                   aria-label="Fullname"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_middle_name">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="middle_name"
-                                                                                    data-table="members">Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
 
                                                                 <div class="row mb-3">
                                                                     <div class="col-sm-3">
@@ -486,181 +415,6 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-mail-send"></i>
-                                                                            Secondary Email</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="email"
-                                                                                   placeholder="Secondary Email Address"
-                                                                                   aria-label="Email"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_email2">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="email2"
-                                                                                    data-table="members">Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-phone"></i>
-                                                                            Phone</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" placeholder="Phone"
-                                                                                   aria-label="Phone"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_phone">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="phone"
-                                                                                    data-table="members">Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-phone"></i>
-                                                                            Secondary Phone</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text"
-                                                                                   placeholder="Secondary Phone"
-                                                                                   aria-label="Phone"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_phone2">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="phone2"
-                                                                                    data-table="members">Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-user"></i>
-                                                                            Gender</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <select class="form-control details_gender select2">
-                                                                                <option value="male">Male</option>
-                                                                                <option value="female">Female</option>
-                                                                            </select>
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="gender"
-                                                                                    data-table="members">Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-current-location"></i>
-                                                                            Address</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" placeholder="Address"
-                                                                                   aria-label="State"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_address">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="address"
-                                                                                    data-table="members">Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-phone"></i>
-                                                                            State</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" placeholder="State"
-                                                                                   aria-label="State"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_state">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="state"
-                                                                                    data-table="members">Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-phone"></i>
-                                                                            LGA</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" placeholder="LGA"
-                                                                                   aria-label="DOB"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_lga">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="lga" data-table="members">
-                                                                                Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-phone"></i>
-                                                                            Date of Birth</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="date" placeholder="DOB"
-                                                                                   aria-label="DOB"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_dob">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="dob" data-table="members">
-                                                                                Save
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
 
                                                             </div>
 
@@ -672,30 +426,10 @@
 
                                                         <div class="tab-pane fade" id="bankdetails" role="tabpanel">
                                                             <ul class="list-group list-group-flush">
-                                                                <h5 class="mt-1 text-primary">Disbursement Bank Details
-                                                                    {% if user.level == 'approval admin' or user.level == 'super admin' %}
-                                                                    <span class="cursor-pointer badge text-bg-primary" data-bs-toggle="modal" data-bs-target="#modifyBankModal" onclick="fetch_banks()"><i class="bx bx-pen"></i> Modify</span>
-                                                                    {% endif %}
-                                                                </h5>
-                                                                <div class="w-100 border-top mb-2"></div>
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                                    <h6 class="mb-0 fw-bold"><i
-                                                                            class="bx bxs-building font-18 me-1"></i>
-                                                                        Account Number</h6>
-                                                                    <span class="text-secondary bankdetails_number">wedigital</span>
-                                                                </li>
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                                    <h6 class="mb-0 fw-bold"><i
-                                                                            class="bx bxs-map-pin font-18 me-1"></i>
-                                                                        Bank Name</h6>
-                                                                    <span class="text-secondary bankdetails_bank">wedigital</span>
-                                                                </li>
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                                    <h6 class="mb-0 fw-bold"><i
-                                                                            class="bx bxs-buildings font-18 me-1"></i>
-                                                                        Account Name</h6>
-                                                                    <span class="text-secondary bankdetails_name">@wedigital</span>
-                                                                </li>
+                                                                <h5 class="mt-1 text-primary">Withdrawal Bank Details</h5>
+                                                                <div class='withdrawal_bank_list'>
+                                                                    
+                                                                </div>
 
 
                                                                 <h5 class="mt-5 text-primary">Virtual Bank Details</h5>
@@ -721,90 +455,9 @@
                                                                 </li>
 
 
-                                                                <h5 class="mt-5 text-primary">Other Details</h5>
-                                                                <div class="w-100 border-top mb-2"></div>
-
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                                    <h6 class="mb-0 fw-bold"><i
-                                                                            class="bx bxs-building font-18 me-1"></i>
-                                                                        BVN</h6>
-                                                                    <span class="text-secondary bankdetails_bvn">wedigital</span>
-                                                                </li>
-
                                                             </ul>
                                                         </div>
 
-
-
-                                                         {#       -------------------------  LOAN DETAILS ----------------------#}
-
-                                                        <div class="tab-pane fade" id="loandetails" role="tabpanel">
-                                                            <ul class="list-group list-group-flush">
-                                                                <h5 class="mt-1 text-primary">Loan Setting</h5>
-                                                                <div class="w-100 border-top mb-2"></div>
-
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold"><i
-                                                                                class="fadeIn animated bx bx-user"></i>
-                                                                            Loan Level</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <select class="form-control details_borrow_level select2">
-                                                                                <option value="1">SOFT</option>
-                                                                                <option value="2">PREMIUM</option>
-                                                                                <option value="3">INDUSTRIAL</option>
-                                                                            </select>
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="borrow_level"
-                                                                                    data-table="members">Update
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold">&#x20A6;
-                                                                            Eligible Amt</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" placeholder="Amount eligible"
-                                                                                   aria-label="Amount eligible"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_eligible_amount">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="eligible_amount"
-                                                                                    data-table="members">Update
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <h5 class="mt-5 text-primary">Other Details</h5>
-                                                                <div class="w-100 border-top mb-2"></div>
-
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                                    <h6 class="mb-0 fw-bold"><i
-                                                                            class="bx bxs-building font-18 me-1"></i>
-                                                                        Max Overdue Days</h6>
-                                                                    <span class="text-secondary max_overdue_days fw-bold text-danger">-</span>
-                                                                </li>
-
-
-                                                                <h5 class="mt-5 text-primary">Overdue Chart</h5>
-
-                                                                <div id="overdue_chart" data-highcharts-chart="0" style="overflow: hidden;"></div>
-
-                                                            </ul>
-                                                        </div>
 
 
                                                     </div>
@@ -1100,8 +753,8 @@
             var start_date = new Date($("#history_month_start").val())
             var end_date = new Date($(this).val())
             if (start_date > end_date) {
-                $(this).val(get_current_month())
-                $("#history_month_start").val(get_current_month(-1))
+                $(this).val(get_current_day())
+                $("#history_month_start").val(get_current_day(-1))
                 notify('warning', 'Ending date cannot be less than starting date')
             }
         })
@@ -1110,8 +763,8 @@
             var end_date = new Date($("#history_month_end").val())
             var start_date = new Date($(this).val())
             if (start_date > end_date) {
-                $(this).val(get_current_month(-1))
-                $("#history_month_end").val(get_current_month())
+                $(this).val(get_current_day(0))
+                $("#history_month_end").val(get_current_day(0))
                 notify('warning', 'Ending date cannot be less than starting date')
             }
 
@@ -1141,8 +794,7 @@
                         window.all_tickers = data.all_tickers
                         var table = $('#example2').DataTable({
                             lengthMenu: [ [30, 70, 150, 500, -1], [30, 70, 150, 500, "All"] ],
-                            pageLength: 30,
-                            buttons: ['copy', 'excel', 'pdf', 'print']
+                            pageLength: 30
                         });
                         table.buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
                     }, 10)
@@ -1317,7 +969,7 @@
 
     <script>
         $(function () {
-            $('#history_month_start').val(get_current_day(-1))
+            $('#history_month_start').val(get_current_day(0))
             $('#history_month_end').val(get_current_day())
 
             start()
@@ -1348,41 +1000,21 @@
             $('body').on('click', '.user_rows', function () {
                 var row = $(this);
                 var first_name = row.data('first_name');
-                var eligible_amount = row.data('eligible_amount');
                 var last_name = row.data('last_name');
-                var middle_name = row.data('middle_name');
                 var email = row.data('email');
-                var email2 = row.data('email2');
                 var phone = row.data('phone');
-                var phone2 = row.data('phone2');
                 var created_at = row.data('created_at');
                 var avatar = row.data('avatar');
-                var address = row.data('address');
-                var dob = row.data('dob');
-                var borrow_level = row.data('borrow_level');
                 var status = row.data('status');
-                var gender = row.data('gender');
-                var lga = row.data('lga');
-                var state = row.data('state');
                 var status_pill = row.data('status_pill');
-                var id = row.data('user_id');
+                var id = row.data('uid');
                 var doc_status = row.data('doc_status');
                 var doc_reason = row.data('doc_reason');
 
                 $(".details_first_name").val(first_name).data('id', id);
-                $(".details_borrow_level").val(borrow_level).select().data('id', id);
-                $(".details_eligible_amount").val(eligible_amount).data('id', id);
                 $(".details_last_name").val(last_name).data('id', id);
-                $(".details_middle_name").val(middle_name).data('id', id);
                 $(".details_email").val(email).data('id', id);
-                $(".details_email2").val(email2).data('id', id);
                 $(".details_phone").val(phone).data('id', id);
-                $(".details_phone2").val(phone2).data('id', id);
-                $(".details_address").val(address).data('id', id);
-                $(".details_dob").val(dob).data('id', id);
-                $(".details_state").val(state).data('id', id);
-                $(".details_lga").val(lga).data('id', id);
-                $(".details_gender").val(gender).select().data('id', id);
                 $(".details_status_show").html(status_pill);
                 $(".details_status").data('id', id);
 
@@ -1418,25 +1050,30 @@
                 // HANDLE OTHER DETAILS FETCH
                 setTimeout(function () {
                     $.ajax({
-                        url: '{% url "crm:users" %}'',
+                        url: '{% url "crm:users" %}',
                         dataType: "json",
                         type: "POST",
                         async: true,
                         data: {
-                            user_id: id,
+                            uid: id,
                             action: 'get_other_details'
                         },
                         success: function (data) {
                             offProgress('user-modal')
                             {#POPULATE OTHER DETAILS WITH RESPONSE#}
                             $.each(data.content, function (key, value) {
-                                if (key !== "tables" && key !== "overdue_chart") {
-                                    $('.' + key).text(value)
+                                if(key === 'banks'){
+                                    populate_banks(value)
+                                }else if(key === 'virtual_accounts'){
+                                    populate_virtual_accounts(value)
+                                }else if(key === 'notes'){
+
+                                }else{
+                                    $(`.${key}`).text(value)
                                 }
                             });
                             $('#show_notes').html(data.content['tables']['notes'])
                             $('#show_files').html(data.content['tables']['files'])
-                            update_overdue_chart(data.content['overdue_chart']['x'], data.content['overdue_chart']['y'], true)
                         },
                         error: function () {
                             notify('error', 'Fetch failed, Retry')
@@ -1450,6 +1087,40 @@
 
 
             })
+
+            function populate_banks(banks){
+                $.each(banks, function(index, bank){
+                    $('.withdrawal_bank_list').append(
+                        `
+                        <div class="w-100 border-top mb-2"></div>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <h6 class="mb-0 fw-bold"><i
+                                                                                class="bx bxs-building font-18 me-1"></i>
+                                                                            Account Number</h6>
+                                                                        <span class="text-secondary">${bank.number}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="bx bxs-map-pin font-18 me-1"></i>
+                                                                            Bank Name</h6>
+                                                                        <span class="text-secondary bankdetails_bank">${bank.bank}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="bx bxs-buildings font-18 me-1"></i>
+                                                                            Account Name</h6>
+                                                                        <span class="text-secondary bankdetails_name">${bank.name}</span>
+                                                                    </li>
+                        `
+                    )
+                })
+            }
+
+            function populate_virtual_accounts(accts){
+                $.each(accts, function(key, value){
+                    $(`.virtual_bankdetails_${key}`).text(value)
+                })
+            }
 
 
             $(".details_save").click(function () {

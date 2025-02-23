@@ -47,7 +47,7 @@ class RegistrationView(View):
 
             return JsonResponse({
                 'status': 'success',
-                'message': 'We have also sent a code to your email address. Continue to confirm your email'
+                'message': 'We have sent a code to your email address. Continue to confirm your email'
             })
         return JsonResponse({
             'status': 'warning',

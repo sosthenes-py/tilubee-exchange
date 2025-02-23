@@ -16,9 +16,16 @@ class AppUser(AbstractUser):
     avatar_id = models.IntegerField(default=3)
     status = models.BooleanField(default=False)
     status_reason = models.CharField(max_length=100, default='')
+    last_access = models.DateTimeField(default=timezone.now)
 
     groups = models.ManyToManyField(Group, related_name="appuser_set")
     user_permissions = models.ManyToManyField(Permission, related_name="appuser_permissions_set")
+
+    def is_blacklisted(self):
+        if hasattr(self, 'blacklist'):
+            return True
+        return False
+
 
 
 class Session(models.Model):
@@ -57,4 +64,3 @@ class VirtualAccount(models.Model):
     bank = models.CharField(max_length=20, default='')
     name = models.CharField(max_length=20, default='')
     created_at = models.DateTimeField(default=timezone.now)
-

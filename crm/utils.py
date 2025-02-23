@@ -64,7 +64,7 @@ class UserUtils:
         end_date = dt.datetime.strptime(end, '%Y-%m-%d') + dt.timedelta(days=1)
         end_date = timezone.make_aware(end_date, timezone.get_current_timezone())
 
-        self.users = (AppUser.objects.
+        users = (AppUser.objects.
                       annotate(first_name_lower=Lower('first_name'), last_name_lower=Lower('last_name')).
                       filter(
             (
@@ -73,35 +73,48 @@ class UserUtils:
             &
             (
                     Q(uid__startswith=filters) | Q(phone__startswith=filters) |
-                    Q(bvn__startswith=filters) | Q(first_name_lower__startswith=filters.lower()) |
+                    Q(first_name_lower__startswith=filters.lower()) |
                     Q(last_name_lower__startswith=filters.lower())
             )
         ).order_by('-created_at').all())
         self._content = ''
         rows = int(rows)
-        for self.user in self.users:
+        for user in users:
             if rows > 0:
-                avatar = f'/static/crm/images/avt/av{self.user.avatar_id}.jpg'
-
-                self.add_table_content(_for='all_users_table', avatar=avatar)
+                self.add_table_content(_for='all_users_table', user=user)
                 rows -= 1
 
     def fetch_other_details(self):
         self._content = {}
-        self._content['bankdetails_number'] = self.user.disbursementaccount.number
-        self._content['bankdetails_bank'] = self.user.disbursementaccount.bank_name
-        self._content['bankdetails_name'] = f'{self.user.last_name} {self.user.first_name}'
-        self._content['bankdetails_bvn'] = self.user.bvn
+       
+        if self.user.virtual_accounts.exists():
+            virtual_accounts = {
+                'number': self.user.virtual_accounts.last().number,
+                'name': self.user.virtual_accounts.last().name,
+                'bank': self.user.virtual_accounts.last().bank
+            }
+        else:
+            virtual_accounts = {}
+        banks = [
+            {
+                field.name: getattr(bank, field.name)
+                for field in bank._meta.fields
+                if field.name not in ('id', 'user')
+            }
+            for bank in self.user.user_bank_accounts.all()
+        ]
 
-        self._content['virtual_bankdetails_number'] = self.user.virtualaccount_set.last().number
-        self._content['virtual_bankdetails_bank'] = self.user.virtualaccount_set.last().bank_name
-        self._content['virtual_bankdetails_name'] = f'{self.user.last_name} {self.user.first_name}'
-
-        self._content['tx_count'] = self.user.transactions_set.count()
-        self._content['notes_count'] = self.user.note_set.count()
-
+        
         self.fetch_notes_in_table()
         self._content['tables'] = {'notes': self._content2}
+
+        self._content = {
+            'virtual_accounts': virtual_accounts,
+            'banks': banks,
+            'notes': self._content2,
+            'tx_count': self.user.transactions.count(),
+            'notes_count': self.user.note_set.count()
+        }
 
     def fetch_notes_in_table(self):
         self._content2 = ''
@@ -284,65 +297,38 @@ class UserUtils:
 
     def add_table_content(self, _for='', **kwargs):
         if _for == 'all_users_table':
-            if self.user.loan_set.filter(~Q(status='repaid')):
-                ongoing = f"""
-                    <div class="badge rounded-pill w-100 text-primary"><i class="bx bx-radio-circle-marked bx-burst bx-rotate-90 align-middle font-18 me-1"></i></div>
-                """
-            else:
-                ongoing = ''
-            user_presence = 'online' if not self.user.is_blacklisted() or hasattr(self.user, 'whitelist') else 'offline'
-            borrow_level_opt = {
-                index: f'{level[:4].upper()}'
-                for index, level in enumerate(settings.DATABASE_ALIAS)
-                if index > 0
-            }
+            user = kwargs['user']
+            user_presence = 'online' if not user.is_blacklisted() else 'offline'
             self._content += f"""
                                 <tr 
-                                    data-uid='{self.user.uid}' 
-                                    data-first_name='{self.user.first_name}' 
-                                    data-eligible_amount='{self.user.eligible_amount:,}' 
-                                    data-last_name='{self.user.last_name}' 
-                                    data-phone='{self.user.phone}' 
-                                    data-phone2='{self.user.phone2}' 
-                                    data-middle_name='{self.user.middle_name}' 
-                                    data-email='{self.user.email}' 
-                                    data-gender='{self.user.gender}' 
-                                    data-state='{self.user.state}' 
-                                    data-lga='{self.user.lga}' 
-                                    data-email2='{self.user.email2}' 
-                                    data-address='{self.user.address}' 
-                                    data-dob='{self.user.dob}' 
-                                    data-borrow_level='{self.user.borrow_level}' 
-                                    data-created_at="{self.user.created_at:%a %b %d, %Y}" 
-                                    data-avatar="{kwargs['avatar']}" 
-                                    data-doc_status="{self.user.status}"
-                                    data-doc_reason="{self.user.status_reason}"
-                                    data-status='{'Active' if not self.user.is_blacklisted() or hasattr(self.user, 'whitelist') else f'Blacklisted: {getattr(self.user, "blacklist").created_at:%b %d}'}' 
-                                    data-status_pill='<span class="badge rounded-pill text-bg-{'success' if not self.user.is_blacklisted() or hasattr(self.user, 'whitelist') else 'danger'}">{'Active' if not self.user.is_blacklisted() or hasattr(self.user, 'whitelist') else f'Blacklisted: {getattr(self.user, "blacklist").created_at:%b %d}: {getattr(self.user, "blacklist").reason}'}</span>' 
-                                    data-style='grey' 
-                                    data-last_access='{self.user.last_access}' class='user_rows' data-bs-toggle='modal' data-bs-target='#exampleLargeModal1'>
+                                    data-first_name='{user.first_name}' 
+                                    data-last_name='{user.last_name}' 
+                                    data-phone='{user.phone}' 
+                                    data-email='{user.email}' 
+                                    data-created_at="{user.created_at:%a %b %d, %Y}" 
+                                    data-avatar="/static/crm/images/avt/avt{user.avatar_id}.jpg" 
+                                    
+                                    data-status='{'Active' if not user.is_blacklisted() or hasattr(user, 'whitelist') else 'Blacklisted'}' 
+                                    data-doc_status="{user.status}"
+                                    data-doc_reason="{user.status_reason}"
+                                    data-status_pill='<span class="badge rounded-pill text-bg-{'success' if not user.is_blacklisted() or hasattr(user, 'whitelist') else 'danger'}">{'Active' if not user.is_blacklisted() else f'Blacklisted: {getattr(user, "blacklist").created_at:%b %d}: {getattr(user, "blacklist").reason}'}</span>'
+                                    data-uid='{user.uid}'
+                                    class='user_rows' data-bs-toggle='modal' data-bs-target='#exampleLargeModal1'>
 
-                                    <td data-order="{0 if user_presence == 'online' else 1}">
-                                		<div class='d-flex align-items-center'>
-                                		<div class="user-presence user-{user_presence}" data-uid="{self.user.uid}">
-                                			<img src="{kwargs['avatar']}" width="10" height="10" alt="" class="rounded-circle"></div>
-                                			{ongoing}
-                                		</div>
-                                	</td>
+                                   
 
                                 	<td>
                                 	<div class="ms-2">
-										<h6 class="mb-0 font-14 fw-bold">{self.user.uid}
-										<span style="font-size: 8px" class="fw-bold text-primary">{borrow_level_opt.get(self.user.borrow_level)}</span>
+										<h6 class="mb-0 font-14 fw-bold">{user.uid}
+										<span style="font-size: 8px" class="fw-bold text-primary"></span>
 										</h6>
 									</div>
                                 	</td>
-                                	<td>{self.user.last_name} {self.user.first_name}</td>
-                                	<td>{self.user.phone}</td>
-                                	<td>{self.user.email}</td>
-                                	<td>{self.user.created_at:%a %b %d, %Y}</td>
-                                	<td>{self.user.address}</td>
-                                	<td>{self.user.last_access:%a %b %d, %Y}</td>	
+                                	<td>{user.last_name} {user.first_name}</td>
+                                	<td>{user.phone}</td>
+                                	<td>{user.email}</td>
+                                	<td>{user.created_at:%a %b %d, %Y}</td>
+                                	<td>{user.last_access:%a %b %d, %Y}</td>	
                                 </tr>
                             """
 
@@ -373,100 +359,6 @@ class UserUtils:
                             </div>
                         </div>
                         """
-
-        elif _for == 'sms_sidebar':
-            log = kwargs['log']
-            self._content += f"""
-                <a href="javascript:;" class="list-group-item sms_sidebar_item phonebook_item" data-name="{log.name}" data-message="{log.message}" data-phone="{log.phone}">
-					<div class="d-flex">
-						<div class="chat-user-offline">
-							<img src="/static/crm/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
-						</div>
-						<div class="flex-grow-1 ms-2">
-							<h6 class="mb-0 chat-title">{log.name}</h6>
-							<p class="mb-0 chat-msg">{log.message if len(log.message) < 15 else f'{log.message[:15]}...'}</p>
-						</div>
-						<div class="chat-time">{log.date:%b %d, %I:%M %p}</div>
-					</div>
-				</a>
-            """
-
-        elif _for == 'sms_content':
-            log = kwargs['log']
-            if log.category == 'incoming':
-                self._content += f"""
-                    <div class="chat-content-leftside">
-							<div class="d-flex">
-								<img src="/static/crm/images/avatars/user.png" width="30" height="30" class="rounded-circle" alt="">
-								<div class="flex-grow-1 ms-2">
-									<p class="mb-0 chat-time">{log.name}, {log.date:%b %d, %I:%M %p}</p>
-									<p class="chat-left-msg">{log.message}</p>
-								</div>
-							</div>
-						</div>
-                """
-            else:
-                self._content += f"""
-                    <div class="chat-content-rightside">
-							<div class="d-flex ms-auto">
-								<div class="flex-grow-1 me-2">
-									<p class="mb-0 chat-time text-end">Customer, {log.date:%b %d, %I:%M %p}</p>
-									<p class="chat-right-msg">{log.message}</p>
-								</div>
-							</div>
-						</div>
-                """
-
-        elif _for == 'contact':
-            contact = kwargs['contact']
-            self._content += f"""
-                            <a href="javascript:;" class="list-group-item contact_item phonebook_item" data-name="{contact.name}" data-message="" data-phone="{contact.phone}">
-            					<div class="d-flex">
-            						<div class="chat-user-offline">
-            							<img src="/static/crm/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
-            						</div>
-            						<div class="flex-grow-1 ms-2">
-            							<h6 class="mb-0 chat-title">{contact.name}</h6>
-            							<p class="mb-0 chat-msg" >{contact.phone}</p>
-            						</div>
-            						<div class="chat-time"><span class='badge text-bg-primary' onclick="copy_to_clipboard('{contact.phone}')"><i class='bx bx-copy'></i> copy</span></div>
-            					</div>
-            				</a>
-                        """
-
-        elif _for == 'call':
-            call = kwargs['call']
-            category_mapping = {
-                'incoming': ('secondary', 'phone-incoming'),
-                'outgoing': ('secondary', 'phone-outgoing'),
-                'missed': ('danger', 'phone-incoming'),
-                'rejected': ('danger', 'block'),
-                'blocked': ('danger', 'block')
-            }
-
-            call_class, icon = category_mapping.get(call.category, ('info', 'phone'))
-
-            self._content += f"""
-                            <a href="javascript:;" class="list-group-item contact_item phonebook_item" data-name="{call.name}" data-message="" data-phone="{call.phone}">
-            					<div class="d-flex">
-            						<div class="chat-user-offline">
-            							<img src="/static/crm/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
-            						</div>
-            						<div class="flex-grow-1 ms-2">
-            							<h6 class="mb-0 chat-title fw-bold text-{call_class}">{'Unsaved' if call.name == '' else call.name} <i class='bx bx-{icon} text-{call_class}'></i></h6>
-            							<p class="mb-0 chat-msg" >{call.phone}</p>
-            						</div>
-            						<div class="chat-time"><span class='badge text-bg-primary' onclick="copy_to_clipboard('{call.phone}')"><i class='bx bx-copy'></i> copy</span></div>
-            					</div>
-            				</a>
-                        """
-
-        elif _for == 'call_content':
-            self._content = """
-            <div style="justify-content: center; height: 100%; align-items: center; display: flex;">
-                <i>Nothing to show here...</i>
-            </div>
-            """
 
         elif _for == 'blacklist':
             row = kwargs['row']

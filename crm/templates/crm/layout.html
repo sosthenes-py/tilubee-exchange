@@ -20,7 +20,7 @@
 	<!-- Bootstrap CSS -->
 	<link href="{% static 'crm/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'crm/css/bootstrap-extended.css' %}" rel="stylesheet" />
-	<link href="{% static 'crm/css/app.scss' %}" rel="stylesheet" />
+	<link href="{% static 'crm/css/app.css' %}" rel="stylesheet" />
 	<link href="{% static 'crm/css/icons.css' %}" rel="stylesheet" />
 	<!-- Theme Style CSS -->
 	<link rel="stylesheet" href="{% static 'crm/css/dark-theme.css' %}" />
@@ -134,170 +134,7 @@
 	<!--wrapper-->
 	<div class="wrapper">
 
-    <div class="sidebar-wrapper" data-simplebar="true">
-			<div class="sidebar-header">
-				<div>
-					<img src="{% static 'admin_panel/images/logo.png' %}" class="logo-icon" alt="logo icon"  style="width: 4em"/>
-				</div>
-                <div class="mobile-toggle-icon ms-auto"><i class="bx bx-x"></i>
-				</div>
-			</div>
-			<!--navigation-->
-			<ul class="metismenu" id="menu">
-            {% if user.level == 'admin' or user.level == 'super admin' or user.level == 'team leader' %}
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-home-circle"></i>
-						</div>
-						<div class="menu-title">Home</div>
-					</a>
-                    {% if user.level == 'super admin' %}
-					<ul>
-						<li> <a href="{% url 'dashboard' %}"><i class="bx bx-right-arrow-alt"></i>Dashboard</a>
-						</li>
-					</ul>
-                    {% endif %}
-
-                    <ul>
-						<li> <a href="{% url 'analysis' %}"><i class="bx bx-right-arrow-alt"></i>Analysis</a>
-						</li>
-					</ul>
-
-				</li>
-            {% endif %}
-
-            {% if user.level != 'admin' %}
-                <li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-category"></i>
-						</div>
-						<div class="menu-title">Loan Tracker</div>
-					</a>
-
-                    {% if user.level == 'super admin' or user.level == 'approval admin' %}
-					<ul>
-						<li> <a href="{% url 'loans' %}"><i class="bx bx-right-arrow-alt"></i>All Loans</a>
-						</li>
-					</ul>
-                     {% endif %}
-
-                    {% if user.level == 'super admin' or user.level == 'approval admin' or user.level == 'team leader' %}
-
-                        {% if user.level == 'super admin' or user.level == 'approval admin' %}
-                    <ul>
-						<li> <a href="{% url 'loans_with_status' 'pending' %}"><i class="bx bx-right-arrow-alt"></i>Pending Loans</a>
-						</li>
-					</ul>
-                    <ul>
-						<li> <a href="{% url 'loans_with_status' 'approved' %}"><i class="bx bx-right-arrow-alt"></i>Approved Loans</a>
-						</li>
-					</ul>
-                       {% endif %}
-
-                    <ul>
-						<li> <a href="{% url 'loans_with_status' 'disbursed' %}"><i class="bx bx-right-arrow-alt"></i>Disbursed Loans</a>
-						</li>
-					</ul>
-
-                        {% if user.level == 'super admin' or user.level == 'approval admin' %}
-
-                    <ul>
-						<li> <a href="{% url 'loans_with_status' 'partpayment' %}"><i class="bx bx-right-arrow-alt"></i>Partly Paid Loans</a>
-						</li>
-					</ul>
-                    <ul>
-						<li> <a href="{% url 'loans_with_status' 'repaid' %}"><i class="bx bx-right-arrow-alt"></i>Repaid Loans</a>
-						</li>
-					</ul>
-                       {% endif %}
-
-                    <ul>
-						<li> <a href="{% url 'loans_with_status' 'overdue' %}"><i class="bx bx-right-arrow-alt"></i>Overdue Loans</a>
-						</li>
-					</ul>
-
-                        {% if user.level == 'super admin' or user.level == 'approval admin' %}
-                    <ul>
-						<li> <a href="{% url 'loans_with_status' 'declined' %}"><i class="bx bx-right-arrow-alt"></i>Declined Loans</a>
-						</li>
-					</ul>
-                       {% endif %}
-                    {% endif %}
-				</li>
-            {% endif %}
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-category"></i>
-						</div>
-						<div class="menu-title">Other Menu</div>
-					</a>
-
-                    {% if user.level != 'admin' %}
-                     <ul>
-						<li> <a href="{% url 'repayments' %}"><i class="bx bx-right-arrow-alt"></i>Repayments</a>
-						</li>
-					</ul>
-                    {% endif %}
-
-
-
-                    {% if user.level == 'admin' or user.level == 'super admin' or user.level == 'team leader' %}
-                        <ul>
-                            <li> <a href="{% url 'operators' %}"><i class="bx bx-right-arrow-alt"></i>Operators</a>
-                            </li>
-                        </ul>
-                    {% endif %}
-
-                    {% if user.level == 'admin' or user.level == 'super admin' or user.level == 'approval admin' %}
-                        {% if user.level == 'admin' or user.level == 'super admin' %}
-					<ul>
-						<li> <a href="{% url 'waiver' %}"><i class="bx bx-right-arrow-alt"></i>Waiver</a>
-						</li>
-					</ul>
-
-
-                    <ul>
-						<li> <a href="{% url 'blacklist' %}"><i class="bx bx-right-arrow-alt"></i>Blacklist</a>
-						</li>
-					</ul>
-
-                     <ul>
-						<li> <a href="{% url 'logs' %}"><i class="bx bx-right-arrow-alt"></i>Api Logs</a>
-						</li>
-					</ul>
-
-                     {% endif %}
-
-                    <ul>
-						<li> <a href="{% url 'users' %}"><i class="bx bx-right-arrow-alt"></i>Registered Users</a>
-						</li>
-					</ul>
-
-                     <ul>
-						<li> <a href="{% url 'accepted_users' %}"><i class="bx bx-right-arrow-alt"></i>Filtered Users</a>
-						</li>
-					</ul>
-                    {% endif %}
-
-				</li>
-				<li>
-					<a href="{% url 'logout' %}">
-						<div class="parent-icon"><i class="bx bx-user-circle"></i>
-						</div>
-						<div class="menu-title">Logout</div>
-					</a>
-				</li>
-
-
-			</ul>
-			<!--end navigation-->
-		</div>
-
-
-
-
-		<!--sidebar wrapper -->
+        <!--sidebar wrapper -->
 		<div class="sidebar-wrapper" data-simplebar="true">
 			<div class="sidebar-header">
 				<div>
@@ -352,6 +189,11 @@
 			</ul>
 			<!--end navigation-->
 		</div>
+
+
+
+
+		
 		<!--end sidebar wrapper -->
 		<!--start header -->
 		<header>
