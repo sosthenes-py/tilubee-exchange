@@ -38,7 +38,7 @@ def login_user(request):
         return JsonResponse({'status': 'warning', 'message': form.errors})
     else:
         form = LoginForm()
-        return render(request, 'admin_panel/auth/login.html', {'form': form})
+        return render(request, 'crm/auth/login.html', {'form': form})
 
 
 def register(request):
@@ -54,7 +54,7 @@ def register(request):
                 user, created = AdminUser.objects.get_or_create(uid=user['uid'], email=user['email'])
                 return JsonResponse({'status': 'success', 'message': 'Successfully registered'})
     else:
-        return render(request, 'admin_panel/auth/register.html')
+        return render(request, 'crm/auth/register.html')
 
 
 
@@ -63,12 +63,12 @@ def dashboard(request):
         return redirect('analysis')
     elif request.user.level != 'super admin':
         return redirect('loans')
-    return render(request, 'admin_panel/dashboard.html')
+    return render(request, 'crm/dashboard.html')
 
 
 def users(request):
     if request.method == "GET":
-        return render(request, 'admin_panel/users.html')
+        return render(request, 'crm/users.html')
     posted_data = {}
     for key, value in request.POST.items():
         posted_data[key] = value
@@ -79,7 +79,7 @@ def users(request):
 
 def loans(request):
     if request.method == "GET":
-        return render(request, 'admin_panel/loans.html',
+        return render(request, 'crm/loans.html',
                       {'app_stages': settings.APP_STAGES.keys(), 'APP_STAGES': settings.APP_STAGES}
                       )
     posted_data = {}
@@ -94,14 +94,14 @@ def loans(request):
 def loans_with_status(request, status):
     if request.method == "GET":
         if status in ('pending', 'approved', 'declined', 'disbursed', 'overdue', 'partpayment', 'repaid'):
-            return render(request, 'admin_panel/loan_with_status.html', {"status": status})
+            return render(request, 'crm/loan_with_status.html', {"status": status})
         return HttpResponseBadRequest(status=404)
 
 
 @login_required
 def repayments(request):
     if request.method == "GET":
-        return render(request, 'admin_panel/repayments.html')
+        return render(request, 'crm/repayments.html')
     posted_data = {}
     for key, value in request.POST.items():
         posted_data[key] = value
@@ -113,29 +113,29 @@ def repayments(request):
 
 @login_required
 def waiver(request):
-    return render(request, 'admin_panel/waiver.html')
+    return render(request, 'crm/waiver.html')
 
 
 @login_required
 def view_blacklist(request):
-    return render(request, 'admin_panel/blacklist.html')
+    return render(request, 'crm/blacklist.html')
 
 
 @login_required
 def view_logs(request):
-    return render(request, 'admin_panel/logs.html')
+    return render(request, 'crm/logs.html')
 
 
 @login_required
 def accepted_users(request):
-    return render(request, 'admin_panel/accepted_user.html')
+    return render(request, 'crm/accepted_user.html')
 
 
 
 @login_required
 def operators(request):
     if request.method == "GET":
-        return render(request, 'admin_panel/operators.html', {'app_stages': settings.APP_STAGES.keys(), 'APP_STAGES': settings.APP_STAGES})
+        return render(request, 'crm/operators.html', {'app_stages': settings.APP_STAGES.keys(), 'APP_STAGES': settings.APP_STAGES})
     posted_data = {}
     for key, value in request.POST.items():
         posted_data[key] = value

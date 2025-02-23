@@ -1,27 +1,112 @@
-{% extends "admin_panel/layout.html" %}
+{% extends "crm/layout.html" %}
 {% load static %}
 
 {% block title %}
-    <title>Repayment History - We Digital</title>
+    <title>Members - PROJECT_NAME</title>
+{% endblock %}
+
+{% block search_block %}
+
+
 {% endblock %}
 
 {% block content %}
 
+    <script>
+        var overlay = $("#overlay");
+        var loader = $("#loader");
+
+        function loadOn() {
+            overlay.css('display', 'block');
+            loader.css('display', 'block');
+        }
+
+        function loadOff() {
+            overlay.css('display', 'none');
+            loader.css('display', 'none');
+        }
+    </script>
+
+    <style>
+        .user-online:after, .user-offline:after {
+            content: "";
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px #fff;
+        }
+
+        .user-online:after {
+            background: #16e15e;
+        }
+
+        .user-offline:after {
+            background: #fd3550;
+        }
+
+        .user-online, .user-offline {
+            position: relative;
+        }
 
 
-<!--start page wrapper -->
-		<div class="page-wrapper">
-			<div class="page-content">
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            list-style: none;
+        }
 
-				<!--end row-->
+        .timeline:before {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 40px;
+            width: 2px;
+            content: "";
+            background-color: #dee2e6;
+        }
 
-				<div class="card radius-10">
-					<div class="card-body">
+        .timeline > .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding-left: 60px;
+        }
+
+        .timeline > .timeline-item:before {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 5px solid #6A49F2;
+            content: "";
+        }
+
+        .timeline > .timeline-item .timeline-content {
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: .25rem;
+        }
+    </style>
+    <!--start page wrapper -->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--end row-->
+
+            <div class="card radius-10">
+                <div class="card-body">
+                    <div class="d-flex align-items-center bg-light p-3 flex-wrap">
+                        <div class="me-auto fw-bold fs-6">All Users</div>
 
 
-                        <div class="d-flex align-items-center bg-light">
-                        <div class="me-auto fw-bold fs-6">{% if user.level == 'staff' or user.level == 'team leader' %}{{ user.stage }}{% endif %} Repayments</div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center flex-wrap">
                             <div class="me-2">
                                 <label for="history_month_start" class="form-label me-1">From:</label>
                                 <input type="date" id="history_month_start" class="form-control d-inline-block" value=""
@@ -35,7 +120,7 @@
                             <div class="me-2">
                                 <label for="history_rows" class="form-label me-1">Rows:</label>
                                 <select id="history_rows" class="form-select d-inline-block" style="width: auto;">
-                                    <option selected value="25">25</option>
+                                    <option value="15">15</option>
                                     <option value="50">50</option>
                                     <option value="200">200</option>
                                     <option value="500">500</option>
@@ -43,22 +128,21 @@
                                     <option value="10000">2000+</option>
                                 </select>
                             </div>
+
                         </div>
-                    </div>
 
 
-
-                    <div class="d-flex align-items-center bg-light">
+                        <div class="d-flex align-items-center bg-light flex-wrap">
                         <div class="me-auto fw-bold fs-6"></div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center flex-wrap">
 
                             <div class="me-2">
                                 <label for="filter" class="form-label me-1">Filters:</label>
-                                <input type="text" placeholder="Search by L.ID, Phone, BVN, Fname, Lname" id="filters" class="form-control d-inline-block" value="">
+                                <input type="text" placeholder="Search by U.ID, Phone, BVN, Fname, Lname" id="filters" class="form-control d-inline-block" value="">
                             </div>
 
                             <div>
-                                <button id="search_rdp" type="button" class="btn btn-primary px-3 radius-30"
+                                <button type="button" class="btn btn-primary px-3 radius-30"
                                         onclick="start(true)">Search
                                 </button>
                             </div>
@@ -66,34 +150,36 @@
                     </div>
 
 
-						<hr/>
-						<div class="table-responsive">
-							<table class="table align-middle mb-5" id="repayment_table">
-								<thead class="table-light">
-									<tr>
-                                        <th>L,U ID</th>
-                                        <th>Principal</th>
-                                        <th>Amount Due</th>
-                                        <th>Record Pay</th>
-                                        <th>Record Stage</th>
-                                        <th>Total Repaid</th>
-                                        <th>Status</th>
-                                        <th>Record Date</th>
-                                        <th>Action</th>
-                                    </tr>
-								</thead>
-								<tbody id="repayment_history" style="padding-bottom: 4em !important">
+                    </div>
 
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--end page wrapper -->
+                    <hr/>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0" id="example2">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Status</th>
+                                <th>User ID</th>
+                                <th>Full Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Date Joined</th>
+                                <th>Address</th>
+                                <th>Last Access</th>
 
-
+                            </tr>
+                            </thead>
+                            <tbody id="members">
+                            <tr>
+                                <td colspan="12" style="font-weight: bold">Fetching users, PLEASE WAIT ...</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page wrapper -->
 
     <input type="hidden" id="selected_user_id">
 
@@ -142,12 +228,42 @@
                                                 class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split">
                                             <span class="visually-hidden">Toggle Dropdown</span></button>
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                                            <a href="#" class="dropdown-item view_repayment_history text-primary"
+                                            <a href="#" class="dropdown-item view_loan_history text-primary"
                                                data-bs-toggle='modal' data-bs-target='#LoanModal'><i
                                                     class="lni lni-cloud-sync"></i> Loans <span
-                                                    class="badge rounded-pill bg-primary m-1 loan_count count">0</span></a>
+                                                    class="badge rounded-pill bg-primary m-1 loan_count">0</span></a>
+
+                                            <a href="#0" class="dropdown-item view_transaction_history text-dark"
+                                               data-bs-toggle='modal' data-bs-target='#transactionModal'><i
+                                                    class="lni lni-cloud-upload"></i> transactions <span
+                                                    class="badge rounded-pill bg-dark m-1 transaction_count count">0</span></a>
 
 
+                                            <a href="#" class="dropdown-item view_timeline text-info-emphasis"
+                                               data-bs-toggle='modal' data-bs-target='#TimelineModal'><i
+                                                    class="lni lni-video"></i> Timeline</a>
+
+
+                                            <div class="dropdown-divider"></div>
+
+
+                                            <a href="#0" class="dropdown-item text-primary generate_transaction_link"
+                                               style="font-weight: bold"><i class="lni lni-link"></i> Generate transaction
+                                                Link</a>
+
+
+                                            <div class="dropdown-divider"></div>
+                                            <a href="#0" class="dropdown-item text-warning blacklist"
+                                               style="font-weight: bold"><i class="lni lni-ban"></i>
+                                                Blacklist</a>
+
+                                             <a href="#0" class="dropdown-item text-warning whitelist" data-item="perm"
+                                               style="font-weight: bold"><i class="lni lni-hand"></i>
+                                                Permanent Whitelist</a>
+
+                                            <a href="#" class="dropdown-item" style="color: red; font-weight: bold"
+                                               data-bs-toggle='modal' data-bs-target='#EraseUserModal'><i
+                                                    class="lni lni-trash"></i> Delete Account</a>
                                         </div>
                                     </div>
                                 </div>
@@ -164,7 +280,7 @@
 
                                                     <!--------------------AVATAR AND USER NAMES---------------------->
                                                     <div class="d-flex flex-column align-items-center text-center">
-                                                        <img src="{% static 'admin_panel/images/avatars/user.png' %}"
+                                                        <img src="{% static 'crm/images/avatars/user.png' %}"
                                                              alt="Admin" width="110"
                                                              class="rounded-circle p-1 bg-primary details_avatar">
                                                         <div class="mt-3">
@@ -187,6 +303,30 @@
                                                             </button>
                                                         </div>
                                                     </div>
+
+                                                    <hr class="my-4">
+
+
+                                                    <!--------------------MINI TRANSACTION HISTORY---------------------->
+                                                    <div class="d-flex flex-column align-items-center text-center">
+                                                        <h5 style="font-size:1.2em; font-weight: bold">Quick
+                                                            Actions</h5>
+
+
+                                                        <div class="col mt-3">
+                                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                                <button type="button" class="btn btn-outline-primary px-3" onclick="check_eligibility()">
+                                                                    Check Eligibility
+                                                                </button>
+                                                                <button type="button" class="btn btn-outline-primary px-3" data-bs-toggle='modal' data-bs-target='#PhoneModal' onclick="load_sms()">
+                                                                    Phone Book
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
 
                                                 </div>
                                             </div>
@@ -225,6 +365,7 @@
                                                                 </div>
                                                             </a>
                                                         </li>
+
                                                         <li class="nav-item" role="presentation">
                                                             <a class="nav-link" data-bs-toggle="tab" href="#bankdetails"
                                                                role="tab" aria-selected="false" tabindex="-1">
@@ -233,6 +374,18 @@
                                                                             class="bx bxs-bank font-18 me-1"></i>
                                                                     </div>
                                                                     <div class="tab-title">Bank Details</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+
+                                                         <li class="nav-item" role="presentation">
+                                                            <a class="nav-link" data-bs-toggle="tab" href="#loandetails"
+                                                               role="tab" aria-selected="false" tabindex="-1">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="tab-icon"><i
+                                                                            class="bx bxs-bank font-18 me-1"></i>
+                                                                    </div>
+                                                                    <div class="tab-title">Loan Details</div>
                                                                 </div>
                                                             </a>
                                                         </li>
@@ -298,7 +451,8 @@
                                                                     <div class="col-sm-9 text-secondary">
                                                                         <div class="input-group mb-3">
                                                                             <input type="text" placeholder="Middle Name"
-                                                                                   aria-label="Fullname"  aria-describedby="button-addon2"
+                                                                                   aria-label="Fullname"
+                                                                                   aria-describedby="button-addon2"
                                                                                    class="form-control details_middle_name">
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
@@ -320,7 +474,8 @@
                                                                         <div class="input-group mb-3">
                                                                             <input type="email"
                                                                                    placeholder="Email Address"
-                                                                                   aria-label="Email" aria-describedby="button-addon2"
+                                                                                   aria-label="Email"
+                                                                                   aria-describedby="button-addon2"
                                                                                    class="form-control details_email">
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
@@ -513,11 +668,15 @@
                                                         </div>
 
 
-                                                        {#       -------------------------  BANK DETAILS ----------------------#}
+                                                        {#       -----------------------  BANK DETAILS ----------------------#}
 
                                                         <div class="tab-pane fade" id="bankdetails" role="tabpanel">
                                                             <ul class="list-group list-group-flush">
-                                                                <h5 class="mt-1 text-primary">Disbursement Bank Details</h5>
+                                                                <h5 class="mt-1 text-primary">Disbursement Bank Details
+                                                                    {% if user.level == 'approval admin' or user.level == 'super admin' %}
+                                                                    <span class="cursor-pointer badge text-bg-primary" data-bs-toggle="modal" data-bs-target="#modifyBankModal" onclick="fetch_banks()"><i class="bx bx-pen"></i> Modify</span>
+                                                                    {% endif %}
+                                                                </h5>
                                                                 <div class="w-100 border-top mb-2"></div>
                                                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                                                     <h6 class="mb-0 fw-bold"><i
@@ -537,7 +696,6 @@
                                                                         Account Name</h6>
                                                                     <span class="text-secondary bankdetails_name">@wedigital</span>
                                                                 </li>
-
 
 
                                                                 <h5 class="mt-5 text-primary">Virtual Bank Details</h5>
@@ -562,6 +720,89 @@
                                                                     <span class="text-secondary virtual_bankdetails_name">@wedigital</span>
                                                                 </li>
 
+
+                                                                <h5 class="mt-5 text-primary">Other Details</h5>
+                                                                <div class="w-100 border-top mb-2"></div>
+
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <h6 class="mb-0 fw-bold"><i
+                                                                            class="bx bxs-building font-18 me-1"></i>
+                                                                        BVN</h6>
+                                                                    <span class="text-secondary bankdetails_bvn">wedigital</span>
+                                                                </li>
+
+                                                            </ul>
+                                                        </div>
+
+
+
+                                                         {#       -------------------------  LOAN DETAILS ----------------------#}
+
+                                                        <div class="tab-pane fade" id="loandetails" role="tabpanel">
+                                                            <ul class="list-group list-group-flush">
+                                                                <h5 class="mt-1 text-primary">Loan Setting</h5>
+                                                                <div class="w-100 border-top mb-2"></div>
+
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-sm-3">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="fadeIn animated bx bx-user"></i>
+                                                                            Loan Level</h6>
+                                                                    </div>
+                                                                    <div class="col-sm-9 text-secondary">
+                                                                        <div class="input-group mb-3">
+                                                                            <select class="form-control details_borrow_level select2">
+                                                                                <option value="1">SOFT</option>
+                                                                                <option value="2">PREMIUM</option>
+                                                                                <option value="3">INDUSTRIAL</option>
+                                                                            </select>
+                                                                            <button type="button" id="button-addon2"
+                                                                                    class="btn btn-outline-primary details_save"
+                                                                                    data-key="borrow_level"
+                                                                                    data-table="members">Update
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-sm-3">
+                                                                        <h6 class="mb-0 fw-bold">&#x20A6;
+                                                                            Eligible Amt</h6>
+                                                                    </div>
+                                                                    <div class="col-sm-9 text-secondary">
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="text" placeholder="Amount eligible"
+                                                                                   aria-label="Amount eligible"
+                                                                                   aria-describedby="button-addon2"
+                                                                                   class="form-control details_eligible_amount">
+                                                                            <button type="button" id="button-addon2"
+                                                                                    class="btn btn-outline-primary details_save"
+                                                                                    data-key="eligible_amount"
+                                                                                    data-table="members">Update
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <h5 class="mt-5 text-primary">Other Details</h5>
+                                                                <div class="w-100 border-top mb-2"></div>
+
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <h6 class="mb-0 fw-bold"><i
+                                                                            class="bx bxs-building font-18 me-1"></i>
+                                                                        Max Overdue Days</h6>
+                                                                    <span class="text-secondary max_overdue_days fw-bold text-danger">-</span>
+                                                                </li>
+
+
+                                                                <h5 class="mt-5 text-primary">Overdue Chart</h5>
+
+                                                                <div id="overdue_chart" data-highcharts-chart="0" style="overflow: hidden;"></div>
+
                                                             </ul>
                                                         </div>
 
@@ -581,7 +822,6 @@
                                 </div>
                             </div>
 
-
                     </div>
                 </div>
 
@@ -590,19 +830,20 @@
         </div>
     </div>
 
+    <div class="overlay"></div>
 
 
 
 
 
-    <!--MODAL FOR REPAYMENTS-->
+     <!--MODAL FOR TRANSACTIONS-->
 
-    <div id="RepaymentModal" tabindex="-1" class="modal fade show" aria-modal="true" role="dialog"
+    <div id="transactionModal" tabindex="-1" class="modal fade show" aria-modal="true" role="dialog"
          style="display: none;">
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
             <div class="modal-content bg-primary">
                 <div class="modal-header">
-                    <h5 class="mb-0 text-light">User -> <span class="details_current_user"></span></h5>
+                    <h5 class="mb-0 text-light">Transactions History</h5>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
                 </div>
                 <div class="modal-body">
@@ -612,31 +853,22 @@
 
 
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div>
-                                    <h5 class="mb-0">Repayment History</h5>
-                                </div>
 
-                                <div class="font-22 ms-auto"><i class='bx bx-dots-horizontal-rounded'></i>
-                                </div>
-                            </div>
-                            <hr/>
                             <div class="table-responsive">
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                     <tr>
-                                        <th>S/N <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Serial Number"></i></th>
                                         <th>Loan ID <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Unique identifier for the loan"></i></th>
                                         <th>Principal <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Principal loan amount"></i></th>
                                         <th>Due <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Amount Due"></i></th>
                                         <th>PN <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Amount Paid Now"></i></th>
-                                        <th>Over Days <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Overdue Days at repayment"></i></th>
+                                        <th>Over Days <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Overdue Days at transaction"></i></th>
                                         <th>TR <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Total Repaid amount so far"></i></th>
-                                        <th>Status <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Loan status at repayment"></i></th>
+                                        <th>Status <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Loan status at transaction"></i></th>
                                         <th>Date <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Date of the record"></i></th>
                                     </tr>
                                     </thead>
-                                    <tbody id="repayment_history" style="padding-bottom: 4em !important">
+                                    <tbody id="transaction_history" style="padding-bottom: 4em !important">
 
                                     </tbody>
                                 </table>
@@ -657,57 +889,31 @@
 
 
 
-    <!--MODAL FOR LOANS-->
 
-    <div id="LoanModal" tabindex="-1" class="modal fade show" aria-modal="true" role="dialog" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
-            <div class="modal-content bg-primary">
+    <!--ERASE USER DIALOG	-->
+    <div id="EraseUserModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-danger">
                 <div class="modal-header">
-                    <h5 class="mb-0 text-light">User's Loans</h5>
+                    <h5 class="mb-0 text-light">Delete Account</h5>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body text-white"><p>You are about to delete the account with username <b
+                        class="details_current_user"></b>. </p>
+                    <p>All information associated to this user's profile will be permanently deleted. <b>This operation
+                        can not be undone.</b> Proceed?</p>
+                </div>
 
-
-                    <div class="card border-top border-0 border-4 border-primary">
-
-
-                        <div class="card-body">
-
-                            <hr/>
-                            <div class="table-responsive">
-                                <table class="table align-middle mb-5">
-                                    <thead class="table-light">
-                                    <tr>
-                                        <th>Loan ID</th>
-                                        <th>Phone</th>
-                                        <th>Principal</th>
-                                        <th>Amt Disbursed</th>
-                                        <th>Due Amount</th>
-                                        <th>Repaid</th>
-                                        <th>Requested</th>
-                                        <th>Disbursed</th>
-                                        <th>Due Date</th>
-                                        <th>Overdue Days</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="mini_loan_history" style="padding-bottom: 4em !important">
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-
+                <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-light">Close</button>
+                    <button data-bs-dismiss="modal" type="button" class="btn btn-dark" onclick="delete_user()">
+                        Yes, delete!
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
 
 
 
@@ -719,7 +925,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content bg-primary">
                 <div class="modal-header">
-                    <h5 class="mb-0 text-light">User Docs</h5>
+                    <h5 class="mb-0 text-light doc-title">User Docs </h5>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
                 </div>
                 <div class="modal-body">
@@ -736,7 +942,14 @@
                         </div>
                     </div>
 
+                </div>
 
+                <div class="modal-footer">
+                    <div class="col-md-2 text-end d-grid me-3">
+                        <button type="button" class="btn btn-dark" data-bs-target="#DoccModal" data-bs-toggle="modal">
+                            Approve/Reject
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -765,7 +978,21 @@
 
                             <div class="row gy-3">
                                 <div class="col-md-10">
-                                    <textarea id="note_input" placeholder="Enter new note here..." class="form-control"
+                                    <select id="note_select" class="form-control">
+                                        <option value="" disabled selected> --Select collection status--</option>
+                                        <option value="promise to pay">Promise To Pay</option>
+                                        <option value="break promise">Break Promise</option>
+                                        <option value="switched off">Switched Off</option>
+                                        <option value="not reachable">Not Reachable</option>
+                                        <option value="not picking">Not Picking</option>
+                                        <option value="fraudulent">Fraudulent</option>
+                                        <option value="payment check request">Payment Check Request</option>
+                                        <option value="negotiating">Negotiating</option>
+                                        <option value="0">Enter custom note</option>
+                                    </select>
+                                    <textarea id="note_input"
+                                              placeholder="Custom note here.."
+                                              class="form-control mt-3" style="display: none"
                                               rows=2></textarea>
                                 </div>
                                 <div class="col-md-2 text-end d-grid">
@@ -791,222 +1018,337 @@
 
 
 
+    <!--DOC APPROVE/REJECT MODAL	-->
+    <div id="DoccModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content bg-primary">
+                <div class="modal-header">
+                    <h5 class="mb-0 text-light">Approve/Reject Docs</h5>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="row gy-3">
+
+                                <div class="input-group"> <span class="input-group-text">Reject Reason</span>
+									<textarea class="form-control doc-reason" aria-label="With textarea" placeholder="Work ID is unclear, outdated, we do not accept the submitted docs, etc"></textarea>
+								</div>
+                                <small class="text-info">You don't have to fill the above for approval</small>
+
+                                <div class="col">
+                                    <button type="button" class="btn btn-success doc-decide" data-action="approve" onclick="doc_decide('approve')">Approve Docs</button>
+
+                                    <button type="button" class="btn btn-danger doc-decide" data-action="reject" onclick="doc_decide('reject')">Reject</button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
     <script>
-        const success_audio = new Audio("{% static 'admin_panel/audio/correct.mp3' %}");
-            const error_audio = new Audio("{% static 'admin_panel/audio/wrong.mp3' %}");
+        const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
+        const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
 
 
-            var overlay = $("#overlay");
-            var loader = $("#loader");
-            var loader_trans = $("#loader-trans");
+        var overlay = $("#overlay");
+        var loader = $("#loader");
+        var loader_trans = $("#loader-trans");
 
-            function loadOn() {
-                overlay.css('display', 'block');
-                loader.css('display', 'block');
+        function loadOn() {
+            overlay.css('display', 'block');
+            loader.css('display', 'block');
+        }
+
+        function onProgress(elem) {
+            $('#' + elem).addClass('thin-loader')
+        }
+
+        function offProgress(elem) {
+            $('#' + elem).removeClass('thin-loader')
+        }
+
+        function loadOff() {
+            overlay.css('display', 'none');
+            loader.css('display', 'none');
+        }
+
+        function notify(status, message) {
+            if (status === "success" || status === "info") {
+                success_audio.play();
+            } else {
+                error_audio.play();
+            }
+            toastr[status](message)
+        }
+
+        $('#history_month_end').change(function () {
+            var start_date = new Date($("#history_month_start").val())
+            var end_date = new Date($(this).val())
+            if (start_date > end_date) {
+                $(this).val(get_current_month())
+                $("#history_month_start").val(get_current_month(-1))
+                notify('warning', 'Ending date cannot be less than starting date')
+            }
+        })
+
+        $('#history_month_start').change(function () {
+            var end_date = new Date($("#history_month_end").val())
+            var start_date = new Date($(this).val())
+            if (start_date > end_date) {
+                $(this).val(get_current_month(-1))
+                $("#history_month_end").val(get_current_month())
+                notify('warning', 'Ending date cannot be less than starting date')
             }
 
-            function onProgress(elem) {
-                $('#' + elem).addClass('thin-loader')
-            }
-
-            function offProgress(elem) {
-                $('#' + elem).removeClass('thin-loader')
-            }
-
-            function loadOff() {
-                overlay.css('display', 'none');
-                loader.css('display', 'none');
-            }
-
-            function notify(status, message) {
-                if (status === "success" || status === "info") {
-                    success_audio.play();
-                } else {
-                    error_audio.play();
-                }
-                toastr[status](message)
-            }
+        })
 
 
-            $('#history_month_end').change(function (){
-                var start_date = new Date($("#history_month_start").val())
-                var end_date = new Date($(this).val())
-                if(start_date > end_date){
-                    $(this).val(get_current_month())
-                    $("#history_month_start").val(get_current_month(-1))
-                    notify('warning', 'Ending date cannot be less than starting date')
+        function start(refresh = false) {
+            loadOn()
+            $.ajax({
+                url: "{% url 'crm:users' %}",
+                type: "POST",
+                data: {
+                    action: 'get_all_users',
+                    rows: $('#history_rows').val(),
+                    start: $('#history_month_start').val(),
+                    end: $('#history_month_end').val(),
+                    filters: $('#filters').val(),
+                },
+                dataType: "json",
+                success: function (data) {
+                    loadOff()
+                    if (refresh) {
+                        $('#example2').DataTable().destroy()
+                    }
+                    setTimeout(function () {
+                        $("#members").html(data.content);
+                        window.all_tickers = data.all_tickers
+                        var table = $('#example2').DataTable({
+                            lengthMenu: [ [30, 70, 150, 500, -1], [30, 70, 150, 500, "All"] ],
+                            pageLength: 30,
+                            buttons: ['copy', 'excel', 'pdf', 'print']
+                        });
+                        table.buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
+                    }, 10)
+                },
+                error: function (jqXHR, errorThrown) {
+                    loadOff()
+                    notify('error', 'An error occurred. Page will be refreshed in 3s')
+                    setTimeout(function () {
+                        {#window.location.update()#}
+                    }, 3000)
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                 }
             })
+        }
 
-            $('#history_month_start').change(function (){
-                var end_date = new Date($("#history_month_end").val())
-                var start_date = new Date($(this).val())
-                if(start_date > end_date){
-                    $(this).val(get_current_month(-1))
-                    $("#history_month_end").val(get_current_month())
-                    notify('warning', 'Ending date cannot be less than starting date')
+        $('.copy').click(function (){
+            var item = $(this).data('item')
+            copy_to_clipboard(item)
+        })
+
+        window.e2_chart = undefined;
+       function update_overdue_chart(overdue_x, overdue_y, refresh=false){
+            if(refresh){
+                if (e2_chart !== undefined && e2_chart && typeof e2_chart.destroy === 'function') {
+                    e2_chart.destroy();
                 }
-
-            })
-
-            function start(refresh = false) {
-                loadOn()
-                const level = '{{ user.level }}'
-                if (level !== 'staff' || level === 'team leader') {
-                    $.ajax({
-                        url: '{% url "repayments" %}',
-                        data: {
-                            action: 'fetch_all_repayments',
-                            rows: $('#history_rows').val(),
-                            start: $('#history_month_start').val(),
-                            end: $('#history_month_end').val(),
-                            filters: $('#filters').val()
-                        },
-                        dataType: 'json',
-                        type: 'post',
-                        success: function (data) {
-                            loadOff()
-                            if (refresh) {
-                                $('#repayment_table').DataTable().destroy()
-                            }
-                            setTimeout(function () {
-                                $("#repayment_history").html(data.content);
-                                var table = $('#repayment_table').DataTable({
-                                    lengthChange: false,
-                                    buttons: ['copy', 'excel', 'pdf', 'print'],
-                                    order: [[7, 'desc']]
-                                });
-                                table.buttons().container().appendTo('#loan_table_wrapper .col-md-6:eq(0)');
-                            }, 10)
-                        },
-                        error: function (jqXHR, errorThrown) {
-                            loadOff()
-                            notify('error', 'An error occurred. Page will be refreshed in 3s')
-                            setTimeout(function () {
-                                {#window.location.update()#}
-                            }, 3000)
-                        },
-                        beforeSend: function (xhr, settings) {
-                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                        }
-                    })
-                } else {
-                    $.ajax({
-                        url: "{% url 'operators' %}",
-                        dataType: "json",
-                        type: "POST",
-                        async: false,
-                        data: {
-                            id: '{{ user.id }}',
-                            action: 'operator_details'
-                        },
-                        success: function (data) {
-                            loadOff()
-                            if (refresh) {
-                                $('#repayment_table').DataTable().destroy()
-                            }
-                            setTimeout(function () {
-                                $("#repayment_history").html(data.content['repayments']);
-                                var table = $('#repayment_table').DataTable({
-                                    lengthChange: false,
-                                    pageLength: 15,
-                                    buttons: ['copy', 'excel', 'pdf', 'print']
-                                });
-                                table.buttons().container().appendTo('#loan_table_wrapper .col-md-6:eq(0)');
-                            }, 10)
-                        },
-                        error: function () {
-                            offProgress('user-modal')
-                            notify('error', 'Fetch failed, Retry')
-                        },
-                        beforeSend: function (xhr, settings) {
-                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                        }
-                    })
-                }
-
             }
+             var e2 = {
+                chart: {
+                    foreColor: '#9ba7b2',
+                    height: 360,
+                    type: 'line',
+                    zoom: {
+                        enabled: false
+                    },
+                    dropShadow: {
+                        enabled: true,
+                        top: 3,
+                        left: 2,
+                        blur: 4,
+                        opacity: 0.1,
+                    }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 5
+                },
+                colors: ["#fd3550"],
+                series: [{
+                    name: "Overdue Days",
+                    data: overdue_y
+                }],
+
+                markers: {
+                    size: 4,
+                    strokeWidth: 0,
+                    hover: {
+                        size: 7
+                    }
+                },
+                grid: {
+                    show: true,
+                    padding: {
+                        bottom: 0
+                    }
+                },
+                labels: overdue_x,
+                xaxis: {
+                    tooltip: {
+                        enabled: false
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'DAYS'
+                    },
+                    labels: {
+                        formatter: function (val) {
+                            return formatNumber(val, 1)
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    offsetY: -20
+                }
+            }
+            window.e2_chart = new ApexCharts(document.querySelector('#overdue_chart'), e2);
+            e2_chart.render();
+       }
+
+
+        function doc_decide(action) {
+            const reason = $('.doc-reason').val()
+            if (action === 'reject' && reason === '') {
+                notify('error', 'Please enter rejection reason')
+            } else {
+                loadOn();
+                $.ajax({
+                    url: '{% url "crm:users" %}',
+                    data: {
+                        action: 'doc_decide',
+                        user_id: $('#selected_user_id').val(),
+                        doc_action: action,
+                        doc_reason: reason
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        notify(data.status, data.message)
+                        $('#DoccModal').modal('hide')
+                        if (data.status === "success") {
+                            $('.doc-title').html(data.content['html'])
+                            $('.user_rows').each(function (){
+                                if($(this).data('user_id') === $('#selected_user_id').val()){
+                                    $(this).prop({'data-doc_status': data.content['doc_status'], 'data-doc_reason': data.content['doc_reason']})
+                                }
+                            })
+                        }
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            }
+        }
+
+
+        function delete_user() {
+            loadOn();
+            $.ajax({
+                url: '{% url "crm:users" %}',
+                data: {
+                    action: 'delete_user',
+                    user_id: $('#selected_user_id').val(),
+                },
+                dataType: 'json',
+                type: 'post',
+                success: function (data) {
+                    loadOff()
+                    notify(data.status, data.message)
+                    if (data.status === "success") {
+                        $('#exampleLargeModal1').modal('hide')
+                        $('.user_rows').each(function (){
+                            if($(this).data('user_id') === $('#selected_user_id').val()){
+                                $(this).hide()
+                            }
+                        })
+                    }
+                },
+                error: function (err1, err2) {
+                    loadOff()
+                    notify('error', JSON.stringify(err1))
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
 
     </script>
 
-   <script>
-	    $(function(){
+
+
+    <script>
+        $(function () {
             $('#history_month_start').val(get_current_day(-1))
             $('#history_month_end').val(get_current_day())
 
             start()
 
+            $('.device_details').click(function () {
+                $('.device_details_name').text($(this).data('name'))
+            })
 
-	        $("body").on('click', '.loan_actions', function(){
-	            var id= $(this).data('id');
-                var user_id= $(this).data('user_id');
-	            var action= $(this).data('action');
-                var size= $(this).data('size');
-	            loadOn();
+            $('.generate_transaction_link').click(function () {
+                notify('error', 'Error generating link')
+            })
 
-                $.ajax({
-                    url: '{% url "loans" %}',
-                    data: {
-                        action: 'status_update',
-                        loan_id: id,
-                        main_action: action,
-                        size: size,
-                        user_id: user_id
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        $('#mini_repayment_history').html(data.content)
-                        notify(data.status, data.message)
-                        start(true)
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-	        })
+            $('body').on('click', '.waive', function () {
+                var id = $(this).data('id')
+                $('#selected_loan').val(id)
+            })
 
 
-            $("body").on('click', '.cancel_repay', function(){
-	            var id= $(this).data('id');
-	            loadOn();
 
-                $.ajax({
-                    url: '{% url "loans" %}',
-                    data: {
-                        action: 'cancel_repay',
-                        repay_id: id
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        notify(data.status, data.message)
-                        start(true)
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-	        })
+            $(".login_as").click(function () {
+                var user = $("#selected_user_id").val();
+                var hash = $("#general_hash").val();
+                var url = ""
+                window.open(url, '_blank');
+            })
 
 
-            $('body').on('click', '.repay_rows', function () {
-                if(!$(event.target).hasClass('cancel_repay')){
-                    $('#exampleLargeModal1').modal('show')
-                }
+            $('body').on('click', '.user_rows', function () {
                 var row = $(this);
                 var first_name = row.data('first_name');
+                var eligible_amount = row.data('eligible_amount');
                 var last_name = row.data('last_name');
                 var middle_name = row.data('middle_name');
                 var email = row.data('email');
@@ -1017,19 +1359,19 @@
                 var avatar = row.data('avatar');
                 var address = row.data('address');
                 var dob = row.data('dob');
+                var borrow_level = row.data('borrow_level');
                 var status = row.data('status');
                 var gender = row.data('gender');
                 var lga = row.data('lga');
                 var state = row.data('state');
                 var status_pill = row.data('status_pill');
                 var id = row.data('user_id');
-                var deposit_count = row.data('deposit_count');
-                var with_count = row.data('with_count');
-                var tf_count = row.data('tf_count');
-                var trade2_count = row.data('trade2_count');
-                var invest_count = row.data('invest_count');
+                var doc_status = row.data('doc_status');
+                var doc_reason = row.data('doc_reason');
 
                 $(".details_first_name").val(first_name).data('id', id);
+                $(".details_borrow_level").val(borrow_level).select().data('id', id);
+                $(".details_eligible_amount").val(eligible_amount).data('id', id);
                 $(".details_last_name").val(last_name).data('id', id);
                 $(".details_middle_name").val(middle_name).data('id', id);
                 $(".details_email").val(email).data('id', id);
@@ -1044,15 +1386,25 @@
                 $(".details_status_show").html(status_pill);
                 $(".details_status").data('id', id);
 
-                $(".details_avatar").attr('src', avatar);
+                $(".details_avatar").prop('src', avatar);
                 $(".details_registered").text(created_at);
                 $(".details_current_user").text(id);
                 $(".details_text_username").text(last_name + ' ' + first_name + ' (' + id + ')');
-                $(".deposit_count").text(deposit_count);
-                $(".with_count").text(with_count);
-                $(".tf_count").text(tf_count);
-                $(".trade2_count").text(trade2_count);
-                $(".invest_count").text(invest_count);
+
+                var blacklist_text = status === 'Active' ? 'Blacklist' : 'Whitelist'
+                $('.blacklist').html('<i class="lni lni-ban"></i> '+blacklist_text).data('value', blacklist_text)
+
+                if(doc_status === 'True'){
+                    $('.doc-title').html('User Docs  <span class="badge text-bg-success">APPROVED</span>')
+                }else{
+                    if(doc_reason === ''){
+                        $('.doc-title').html('User Docs  <span class="badge text-bg-info">WAITING</span>')
+                    }else if(doc_reason === 'submitted'){
+                        $('.doc-title').html('User Docs  <span class="badge text-bg-warning">SUBMITTED</span>')
+                    }else{
+                        $('.doc-title').html('User Docs  <span class="badge text-bg-danger">REJECTED</span>')
+                    }
+                }
 
 
                 $("#selected_user_id").val(id);
@@ -1066,10 +1418,10 @@
                 // HANDLE OTHER DETAILS FETCH
                 setTimeout(function () {
                     $.ajax({
-                        url: "{% url 'users' %}",
+                        url: '{% url "crm:users" %}'',
                         dataType: "json",
                         type: "POST",
-                        async: false,
+                        async: true,
                         data: {
                             user_id: id,
                             action: 'get_other_details'
@@ -1078,12 +1430,13 @@
                             offProgress('user-modal')
                             {#POPULATE OTHER DETAILS WITH RESPONSE#}
                             $.each(data.content, function (key, value) {
-                                if (key !== "tables") {
+                                if (key !== "tables" && key !== "overdue_chart") {
                                     $('.' + key).text(value)
                                 }
                             });
                             $('#show_notes').html(data.content['tables']['notes'])
                             $('#show_files').html(data.content['tables']['files'])
+                            update_overdue_chart(data.content['overdue_chart']['x'], data.content['overdue_chart']['y'], true)
                         },
                         error: function () {
                             notify('error', 'Fetch failed, Retry')
@@ -1105,7 +1458,7 @@
                 var value = $(".details_" + key).val();
                 loadOn();
                 $.ajax({
-                    url: '{% url "users" %}',
+                    url: '{% url "crm:users" %}',
                     data: {
                         key: key,
                         value: value,
@@ -1129,21 +1482,23 @@
             })
 
 
-            // LOANS BLOCK
-            $(".view_repayment_history").click(function () {
+
+            {#transactionS#}
+
+            $(".view_transaction_history").click(function () {
                 var user_id = $("#selected_user_id").val();
                 loadOn();
                 $.ajax({
-                    url: '{% url "loans" %}',
+                    url: '{% url "crm:transactions" %}',
                     data: {
                         user_id: user_id,
-                        action: 'fetch_repayments'
+                        action: 'fetch_transactions'
                     },
                     dataType: 'json',
                     type: 'post',
                     success: function (data) {
                         loadOff()
-                        $('#mini_repayment_history').html(data.content)
+                        $('#transaction_history').html(data.content)
                     },
                     error: function (err1, err2) {
                         loadOff()
@@ -1158,18 +1513,20 @@
 
 
 
-             // NOTE BLOCK
+            // NOTE BLOCK
             $("#add_note").click(function () {
                 var user_id = $("#selected_user_id").val();
                 var input = $("#note_input").val();
-                if (input === "") {
+                var select = $("#note_select").val();
+                if (input === "" && select === "" || select === "0" && input === "" || select === null) {
                     toastr["warning"]('Input cannot be empty');
                 } else {
+                    let body = (select === '0') ? input : select
                     loadOn();
                     $.ajax({
-                        url: '{% url "users" %}',
+                        url: '{% url "crm:users" %}',
                         data: {
-                            note: input,
+                            note: body,
                             user_id: user_id,
                             action: 'add_note'
                         },
@@ -1178,6 +1535,7 @@
                         success: function (data) {
                             loadOff()
                             $('#note_input').val('')
+                            $('#note_select').val('').change()
                             $('#show_notes').html(data.content)
                             notify(data.status, data.message)
                         },
@@ -1192,13 +1550,20 @@
                 }
             })
 
+            $('#note_select').change(function (){
+                if($(this).val() === '0'){
+                    $('#note_input').show()
+                }else{
+                    $('#note_input').hide()
+                }
+            })
 
             $("body").on('click', '.delete_note', function () {
                 var user_id = $("#selected_user_id").val();
                 var id = $(this).data('id');
                 loadOn()
                 $.ajax({
-                    url: '{% url "users" %}',
+                    url: '{% url "crm:users" %}',
                     data: {
                         note_id: id,
                         user_id: user_id,
@@ -1228,7 +1593,7 @@
                 var input = $(this).val();
                 if (input !== "") {
                     $.ajax({
-                        url: '{% url "users" %}',
+                        url: '{% url "crm:users" %}',
                         data: {
                             note: input,
                             user_id: user_id,
@@ -1256,16 +1621,82 @@
 
 
 
+            {#BLACKLIST#}
+            $('.blacklist').click(function () {
+                var user_id = $("#selected_user_id").val();
+                loadOn();
+                $.ajax({
+                    url: '{% url "crm:users" %}',
+                    data: {
+                        user_id: user_id,
+                        action: 'blacklist',
+                        main_action: $(this).text()
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        notify(data.status, data.message)
+                        if (data.status === 'success') {
+                            start(true)
+                            $('#exampleLargeModal1').modal('hide')
+                        }
 
-            $('body').on('mouseover', '.repay_rows', function(){
-	            $(this).css({'background':'#E2EDFF', 'color':'#267DFD', 'cursor':'pointer'})
-	        })
-	        $('body').on('mouseout', '.repay_rows', function(){
-	            $(this).css({'background':'white', 'color':'black', 'cursor':'pointer'})
-	        })
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            })
+
+            $('.whitelist').click(function () {
+                var user_id = $("#selected_user_id").val();
+                loadOn();
+                $.ajax({
+                    url: '{% url "crm:users" %}',
+                    data: {
+                        user_id: user_id,
+                        action: 'whitelist'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        notify(data.status, data.message)
+                        if (data.status === 'success') {
+                            start(true)
+                            $('#exampleLargeModal1').modal('hide')
+                        }
+
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            })
 
 
-	    })
-	</script>
+
+
+            $('body').on('mouseover', '.user_rows', function () {
+                $(this).css({'background-color': '#E2EDFF', 'color': '#267DFD', 'cursor': 'pointer'})
+            })
+            $('body').on('mouseout', '.trs', function () {
+                $(this).css({'background': 'white', 'color': 'black', 'cursor': 'pointer'})
+            })
+
+
+        })
+    </script>
+
+
 
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends "admin_panel/layout.html" %}
+{% extends "crm/layout.html" %}
 {% load static %}
 
 {% block title %}
@@ -56,13 +56,110 @@
     <div class="page-wrapper">
         <div class="page-content">
 
+
+
+
+{% if user.level == 'staff' or user.level == 'team leader' %}
+{#------------   COLLECTORS DATA ANALYSIS#}
+                <div class="row row-cols-1 row-cols-md-12 row-cols-xl-12">
+					<div class="">
+						<div class="card radius-10">
+                            <div class="pt-3 ps-3 pb-0" style="display: inline-block">
+                                <p style="float: left" class="fw-bold fs-6">Collectors Data</p>
+
+                            </div>
+                            <div style="margin-bottom: -1em; width: 100%;">
+                                <div style="float: right; width: 25%; display: inline-block" class="pe-4">
+                                    <div style="width: 40%; float: left">
+                                        <label for="cda_date">Date:</label>
+                                        <input type="date" id="cda_date" class="me-2" value="" >
+                                    </div>
+
+
+                                    <div class="mt-3" style="width: 30%; float: right">
+                                        <button id="cda_search" type="button" class="btn btn-primary px-3 radius-30" onclick="get_analysis('cda')">Search</button>
+                                    </div>
+
+                                </div>
+
+                                <div style="width: 70%; float: left" class="d-flex align-items-center gap-2 mb-1">
+                                    <div class="form-check">
+
+                                        <label class="form-check-label fw-bold" for="flexRadioDefault1">
+                                          Collection Stage:
+                                        </label>
+                                      </div>
+
+
+                                      <div class="form-check form-check-primary">
+                                        <input class="form-check-input" type="radio" name="cda_stage" value="{{ APP_STAGES.keys|join:"," }}" checked id="cda_stage_all">
+                                        <label class="form-check-label" for="flexRadioSuccess">
+                                          All
+                                        </label>
+                                      </div>
+
+
+                                      {% for stage, details in APP_STAGES.items %}
+                                            <div class="form-check form-check-primary">
+                                                <input class="form-check-input" type="radio" name="cda_stage" value="{{ stage }}">
+                                                <label class="form-check-label" for="flexRadioWarning">
+                                                  {{ stage }}
+                                                  {% if details.min == details.max %}
+                                                    ({{ details.min }})
+                                                  {% else %}
+                                                    ({{ details.min }} ~ {{ details.max }})
+                                                  {% endif %}
+                                                </label>
+                                              </div>
+                                      {% endfor %}
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <hr>
+							<div class="rdp-table-container">
+								<table class="table table-bordered mb-0" >
+									<thead class="table-dark rdp-thead">
+										<tr>
+											<th scope="col" class="rdp-th">Account</th>
+											<th scope="col" class="rdp-th">CIQ</th>
+											<th scope="col" class="rdp-th">New</th>
+											<th scope="col" class="rdp-th">Amount Held</th>
+											<th scope="col" class="rdp-th">Paid</th>
+                                            <th scope="col" class="rdp-th">PartlyPaid</th>
+                                            <th scope="col" class="rdp-th">Paid Rate</th>
+                                            <th scope="col" class="rdp-th">Amount Paid</th>
+                                            <th scope="col" class="rdp-th">Amt Paid Rate</th>
+                                            <th scope="col" class="rdp-th">Notes</th>
+										</tr>
+									</thead>
+									<tbody id="cda_show" class="rdp-tbody">
+
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+{% endif %}
+
+
+
+
+
             <!--end row-->
 
-            <div class="card radius-10 col-12">
+            <div class="card radius-10">
                 <div class="card-body">
 
                     <div class="d-flex align-items-center bg-light flex-wrap">
-                        <div class="me-auto fw-bold fs-6">{{ status|title }} Loans</div>
+                        <div class="me-auto fw-bold fs-6">{% if user.level == 'staff' or user.level == 'team leader' %}{{ user.stage }}{% endif %} Loan Tracker</div>
                         <div class="d-flex align-items-center flex-wrap">
                             <div class="me-2">
                                 <label for="history_month_start" class="form-label me-1">From:</label>
@@ -77,9 +174,9 @@
                             <div class="me-2">
                                 <label for="history_rows" class="form-label me-1">Rows:</label>
                                 <select id="history_rows" class="form-select d-inline-block" style="width: auto;">
-                                    <option value="15">15</option>
+                                    <option selected value="25">25</option>
                                     <option value="50">50</option>
-                                    <option selected value="200">200</option>
+                                    <option value="200">200</option>
                                     <option value="500">500</option>
                                     <option value="2000">2000</option>
                                     <option value="10000">2000+</option>
@@ -87,6 +184,7 @@
                             </div>
                         </div>
                     </div>
+
 
 
                     <div class="d-flex align-items-center bg-light flex-wrap">
@@ -117,29 +215,27 @@
                         </div>
                     </div>
 
-
                     <hr/>
                     <div class="table-responsive">
                         <table class="table align-middle mb-5" id="loan_table">
-
                             <thead class="table-light">
                             <tr>
-                                <th>
-                                    <div>
-										<input class="form-check-input me-3 all-checkbox border-primary border-2" type="checkbox" value="" aria-label="..." onchange="check_all_loans()">
-                                        Loan ID
-									</div>
-                                </th>
+                                <th>L.ID <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Loan ID"></i></th>
                                 <th>Phone</th>
                                 <th>Principal</th>
                                 <th>Amt Disb <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Amount Disbursed"></i></th>
                                 <th>Amt Due</th>
                                 <th>Repaid</th>
+                                {% if user.level != 'staff' %}
                                 <th>Req Date <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Date Requested"></i></th>
-                                <th>Disb Date <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Date Disbursed"></i></th>
+                                {% endif %}
+                                <th>Disb Date <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Disburse Date"></i></th>
                                 <th>Due Date</th>
                                 <th>Overdue Days</th>
                                 <th>Status</th>
+                                {% if user.level == 'staff' %}
+                                <th>Action</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody id="loan_history" style="padding-bottom: 4em !important">
@@ -213,19 +309,21 @@
                                                     class="lni lni-cloud-upload"></i> Repayments <span
                                                     class="badge rounded-pill bg-dark m-1 repayment_count count">0</span></a>
 
-
+                                            {% if user.level == 'admin' or user.level == 'super admin' %}
                                             <a href="#" class="dropdown-item view_timeline text-info-emphasis"
                                                data-bs-toggle='modal' data-bs-target='#TimelineModal'><i
                                                     class="lni lni-video"></i> Timeline</a>
+                                            {% endif %}
 
 
                                             <div class="dropdown-divider"></div>
 
-
+                                            {% if user.level == 'admin' or user.level == 'super admin' %}
                                             <a href="#0" class="dropdown-item text-primary assign"
                                                style="font-weight: bold" data-bs-toggle='modal'
                                                data-bs-target='#AssignModal'><i class="lni lni-network"></i> Assign To
                                                 Collector</a>
+                                            {% endif %}
 
 
                                             <a href="#0" class="dropdown-item text-primary generate_repayment_link"
@@ -233,6 +331,7 @@
                                                 Link</a>
 
 
+                                            {% if user.level == 'admin' or user.level == 'super admin' %}
                                             <div class="dropdown-divider"></div>
                                             <a href="#0" class="dropdown-item text-warning blacklist"
                                                style="font-weight: bold"><i class="lni lni-ban"></i>
@@ -241,10 +340,12 @@
                                              <a href="#0" class="dropdown-item text-warning whitelist"
                                                style="font-weight: bold"><i class="lni lni-hand"></i>
                                                 Permanent Whitelist</a>
-
+                                            {% endif %}
+                                            {% if user.level == 'admin' or user.level == 'super admin' or user.level == 'approval admin' %}
                                             <a href="#" class="dropdown-item" style="color: red; font-weight: bold"
                                                data-bs-toggle='modal' data-bs-target='#EraseUserModal'><i
                                                     class="lni lni-trash"></i> Delete Account</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -261,7 +362,7 @@
 
                                                     <!--------------------AVATAR AND USER NAMES---------------------->
                                                     <div class="d-flex flex-column align-items-center text-center">
-                                                        <img src="{% static 'admin_panel/images/avatars/user.png' %}"
+                                                        <img src="{% static 'crm/images/avatars/user.png' %}"
                                                              alt="Admin" width="110"
                                                              class="rounded-circle p-1 bg-primary details_avatar">
                                                         <div class="mt-3">
@@ -391,7 +492,7 @@
                                                                             <input type="text" placeholder="First Name"
                                                                                    aria-label="First Name"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_first_name">
+                                                                                   class="form-control details_first_name" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="first_name"
@@ -412,7 +513,7 @@
                                                                             <input type="text" placeholder="Last Name"
                                                                                    aria-label="Last Name"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_last_name">
+                                                                                   class="form-control details_last_name" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="last_name"
@@ -433,7 +534,7 @@
                                                                             <input type="text" placeholder="Middle Name"
                                                                                    aria-label="Fullname"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_middle_name">
+                                                                                   class="form-control details_middle_name" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="middle_name"
@@ -456,7 +557,7 @@
                                                                                    placeholder="Email Address"
                                                                                    aria-label="Email"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_email">
+                                                                                   class="form-control details_email" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="email"
@@ -478,7 +579,7 @@
                                                                                    placeholder="Secondary Email Address"
                                                                                    aria-label="Email"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_email2">
+                                                                                   class="form-control details_email2" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="email2"
@@ -500,7 +601,7 @@
                                                                             <input type="text" placeholder="Phone"
                                                                                    aria-label="Phone"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_phone">
+                                                                                   class="form-control details_phone" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="phone"
@@ -522,7 +623,7 @@
                                                                                    placeholder="Secondary Phone"
                                                                                    aria-label="Phone"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_phone2">
+                                                                                   class="form-control details_phone2" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="phone2"
@@ -541,7 +642,7 @@
                                                                     </div>
                                                                     <div class="col-sm-9 text-secondary">
                                                                         <div class="input-group mb-3">
-                                                                            <select class="form-control details_gender select2">
+                                                                            <select class="form-control details_gender select2" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                                 <option value="male">Male</option>
                                                                                 <option value="female">Female</option>
                                                                             </select>
@@ -566,7 +667,7 @@
                                                                             <input type="text" placeholder="Address"
                                                                                    aria-label="State"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_address">
+                                                                                   class="form-control details_address" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="address"
@@ -588,7 +689,7 @@
                                                                             <input type="text" placeholder="State"
                                                                                    aria-label="State"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_state">
+                                                                                   class="form-control details_state" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="state"
@@ -609,7 +710,7 @@
                                                                             <input type="text" placeholder="LGA"
                                                                                    aria-label="DOB"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_lga">
+                                                                                   class="form-control details_lga" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="lga" data-table="members">
@@ -631,7 +732,7 @@
                                                                             <input type="date" placeholder="DOB"
                                                                                    aria-label="DOB"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_dob">
+                                                                                   class="form-control details_dob" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="dob" data-table="members">
@@ -733,12 +834,14 @@
                                                                             <input type="text" placeholder="Amount eligible"
                                                                                    aria-label="Amount eligible"
                                                                                    aria-describedby="button-addon2"
-                                                                                   class="form-control details_eligible_amount">
+                                                                                   class="form-control details_eligible_amount" {% if user.level != 'admin' and user.level != 'super admin' %}readonly{% endif %}>
+                                                                            {% if user.level == 'admin' or user.level == 'super admin' %}
                                                                             <button type="button" id="button-addon2"
                                                                                     class="btn btn-outline-primary details_save"
                                                                                     data-key="eligible_amount"
                                                                                     data-table="members">Update
                                                                             </button>
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -902,7 +1005,7 @@
 
 
 
-   <!--DOCS MODAL	-->
+    <!--DOCS MODAL	-->
     <div id="DocsModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content bg-primary">
@@ -936,6 +1039,9 @@
             </div>
         </div>
     </div>
+
+
+
 
 
 
@@ -997,6 +1103,7 @@
 
 
 
+
     <!--DEVICE DETAILS MODAL	-->
     <div id="deviceDetailsModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -1024,6 +1131,7 @@
             </div>
         </div>
     </div>
+
 
 
 
@@ -1063,6 +1171,7 @@
             </div>
         </div>
     </div>
+
 
 
     <!--WRITE OFF PART MODAL  wop	-->
@@ -1208,7 +1317,9 @@
 
 
 
-     <!--PHONE MODAL	-->
+
+
+    <!--PHONE MODAL	-->
     <div id="PhoneModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content bg-primary">
@@ -1226,7 +1337,7 @@
 						<div class="chat-sidebar-header">
 							<div class="d-flex align-items-center">
 								<div class="chat-user-online">
-									<img src="{% static 'admin_panel/images/avatars/user.png' %}" width="35" height="35" class="rounded-circle" alt="">
+									<img src="{% static 'crm/images/avatars/user.png' %}" width="35" height="35" class="rounded-circle" alt="">
 								</div>
 								<div class="flex-grow-1 ms-2">
 									<p class="mb-0 details_text_username"></p>
@@ -1382,7 +1493,7 @@
 
 
 
-     <!--REASON SHOW DIALOG	-->
+    <!--REASON SHOW DIALOG	-->
     <div id="ReasonModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -1400,27 +1511,6 @@
         </div>
     </div>
     </div>
-
-
-
-{#    CHECKBOX SELECTED MODAL#}
-    <div class="modal fade" id="CheckboxSelectedModal" tabindex="-1" aria-modal="true" role="dialog" style="display: none;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Sure to proceed?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">You are about to <span class="fw-bold text-danger"><span class="checkbox-modal-action" style="text-transform: capitalize"></span> All Selected Rows</span>. This action may not be explicitly reversible, proceed?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary checkbox-modal-sbmt" style="text-transform: capitalize" onclick="get_all_checked()">Action</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
 
 
@@ -1461,12 +1551,12 @@
             </div>
         </div>
     </div>
-<i class="bx bx-bl"></i>
+
 
 
     <script>
-        const success_audio = new Audio("{% static 'admin_panel/audio/correct.mp3' %}");
-        const error_audio = new Audio("{% static 'admin_panel/audio/wrong.mp3' %}");
+        const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
+        const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
 
         var overlay = $("#overlay");
         var loader = $("#loader");
@@ -1499,6 +1589,45 @@
             toastr[status](message)
         }
 
+
+            function get_analysis(fetch='cda'){
+                var items = fetch.split(',')
+                loadOn()
+                $.ajax({
+                    url: '{% url "analysis" %}',
+                    data: {
+                        action: 'get_analysis',
+                        fetch: fetch,
+                        cda_date: $('#cda_date').val(),
+                        cda_stage: get_cda_stage()
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        $.each(items, function (index, value){
+                            if(value !== 'crc'){
+                                $(`#${value}_show`).html(data.content[value])
+                            }
+                        })
+                        {#update_crc_chart(data.content['crc']['x'], data.content['crc']['y'])#}
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            }
+
+            function get_cda_stage(){
+                const stage = '{{ user.stage }}'
+                const level = '{{ user.level }}'
+                return $('input[name="cda_stage"]:checked').val();
+            }
+
         $('#history_month_end').change(function () {
             var start_date = new Date($("#history_month_start").val())
             var end_date = new Date($(this).val())
@@ -1524,57 +1653,95 @@
         function start(refresh = false) {
             var overdue_start = $('#overdue_start').val()
             var overdue_end = $('#overdue_end').val()
+            var level = "{{ user.level }}"
             if(overdue_start !== '' && overdue_end === '' || overdue_start === '' && overdue_end !== ''){
                 notify('error', 'Overdue days filter error')
             }else{
                 loadOn()
-                $.ajax({
-                    url: '{% url "loans" %}',
-                    data: {
-                        action: 'fetch_all_loans',
-                        rows: $('#history_rows').val(),
-                        start: $('#history_month_start').val(),
-                        end: $('#history_month_end').val(),
-                        status: '{{ status }}',
-                        overdue_start: overdue_start,
-                        overdue_end: overdue_end,
-                        filters: $('#filters').val(),
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        if (refresh) {
-                            $('#loan_table').DataTable().destroy()
+                $("#loan_history").html(`<tr><td colspan="9" style="text-align: center">loading data...</td></tr>`)
+                if(level === 'staff' || level === 'team leader'){
+                    get_analysis('cda')
+                }
+                if (level !== 'staff') {
+                    $.ajax({
+                        url: '{% url "loans" %}',
+                        data: {
+                            action: 'fetch_all_loans',
+                            rows: $('#history_rows').val(),
+                            start: $('#history_month_start').val(),
+                            end: $('#history_month_end').val(),
+                            status: 'pending,approved,disbursed,declined,partpayment,repaid,overdue',
+                            overdue_start: overdue_start,
+                            overdue_end: overdue_end,
+                            filters: $('#filters').val(),
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (data) {
+                            loadOff()
+                            if (refresh) {
+                                $('#loan_table').DataTable().destroy()
+                            }
+                            setTimeout(function () {
+                                $("#loan_history").html(data.content);
+                                var table = $('#loan_table').DataTable({
+                                    lengthChange: false,
+                                    pageLength: 15,
+                                    ordering: false,
+                                    buttons: ['copy', 'excel', 'pdf', 'print']
+                                });
+                                table.buttons().container().appendTo('#loan_table_wrapper .col-md-6:eq(0)');
+                            }, 10)
+                        },
+                        error: function (jqXHR, errorThrown) {
+                            loadOff()
+                            notify('error', 'An error occurred. Page will be refreshed in 3s')
+                            setTimeout(function () {
+                                {#window.location.update()#}
+                            }, 3000)
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                         }
-                        setTimeout(function () {
-                            $("#loan_history").html(data.content);
-                            var table = $('#loan_table').DataTable({
-                                lengthMenu: [ [20, 70, 150, -1], [20, 70, 150, "All"] ],
-                                pageLength: 20,
-                                buttons: ['copy', 'excel', 'pdf', 'print'],
-                                ordering: false,
-                                columnDefs: [
-                                    { "orderable": false, "targets": 0 }
-                                ]
-                            });
-                            table.buttons().container().appendTo('#loan_table_wrapper .col-md-6:eq(0)');
-                        }, 10)
-                    },
-                    error: function (jqXHR, errorThrown) {
-                        loadOff()
-                        notify('error', 'An error occurred. Page will be refreshed in 3s')
-                        setTimeout(function () {
-                            {#window.location.update()#}
-                        }, 3000)
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
+                    })
+
+                } else {
+                    $.ajax({
+                        url: "{% url 'operators' %}",
+                        dataType: "json",
+                        type: "POST",
+                        async: false,
+                        data: {
+                            id: '{{ user.id }}',
+                            action: 'operator_details'
+                        },
+                        success: function (data) {
+                            loadOff()
+                            if (refresh) {
+                                $('#loan_table').DataTable().destroy()
+                            }
+                            setTimeout(function () {
+                                $("#loan_history").html(data.content['loans']);
+                                var table = $('#loan_table').DataTable({
+                                    lengthChange: false,
+                                    pageLength: 15,
+                                    buttons: ['copy', 'excel', 'pdf', 'print']
+                                });
+                                table.buttons().container().appendTo('#loan_table_wrapper .col-md-6:eq(0)');
+                            }, 10)
+                        },
+                        error: function () {
+                            offProgress('user-modal')
+                            notify('error', 'Fetch failed, Retry')
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+                }
+
             }
         }
-
 
         window.e2_chart = undefined;
        function update_overdue_chart(overdue_x, overdue_y, refresh=false){
@@ -1649,114 +1816,35 @@
        }
 
 
-       function get_selected_checkbox_action(){
-           var html = '';
-           var del = ''
-           const status = '{{ status }}'
-           const level = '{{ user.level }}'
-           const allowed_admins = ['super admin', 'approval admin']
-           if(status === 'approved'){
-               html = `<li><a class="dropdown-item selected-check-action" data-action='disburse' href="#">Disburse all</a></li>
-                        <li><a class="dropdown-item selected-check-action" data-action='decline' href="#">Decline all</a></li>`
-           }else if(status === 'pending'){
-                html = `<li><a class="dropdown-item selected-check-action" data-action='approve' href="#">Approve all</a></li>
-                        <li><a class="dropdown-item selected-check-action" data-action='decline' href="#">Decline all</a></li>`
-           }else if(status === 'disbursed' && allowed_admins.includes(level)){
-               html = `<li><a class="dropdown-item selected-check-action" data-action='write-off' href="#">Write-off all</a></li>`
-           }else if(status === 'overdue' && allowed_admins.includes(level)){
-               html = `<li><a class="dropdown-item selected-check-action" data-action='write-off' href="#">Write-off all</a></li>`
-           }
-
-           if(allowed_admins.includes(level)){
-               del = `<li><a class="dropdown-item selected-check-action" data-action='delete' href="#">Delete all</a></li>`
-           }
-
-           return `
-                <div class="dropdown ms-3 checkbox-btn">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Selected Actions</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item selected-check-action" data-action='copy_phone' href="#">Copy phones</a></li>
-                            ${html}
-                            ${del}
-                        </ul>
-                    </div>
-           `
-       }
-
-       function check_all_loans(){
-           const all_check = $('.all-checkbox').is(':checked') ? 'checked' : 'unchecked'
-           if(all_check === 'checked'){
-               $('.dt-buttons').append(get_selected_checkbox_action())
-           }else{
-               $('.checkbox-btn').hide()
-           }
-
-           $('.loan-checkbox').each(function(){
-               if(all_check === 'checked'){
-                   $(this).prop('checked', true)
-               }else{
-                   $(this).prop('checked', false)
-               }
-           })
-       }
-
-       var checkbox_btn_appended = false
-       $('body').on('change', '.loan-checkbox', function(){
-           if($('.loan-checkbox:checked').length > 0 && !checkbox_btn_appended){
-               checkbox_btn_appended = true
-               $('.dt-buttons').append(get_selected_checkbox_action())
-           }else if($('.loan-checkbox:checked').length === 0 && checkbox_btn_appended){
-               $('.checkbox-btn').hide()
-               checkbox_btn_appended = false
-           }
-
-        })
-
-
-        $('body').on('click', '.selected-check-action', function (){
-            const action = $(this).data('action')
-            if(action === 'copy_phone'){
-                var phones = get_all_checked('phone')
-                copy_to_clipboard(phones.join(' '))
-            }else {
-                $('#CheckboxSelectedModal').modal('show')
-                $('.checkbox-modal-action').text(action)
-                $('.checkbox-modal-sbmt').data('action', action).text('Yes, ' + action)
-            }
-        })
-
-        function get_all_checked(get='loan_id'){
-           var checked = []
-            $('.loan_rows').each(function (){
-                const check = $(this).find('input')
-                if(check.is(':checked')){
-                    var item = $(this).data(get)
-                    checked.push(item)
-                }
-            })
-            return checked
-        }
-
-
-
-        $('.checkbox-modal-sbmt').click(function () {
-            const checked = get_all_checked()
-            loadOn();
+       function load_sms() {
+            var user_id = $("#selected_user_id").val();
+            loadOn()
             $.ajax({
-                url: '{% url "loans" %}',
+                url: '{% url "users" %}',
                 data: {
-                    action: 'status_update',
-                    main_action: $(this).data('action'),
-                    qty: 'multiple',
-                    loans: JSON.stringify(checked)
+                    user_id: user_id,
+                    action: 'fetch_sms',
+                    which: 'sidebar'
                 },
                 dataType: 'json',
                 type: 'post',
                 success: function (data) {
                     loadOff()
-                    notify(data.status, data.message)
-                    start(true)
-                    $('#CheckboxSelectedModal').modal('hide')
+                    if (data.status === 'success') {
+                        $('.sms_sidebar').html(data.content['sidebar'])
+                        $('.sms_content').html(data.content['content'])
+                    } else {
+                        notify(data.status, data.message)
+                        $('.sms_sidebar').html(data.content['sidebar'])
+                        $('.sms_content').html(data.content['content'])
+                        $('.sms_name').text('...')
+                        $('.sms_phone').attr('href', 'tel:0000')
+                        $('.sms_last_updated').text('...')
+                    }
+                    $('.phonebook_count').each(function (){
+                        var item = $(this).data('item')
+                        $(this).text(`(${data.content['count'][item]})`)
+                    })
                 },
                 error: function (err1, err2) {
                     loadOff()
@@ -1766,7 +1854,107 @@
                     xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                 }
             })
-        })
+        }
+
+        function load_contact() {
+            var user_id = $("#selected_user_id").val();
+            loadOn()
+            $.ajax({
+                url: '{% url "users" %}',
+                data: {
+                    user_id: user_id,
+                    action: 'fetch_contact'
+                },
+                dataType: 'json',
+                type: 'post',
+                success: function (data) {
+                    loadOff()
+                    $('.sms_content').html(data.content['content'])
+                    $('.sms_name').text('...')
+                    $('.sms_phone').attr('href', 'tel:0000')
+                    $('.sms_last_updated').text('...')
+                    if (data.status === 'success') {
+                        $('.sms_sidebar').html(data.content['sidebar'])
+                    } else {
+                        notify(data.status, data.message)
+                        $('.sms_sidebar').html(data.content['sidebar'])
+                    }
+                },
+                error: function (err1, err2) {
+                    loadOff()
+                    notify('error', JSON.stringify(err1))
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+        function load_call() {
+            var user_id = $("#selected_user_id").val();
+            loadOn()
+            $.ajax({
+                url: '{% url "users" %}',
+                data: {
+                    user_id: user_id,
+                    action: 'fetch_call'
+                },
+                dataType: 'json',
+                type: 'post',
+                success: function (data) {
+                    loadOff()
+                    $('.sms_content').html(data.content['content'])
+                    $('.sms_name').text('...')
+                    $('.sms_phone').attr('href', 'tel:0000')
+                    $('.sms_last_updated').text('...')
+                    if (data.status === 'success') {
+                        $('.sms_sidebar').html(data.content['sidebar'])
+                    } else {
+                        notify(data.status, data.message)
+                        $('.sms_sidebar').html(data.content['sidebar'])
+                    }
+                    load_call_chart(data.content['chart_phones'], data.content['chart_count'])
+                },
+                error: function (err1, err2) {
+                    loadOff()
+                    notify('error', JSON.stringify(err1))
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+        function load_call_chart(phone, count){
+             var options = {
+                series: [{
+                    data: count
+                }],
+                chart: {
+                    foreColor: '#9ba7b2',
+                    type: 'bar',
+                    height: 300
+                },
+                colors: ["#6A49F2"],
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        columnWidth: '35%',
+                        endingShape: 'rounded'
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    categories: phone,
+                }
+            };
+            var chart = new ApexCharts(document.querySelector("#call-chart"), options);
+            chart.render();
+
+        }
+
 
 
         function doc_decide(action) {
@@ -1809,16 +1997,27 @@
             }
         }
 
+
     </script>
 
 
     <script>
         $(function () {
-            console.log(get_current_day(-1))
             $('#history_month_start').val(get_current_day(-1))
             $('#history_month_end').val(get_current_day())
+            $('#cda_date').val(get_current_day())
 
             start()
+
+            $('input[name="cda_stage"]').each(function (){
+                const value = $(this).val()
+                const level = '{{ user.level }}'
+                const stage = '{{ user.stage }}'
+                $('#cda_stage_all').prop('checked', true)
+                if(level !== 'super admin' && level !== 'team leader'){
+                    $(this).prop('disabled', true)
+                }
+            })
 
             $('.device_details').click(function () {
                 $('.device_details_name').text($(this).data('name'))
@@ -2025,10 +2224,8 @@
 
 
 
-            $('body').on('click', '.loan_rows', function (event) {
-                if(!$(event.target).hasClass('loan-checkbox')){
-                    $('#exampleLargeModal1').modal('show')
-                }
+            $('body').on('click', '.loan_rows', function () {
+                $('#exampleLargeModal1').modal('show')
                 var row = $(this);
                 var first_name = row.data('first_name');
                 var last_name = row.data('last_name');
@@ -2327,8 +2524,6 @@
             })
 
 
-
-
             // NOTE BLOCK
             $("#add_note").click(function () {
                 var user_id = $("#selected_user_id").val();
@@ -2436,7 +2631,7 @@
             })
 
 
-            {#PHONEBOOK--------------#}
+
             {#PHONEBOOK--------------#}
             $('.phonebook_search_input').keyup(function (){
                 var key = $(this).val().toLowerCase()
@@ -2493,7 +2688,6 @@
                     }
                 })
             })
-
 
 
 

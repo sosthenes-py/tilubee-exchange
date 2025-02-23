@@ -1,8 +1,8 @@
-{% extends "admin_panel/layout.html" %}
+{% extends "crm/layout.html" %}
 {% load static %}
 
 {% block title %}
-    <title>Waive Function - We Digital</title>
+    <title>Repayment History - We Digital</title>
 {% endblock %}
 
 {% block content %}
@@ -18,57 +18,71 @@
 				<div class="card radius-10">
 					<div class="card-body">
 
-						<div class="d-flex align-items-center text-bg-">
-							<div class="pt-3 ps-3 pb-0" style="display: inline-block; width: 100%">
-                                <p style="float: left" class="fw-bold fs-6">Waive Function</p>
-                                <div style="float: right; width: 30%; display: inline-block">
-                                    <div style="width: 40%; float: left">
-                                        <label for="history_month_start">From:</label>
-                                        <input  type="date" id="history_month_start"
-                                           class="me-2" value="" onchange="start(true)" >
-                                    </div>
 
-                                    <div style="width: 40%; float: right">
-                                        <label for="history_month_end">To:</label>
-                                        <input  type="date" id="history_month_end"
-                                           class="me-2" value="" onchange="start(true)">
-                                    </div>
+                        <div class="d-flex align-items-center bg-light">
+                        <div class="me-auto fw-bold fs-6">{% if user.level == 'staff' or user.level == 'team leader' %}{{ user.stage }}{% endif %} Repayments</div>
+                        <div class="d-flex align-items-center">
+                            <div class="me-2">
+                                <label for="history_month_start" class="form-label me-1">From:</label>
+                                <input type="date" id="history_month_start" class="form-control d-inline-block" value=""
+                                       style="width: auto;">
+                            </div>
+                            <div class="me-2">
+                                <label for="history_month_end" class="form-label me-1">To:</label>
+                                <input type="date" id="history_month_end" class="form-control d-inline-block" value=""
+                                       style="width: auto;">
+                            </div>
+                            <div class="me-2">
+                                <label for="history_rows" class="form-label me-1">Rows:</label>
+                                <select id="history_rows" class="form-select d-inline-block" style="width: auto;">
+                                    <option selected value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                    <option value="2000">2000</option>
+                                    <option value="10000">2000+</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                                    <div style="width: 20%; float: right">
-                                        <label for="history_rows">Rows:</label>
-                                        <select id="history_rows" class="" onchange="start(true)">
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="50">50</option>
-                                            <option value="100">100</option>
-                                            <option value="500">500</option>
-                                        </select>
-                                    </div>
-                                </div>
+
+
+                    <div class="d-flex align-items-center bg-light">
+                        <div class="me-auto fw-bold fs-6"></div>
+                        <div class="d-flex align-items-center">
+
+                            <div class="me-2">
+                                <label for="filter" class="form-label me-1">Filters:</label>
+                                <input type="text" placeholder="Search by L.ID, Phone, BVN, Fname, Lname" id="filters" class="form-control d-inline-block" value="">
                             </div>
 
-						</div>
+                            <div>
+                                <button id="search_rdp" type="button" class="btn btn-primary px-3 radius-30"
+                                        onclick="start(true)">Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
 						<hr/>
 						<div class="table-responsive">
-							<table class="table align-middle mb-5" id="waive_table">
+							<table class="table align-middle mb-5" id="repayment_table">
 								<thead class="table-light">
 									<tr>
-                                        <th>
-                                            <div>
-                                                <input class="form-check-input me-3 all-checkbox border-primary border-2" type="checkbox" value="" aria-label="..." onchange="check_all_loans()">
-                                                Loan ID
-                                            </div>
-                                        </th>
+                                        <th>L,U ID</th>
+                                        <th>Principal</th>
                                         <th>Amount Due</th>
-                                        <th>Amt Repaid</th>
-                                        <th>Overdue Charges</th>
-                                        <th>Waive Amount</th>
-                                        <th>Due Date</th>
-                                        <th>Overdue Days</th>
-                                        <th>Waive Status</th>
+                                        <th>Record Pay</th>
+                                        <th>Record Stage</th>
+                                        <th>Total Repaid</th>
+                                        <th>Status</th>
+                                        <th>Record Date</th>
+                                        <th>Action</th>
                                     </tr>
 								</thead>
-								<tbody id="waive_history" style="padding-bottom: 4em !important">
+								<tbody id="repayment_history" style="padding-bottom: 4em !important">
 
 								</tbody>
 							</table>
@@ -82,7 +96,6 @@
 
 
     <input type="hidden" id="selected_user_id">
-    <input type="hidden" id="selected_waive_id">
 
 
 
@@ -129,15 +142,11 @@
                                                 class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split">
                                             <span class="visually-hidden">Toggle Dropdown</span></button>
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                                            <a href="#" class="dropdown-item view_loan_history text-primary"
+                                            <a href="#" class="dropdown-item view_repayment_history text-primary"
                                                data-bs-toggle='modal' data-bs-target='#LoanModal'><i
                                                     class="lni lni-cloud-sync"></i> Loans <span
                                                     class="badge rounded-pill bg-primary m-1 loan_count count">0</span></a>
 
-                                            <a href="#" class="dropdown-item view_repayment_history text-dark"
-                                               data-bs-toggle='modal' data-bs-target='#RepaymentModal'><i
-                                                    class="lni lni-cloud-upload"></i> Repayments <span
-                                                    class="badge rounded-pill bg-dark m-1 repayment_count count">0</span></a>
 
                                         </div>
                                     </div>
@@ -155,7 +164,7 @@
 
                                                     <!--------------------AVATAR AND USER NAMES---------------------->
                                                     <div class="d-flex flex-column align-items-center text-center">
-                                                        <img src="{% static 'admin_panel/images/avatars/user.png' %}"
+                                                        <img src="{% static 'crm/images/avatars/user.png' %}"
                                                              alt="Admin" width="110"
                                                              class="rounded-circle p-1 bg-primary details_avatar">
                                                         <div class="mt-3">
@@ -178,24 +187,6 @@
                                                             </button>
                                                         </div>
                                                     </div>
-
-                                                    <hr class="my-4">
-
-
-                                                    <!--------------------MINI TRANSACTION HISTORY---------------------->
-                                                    <div class="d-flex flex-column align-items-center text-center">
-                                                        <h5 style="font-size:1.2em; font-weight: bold">Quick
-                                                            Actions</h5>
-
-                                                        <div class="col mb-4 mt-3">
-                                                            <button type="button" class="btn btn-outline-primary px-5" id="waive">
-                                                                <i class="bx bx-check mr-1"></i>Approve Waive
-                                                            </button>
-                                                        </div>
-
-
-                                                    </div>
-
 
                                                 </div>
                                             </div>
@@ -234,7 +225,6 @@
                                                                 </div>
                                                             </a>
                                                         </li>
-
                                                         <li class="nav-item" role="presentation">
                                                             <a class="nav-link" data-bs-toggle="tab" href="#bankdetails"
                                                                role="tab" aria-selected="false" tabindex="-1">
@@ -243,18 +233,6 @@
                                                                             class="bx bxs-bank font-18 me-1"></i>
                                                                     </div>
                                                                     <div class="tab-title">Bank Details</div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-
-                                                        <li class="nav-item" role="presentation">
-                                                            <a class="nav-link" data-bs-toggle="tab" href="#loandetails"
-                                                               role="tab" aria-selected="false" tabindex="-1">
-                                                                <div class="d-flex align-items-center">
-                                                                    <div class="tab-icon"><i
-                                                                            class="bx bxs-bank font-18 me-1"></i>
-                                                                    </div>
-                                                                    <div class="tab-title">Loan Details</div>
                                                                 </div>
                                                             </a>
                                                         </li>
@@ -584,69 +562,8 @@
                                                                     <span class="text-secondary virtual_bankdetails_name">@wedigital</span>
                                                                 </li>
 
-
-
-                                                                <h5 class="mt-5 text-primary">Other Details</h5>
-                                                                <div class="w-100 border-top mb-2"></div>
-
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                                    <h6 class="mb-0 fw-bold"><i
-                                                                            class="bx bxs-building font-18 me-1"></i>
-                                                                        BVN</h6>
-                                                                    <span class="text-secondary bankdetails_bvn">wedigital</span>
-                                                                </li>
-
                                                             </ul>
                                                         </div>
-
-
-
-
-                                                         {#       -------------------------  LOAN DETAILS ----------------------#}
-
-                                                        <div class="tab-pane fade" id="loandetails" role="tabpanel">
-                                                            <ul class="list-group list-group-flush">
-                                                                <h5 class="mt-1 text-primary">Loan Setting</h5>
-                                                                <div class="w-100 border-top mb-2"></div>
-                                                                <div class="row mb-3">
-                                                                    <div class="col-sm-3">
-                                                                        <h6 class="mb-0 fw-bold">&#x20A6;
-                                                                            Eligible Amt</h6>
-                                                                    </div>
-                                                                    <div class="col-sm-9 text-secondary">
-                                                                        <div class="input-group mb-3">
-                                                                            <input type="text" placeholder="Amount eligible"
-                                                                                   aria-label="Amount eligible"
-                                                                                   aria-describedby="button-addon2"
-                                                                                   class="form-control details_eligible_amount">
-                                                                            <button type="button" id="button-addon2"
-                                                                                    class="btn btn-outline-primary details_save"
-                                                                                    data-key="eligible_amount"
-                                                                                    data-table="members">Update
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-                                                                <h5 class="mt-5 text-primary">Other Details</h5>
-                                                                <div class="w-100 border-top mb-2"></div>
-
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                                                    <h6 class="mb-0 fw-bold"><i
-                                                                            class="bx bxs-building font-18 me-1"></i>
-                                                                        Max Overdue Days</h6>
-                                                                    <span class="text-secondary max_overdue_days fw-bold text-danger">-</span>
-                                                                </li>
-
-
-                                                                <h5 class="mt-5 text-primary">Overdue Chart</h5>
-
-                                                                <div id="overdue_chart" data-highcharts-chart="0" style="overflow: hidden;"></div>
-
-                                                            </ul>
-                                                        </div>
-
 
 
                                                     </div>
@@ -678,14 +595,14 @@
 
 
 
-     <!--MODAL FOR REPAYMENTS-->
+    <!--MODAL FOR REPAYMENTS-->
 
     <div id="RepaymentModal" tabindex="-1" class="modal fade show" aria-modal="true" role="dialog"
          style="display: none;">
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
             <div class="modal-content bg-primary">
                 <div class="modal-header">
-                    <h5 class="mb-0 text-light">Repayment History</h5>
+                    <h5 class="mb-0 text-light">User -> <span class="details_current_user"></span></h5>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
                 </div>
                 <div class="modal-body">
@@ -695,7 +612,15 @@
 
 
                         <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="mb-0">Repayment History</h5>
+                                </div>
 
+                                <div class="font-22 ms-auto"><i class='bx bx-dots-horizontal-rounded'></i>
+                                </div>
+                            </div>
+                            <hr/>
                             <div class="table-responsive">
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
@@ -754,8 +679,8 @@
                                 <table class="table align-middle mb-5">
                                     <thead class="table-light">
                                     <tr>
-                                        <th>S/N</th>
                                         <th>Loan ID</th>
+                                        <th>Phone</th>
                                         <th>Principal</th>
                                         <th>Amt Disbursed</th>
                                         <th>Due Amount</th>
@@ -822,6 +747,8 @@
 
 
 
+
+
     <!--NOTES MODAL	-->
     <div id="NoteModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -864,77 +791,19 @@
 
 
 
-     <!--WAIVE MODAL	-->
-    <div id="WaiveModa" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content bg-primary">
-                <div class="modal-header">
-                    <h5 class="mb-0 text-light device_details_name">Waive Loan</h5>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <input id="selected_loan" type="hidden">
-                    <div class="card">
-                        <div class="card-body">
-
-                            <div class="input-group mb-3">
-                                <span class="input-group-text">&#x20A6;</span>
-                                <input type="number" class="form-control" placeholder="Amount to waive" aria-label="Amount (to the nearest naira)" id="waive_amount">
-                                <span class="input-group-text">.00</span>
-                            </div>
-                            <button class="btn btn-primary" id="waive_sbmt">
-                                {% if user.level == 'super admin' or user.level == 'approval admin' %}
-                                    Waive Now
-                                {% else %}
-                                    Submit waive request
-                                {% endif %}
-                            </button>
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    {#    CHECKBOX SELECTED MODAL#}
-    <div class="modal fade" id="CheckboxSelectedModal" tabindex="-1" aria-modal="true" role="dialog" style="display: none;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Sure to proceed?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">You are about to <span class="fw-bold text-danger"><span class="checkbox-modal-action" style="text-transform: capitalize"></span> All Selected Rows</span>. This action may not be explicitly reversible, proceed?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary checkbox-modal-sbmt" style="text-transform: capitalize" onclick="get_all_checked()">Action</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
 
     <script>
-         const success_audio = new Audio("{% static 'admin_panel/audio/correct.mp3' %}");
-                const error_audio = new Audio("{% static 'admin_panel/audio/wrong.mp3' %}");
+        const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
+            const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
 
-         var overlay= $("#overlay");
-            var loader= $("#loader");
 
-            function loadOn(){
+            var overlay = $("#overlay");
+            var loader = $("#loader");
+            var loader_trans = $("#loader-trans");
+
+            function loadOn() {
                 overlay.css('display', 'block');
                 loader.css('display', 'block');
-            }
-            function loadOff(){
-                overlay.css('display', 'none');
-                loader.css('display', 'none');
             }
 
             function onProgress(elem) {
@@ -945,15 +814,19 @@
                 $('#' + elem).removeClass('thin-loader')
             }
 
+            function loadOff() {
+                overlay.css('display', 'none');
+                loader.css('display', 'none');
+            }
 
             function notify(status, message) {
-                    if (status === "success" || status === "info") {
-                        success_audio.play();
-                    } else {
-                        error_audio.play();
-                    }
-                    toastr[status](message)
+                if (status === "success" || status === "info") {
+                    success_audio.play();
+                } else {
+                    error_audio.play();
                 }
+                toastr[status](message)
+            }
 
 
             $('#history_month_end').change(function (){
@@ -979,236 +852,83 @@
 
             function start(refresh = false) {
                 loadOn()
-                $.ajax({
-                    url: '{% url "loans" %}',
-                    data: {
-                        action: 'fetch_waives',
-                        rows: $('#history_rows').val(),
-                        start: $('#history_month_start').val(),
-                        end: $('#history_month_end').val()
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        if (refresh) {
-                            $('#waive_table').DataTable().destroy()
-                        }
-                        setTimeout(function () {
-                            $("#waive_history").html(data.content);
-                            var table = $('#waive_table').DataTable({
-                                lengthChange: false,
-                                buttons: ['copy', 'excel', 'pdf', 'print'],
-                                ordering: false,
-                                columnDefs: [
-                                    {"orderable": false, "targets": 0}
-                                ]
-                            });
-                            table.buttons().container().appendTo('#waive_table_wrapper .col-md-6:eq(0)');
-                        }, 10)
-                    },
-                    error: function (jqXHR, errorThrown) {
-                        loadOff()
-                        notify('error', 'An error occurred. Page will be refreshed in 3s')
-                        setTimeout(function () {
-                            {#window.location.update()#}
-                        }, 3000)
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            }
-
-
-            window.e2_chart = undefined;
-            function update_overdue_chart(overdue_x, overdue_y, refresh=false){
-            if(refresh){
-                if (e2_chart !== undefined && e2_chart && typeof e2_chart.destroy === 'function') {
-                    e2_chart.destroy();
-                }
-            }
-             var e2 = {
-                chart: {
-                    foreColor: '#9ba7b2',
-                    height: 360,
-                    type: 'line',
-                    zoom: {
-                        enabled: false
-                    },
-                    dropShadow: {
-                        enabled: true,
-                        top: 3,
-                        left: 2,
-                        blur: 4,
-                        opacity: 0.1,
-                    }
-                },
-                stroke: {
-                    curve: 'smooth',
-                    width: 5
-                },
-                colors: ["#fd3550"],
-                series: [{
-                    name: "Overdue Days",
-                    data: overdue_y
-                }],
-
-                markers: {
-                    size: 4,
-                    strokeWidth: 0,
-                    hover: {
-                        size: 7
-                    }
-                },
-                grid: {
-                    show: true,
-                    padding: {
-                        bottom: 0
-                    }
-                },
-                labels: overdue_x,
-                xaxis: {
-                    tooltip: {
-                        enabled: false
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'DAYS'
-                    },
-                    labels: {
-                        formatter: function (val) {
-                            return formatNumber(val, 1)
-                        }
-                    }
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    offsetY: -20
-                }
-            }
-            window.e2_chart = new ApexCharts(document.querySelector('#overdue_chart'), e2);
-            e2_chart.render();
-       }
-
-
-
-
-             {#CHECKBOX STUFFS#}
-
-            function get_selected_checkbox_action() {
-                var html = '';
                 const level = '{{ user.level }}'
-                const allowed_admins = ['super admin', 'approval admin']
-
-                if (allowed_admins.includes(level)) {
-                    html = `<li><a class="dropdown-item selected-check-action" data-action='approve' href="#">Approve all</a></li>
-                       <li><a class="dropdown-item selected-check-action" data-action='decline' href="#">Decline all</a></li>`
-                }
-
-                return `
-                <div class="dropdown ms-3 checkbox-btn">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Selected Actions</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item selected-check-action" data-action='copy_phone' href="#">Copy phones</a></li>
-                            ${html}
-                        </ul>
-                    </div>
-           `
-            }
-
-
-            function check_all_loans() {
-                const all_check = $('.all-checkbox').is(':checked') ? 'checked' : 'unchecked'
-                if (all_check === 'checked') {
-                    $('.dt-buttons').append(get_selected_checkbox_action())
+                if (level !== 'staff' || level === 'team leader') {
+                    $.ajax({
+                        url: '{% url "repayments" %}',
+                        data: {
+                            action: 'fetch_all_repayments',
+                            rows: $('#history_rows').val(),
+                            start: $('#history_month_start').val(),
+                            end: $('#history_month_end').val(),
+                            filters: $('#filters').val()
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (data) {
+                            loadOff()
+                            if (refresh) {
+                                $('#repayment_table').DataTable().destroy()
+                            }
+                            setTimeout(function () {
+                                $("#repayment_history").html(data.content);
+                                var table = $('#repayment_table').DataTable({
+                                    lengthChange: false,
+                                    buttons: ['copy', 'excel', 'pdf', 'print'],
+                                    order: [[7, 'desc']]
+                                });
+                                table.buttons().container().appendTo('#loan_table_wrapper .col-md-6:eq(0)');
+                            }, 10)
+                        },
+                        error: function (jqXHR, errorThrown) {
+                            loadOff()
+                            notify('error', 'An error occurred. Page will be refreshed in 3s')
+                            setTimeout(function () {
+                                {#window.location.update()#}
+                            }, 3000)
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
                 } else {
-                    $('.checkbox-btn').hide()
+                    $.ajax({
+                        url: "{% url 'operators' %}",
+                        dataType: "json",
+                        type: "POST",
+                        async: false,
+                        data: {
+                            id: '{{ user.id }}',
+                            action: 'operator_details'
+                        },
+                        success: function (data) {
+                            loadOff()
+                            if (refresh) {
+                                $('#repayment_table').DataTable().destroy()
+                            }
+                            setTimeout(function () {
+                                $("#repayment_history").html(data.content['repayments']);
+                                var table = $('#repayment_table').DataTable({
+                                    lengthChange: false,
+                                    pageLength: 15,
+                                    buttons: ['copy', 'excel', 'pdf', 'print']
+                                });
+                                table.buttons().container().appendTo('#loan_table_wrapper .col-md-6:eq(0)');
+                            }, 10)
+                        },
+                        error: function () {
+                            offProgress('user-modal')
+                            notify('error', 'Fetch failed, Retry')
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
                 }
 
-                $('.loan-checkbox').each(function () {
-                    if (all_check === 'checked') {
-                        $(this).prop('checked', true)
-                    } else {
-                        $(this).prop('checked', false)
-                    }
-                })
             }
-
-            var checkbox_btn_appended = false
-            $('body').on('change', '.loan-checkbox', function () {
-                if ($('.loan-checkbox:checked').length > 0 && !checkbox_btn_appended) {
-                    checkbox_btn_appended = true
-                    $('.dt-buttons').append(get_selected_checkbox_action())
-                } else if ($('.loan-checkbox:checked').length === 0 && checkbox_btn_appended) {
-                    $('.checkbox-btn').hide()
-                    checkbox_btn_appended = false
-                }
-
-            })
-
-
-            $('body').on('click', '.selected-check-action', function () {
-                const action = $(this).data('action')
-                if (action === 'copy_phone') {
-                    var phones = get_all_checked('phone')
-                    copy_to_clipboard(phones.join(' '))
-                } else {
-                    $('#CheckboxSelectedModal').modal('show')
-                    $('.checkbox-modal-action').text(action)
-                    $('.checkbox-modal-sbmt').data('action', action).text('Yes, ' + action)
-                }
-            })
-
-            function get_all_checked(get = 'waive_id') {
-                var checked = []
-                $('.user_rows').each(function () {
-                    const check = $(this).find('input')
-                    if (check.is(':checked')) {
-                        var item = $(this).data(get)
-                        checked.push(item)
-                    }
-                })
-                return checked
-            }
-
-
-            $('.checkbox-modal-sbmt').click(function () {
-                const checked = get_all_checked()
-                loadOn();
-                $.ajax({
-                    url: '{% url "loans" %}',
-                    data: {
-                        action: 'bulk_waive',
-                        main_action: $(this).data('action'),
-                        waives: JSON.stringify(checked)
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        notify(data.status, data.message)
-                        start(true)
-                        $('#CheckboxSelectedModal').modal('hide')
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            })
-
-
-            {#CHECKBOX STUFF ENDS#}
-
 
     </script>
-
 
    <script>
 	    $(function(){
@@ -1216,88 +936,6 @@
             $('#history_month_end').val(get_current_day())
 
             start()
-
-
-            $('.device_details').click(function (){
-                $('.device_details_name').text($(this).data('name'))
-            })
-
-            $('.generate_repayment_link').click(function (){
-                notify('error', 'Error generating link')
-            })
-
-
-            $('#waive').click(function () {
-                var waive_id = $('#selected_waive_id').val()
-                var id = $('#selected_loan').val()
-                loadOn();
-                $.ajax({
-                    url: '{% url "loans" %}',
-                    data: {
-                        action: 'waive_loan',
-                        size: 'single',
-                        user_id: $('#selected_user_id').val(),
-                        waive_id: waive_id,
-                        loan_id: id
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        notify(data.status, data.message)
-                        if (data.status === "success") {
-                            $('#mini_loan_history').html(data.content)
-                            start(true)
-                        }
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            })
-
-
-            $('#waive_sbmt').click(function (){
-                var id = $('#selected_loan').val()
-                var amount = $('#waive_amount').val()
-                if(amount === 0 || amount === ''){
-                    notify('warning', 'Please enter valid amount')
-                }else{
-                    loadOn();
-                    $.ajax({
-                        url: '{% url "loans" %}',
-                        data: {
-                            action: 'waive_loan',
-                            loan_id: id,
-                            size: 'single',
-                            user_id: $('#selected_user_id').val(),
-                            amount: amount
-                        },
-                        dataType: 'json',
-                        type: 'post',
-                        success: function (data) {
-                            loadOff()
-                            notify(data.status, data.message)
-                            $('#WaiveModal').modal('close')
-                            if(data.status === "success"){
-                                $('#waive_history').html(data.content)
-                                start(true)
-                            }
-                        },
-                        error: function (err1, err2) {
-                            loadOff()
-                            notify('error', JSON.stringify(err1))
-                        },
-                        beforeSend: function (xhr, settings) {
-                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                        }
-                    })
-                }
-            })
 
 
 	        $("body").on('click', '.loan_actions', function(){
@@ -1320,7 +958,7 @@
                     type: 'post',
                     success: function (data) {
                         loadOff()
-                        $('#mini_loan_history').html(data.content)
+                        $('#mini_repayment_history').html(data.content)
                         notify(data.status, data.message)
                         start(true)
                     },
@@ -1335,12 +973,38 @@
 	        })
 
 
+            $("body").on('click', '.cancel_repay', function(){
+	            var id= $(this).data('id');
+	            loadOn();
+
+                $.ajax({
+                    url: '{% url "loans" %}',
+                    data: {
+                        action: 'cancel_repay',
+                        repay_id: id
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        notify(data.status, data.message)
+                        start(true)
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+	        })
 
 
-            $('body').on('click', '.waive_rows', function () {
-                if(!$(event.target).hasClass('loan-checkbox')){
+            $('body').on('click', '.repay_rows', function () {
+                if(!$(event.target).hasClass('cancel_repay')){
                     $('#exampleLargeModal1').modal('show')
-
+                }
                 var row = $(this);
                 var first_name = row.data('first_name');
                 var last_name = row.data('last_name');
@@ -1359,11 +1023,11 @@
                 var state = row.data('state');
                 var status_pill = row.data('status_pill');
                 var id = row.data('user_id');
-                var waive_id = row.data('waive_id');
-                var loan_id = row.data('loan_id');
-                var waive_status = row.data('waive_status')
-                var eligible_amount = row.data('eligible_amount');
-
+                var deposit_count = row.data('deposit_count');
+                var with_count = row.data('with_count');
+                var tf_count = row.data('tf_count');
+                var trade2_count = row.data('trade2_count');
+                var invest_count = row.data('invest_count');
 
                 $(".details_first_name").val(first_name).data('id', id);
                 $(".details_last_name").val(last_name).data('id', id);
@@ -1379,23 +1043,19 @@
                 $(".details_gender").val(gender).select().data('id', id);
                 $(".details_status_show").html(status_pill);
                 $(".details_status").data('id', id);
-                $(".details_eligible_amount").val(eligible_amount).data('id', id);
 
                 $(".details_avatar").attr('src', avatar);
                 $(".details_registered").text(created_at);
                 $(".details_current_user").text(id);
                 $(".details_text_username").text(last_name + ' ' + first_name + ' (' + id + ')');
-
-                if(waive_status === 'pending'){
-                    $('#waive').attr('disabled', false).html('<i class="bx bx-check mr-1"></i>Approve Waive')
-                }else{
-                    $('#waive').attr('disabled', true).html('<i class="bx bx-check-double mr-1"></i>Waive Approved')
-                }
+                $(".deposit_count").text(deposit_count);
+                $(".with_count").text(with_count);
+                $(".tf_count").text(tf_count);
+                $(".trade2_count").text(trade2_count);
+                $(".invest_count").text(invest_count);
 
 
                 $("#selected_user_id").val(id);
-                $('#selected_loan').val(loan_id)
-                $("#selected_waive_id").val(waive_id);
 
                 {#RESET COUNTERS AND ELEMENTS#}
                 $('.count').text('0')
@@ -1418,13 +1078,12 @@
                             offProgress('user-modal')
                             {#POPULATE OTHER DETAILS WITH RESPONSE#}
                             $.each(data.content, function (key, value) {
-                                if (key !== "tables" && key !== "overdue_chart") {
+                                if (key !== "tables") {
                                     $('.' + key).text(value)
                                 }
                             });
                             $('#show_notes').html(data.content['tables']['notes'])
                             $('#show_files').html(data.content['tables']['files'])
-                            update_overdue_chart(data.content['overdue_chart']['x'], data.content['overdue_chart']['y'], true)
                         },
                         error: function () {
                             notify('error', 'Fetch failed, Retry')
@@ -1435,7 +1094,7 @@
                     })
 
                 }, 1100)
-                }
+
 
             })
 
@@ -1471,20 +1130,20 @@
 
 
             // LOANS BLOCK
-            $(".view_loan_history").click(function () {
+            $(".view_repayment_history").click(function () {
                 var user_id = $("#selected_user_id").val();
                 loadOn();
                 $.ajax({
                     url: '{% url "loans" %}',
                     data: {
                         user_id: user_id,
-                        action: 'fetch_loans'
+                        action: 'fetch_repayments'
                     },
                     dataType: 'json',
                     type: 'post',
                     success: function (data) {
                         loadOff()
-                        $('#mini_loan_history').html(data.content)
+                        $('#mini_repayment_history').html(data.content)
                     },
                     error: function (err1, err2) {
                         loadOff()
@@ -1596,38 +1255,12 @@
             })
 
 
-            $(".view_repayment_history").click(function () {
-                var user_id = $("#selected_user_id").val();
-                loadOn();
-                $.ajax({
-                    url: '{% url "loans" %}',
-                    data: {
-                        user_id: user_id,
-                        action: 'fetch_repayments'
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        $('#repayment_history').html(data.content)
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            })
 
 
-
-
-            $('body').on('mouseover', '.waive_rows', function(){
+            $('body').on('mouseover', '.repay_rows', function(){
 	            $(this).css({'background':'#E2EDFF', 'color':'#267DFD', 'cursor':'pointer'})
 	        })
-	        $('body').on('mouseout', '.waive_rows', function(){
+	        $('body').on('mouseout', '.repay_rows', function(){
 	            $(this).css({'background':'white', 'color':'black', 'cursor':'pointer'})
 	        })
 

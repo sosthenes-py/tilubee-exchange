@@ -1,4 +1,4 @@
-{% extends "admin_panel/layout.html" %}
+{% extends "crm/layout.html" %}
 {% load static %}
 
 {% block title %}
@@ -387,8 +387,8 @@
 
 
     <script>
-        const success_audio = new Audio("{% static 'admin_panel/audio/correct.mp3' %}");
-	        const error_audio = new Audio("{% static 'admin_panel/audio/wrong.mp3' %}");
+        const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
+	        const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
 
 
 	         var overlay= $("#overlay");

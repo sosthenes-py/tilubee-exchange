@@ -1,0 +1,623 @@
+{% load static %}
+    {% block title %}
+    {% endblock %}
+    <!--favicon-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="{% static 'crm/images/favicon.png' %}" type="image/png" />
+	<!--plugins-->
+	<link href="{% static 'crm/plugins/simplebar/css/simplebar.css' %}" rel="stylesheet" />
+	<link href="{% static 'crm/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet" />
+	<link href="{% static 'crm/plugins/metismenu/css/metisMenu.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'crm/plugins/datatable/css/dataTables.bootstrap5.min.css' %}" rel="stylesheet" />
+
+
+    <link href="{% static 'crm/plugins/Drag-And-Drop/dist/imageuploadify.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'crm/plugins/fancy-file-uploader/fancy_fileupload.css' %}" rel="stylesheet" />
+
+
+	<!-- loader-->
+	<link href="{% static 'crm/css/pace.min.css' %}" rel="stylesheet" />
+	<!-- Bootstrap CSS -->
+	<link href="{% static 'crm/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'crm/css/bootstrap-extended.css' %}" rel="stylesheet" />
+	<link href="{% static 'crm/css/app.scss' %}" rel="stylesheet" />
+	<link href="{% static 'crm/css/icons.css' %}" rel="stylesheet" />
+	<!-- Theme Style CSS -->
+	<link rel="stylesheet" href="{% static 'crm/css/dark-theme.css' %}" />
+	<link rel="stylesheet" href="{% static 'crm/css/semi-dark.css' %}" />
+	<link rel="stylesheet" href="{% static 'crm/css/header-colors.css' %}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" integrity="sha512-Ars0BmSwpsUJnWMw+KoUKGKunT7+T8NGK0ORRKj+HT8naZzLSIQoOSIIM3oyaJljgLxFi0xImI5oZkAWEFARSA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<!-- toastr js -->
+    <link rel="stylesheet" href="{% static 'crm/css/toastr.min.css' %}" />
+
+
+	 <script src="{% static 'crm/js/jquery-3.6.0.min.js' %}"></script>
+
+	 <style>
+        #loader{
+          position: fixed;
+          text-align:center;
+          width: 100%;
+          height: 100%;
+          top: 50%;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 10000;
+          cursor: pointer;
+          display:none;
+          justify-content: center;
+          margin-top:-50px;
+        }
+
+         #overlay{
+          position: fixed;
+          text-align:center;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: black;
+          opacity: 0.6;
+          z-index: 1000000;
+          cursor: not-allowed;
+          display:none;
+          justify-content: center;
+        }
+         th {
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow: hidden;    /* Hide any overflowing text */
+            text-overflow: ellipsis; /* Optionally, add ellipsis for long text */
+        }
+         td{
+             white-space: nowrap;
+         }
+         td input {
+            width: auto; /* Allow the input to expand to fit its content */
+            box-sizing: border-box; /* Include padding and border in the width calculation */
+        }
+         table{
+            font-size: 14px;
+         }
+        .actions{
+            cursor: pointer;
+        }
+
+         /* Custom CSS for the loader animation */
+            .thin-loader {
+              position: relative;
+              height: 4px; /* Adjust height as needed */
+              background-color: #E65100; /* Loader color */
+            }
+            .thin-loader::after {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 50%; /* Initial width of the loader */
+              height: 100%;
+              background-color: #fff; /* Background color */
+              animation: loader 2s infinite; /* Animation */
+            }
+            @keyframes loader {
+              0% {
+                width: 0; /* Start from 0 width */
+              }
+              50% {
+                width: 100%; /* Move to 100% width */
+                left: 0; /* Move to left */
+              }
+              100% {
+                width: 0; /* Back to 0 width */
+                left: 100%; /* Move to right */
+              }
+            }
+
+            .text-bg-success-light{
+                color: #fff;
+                background-color: #0eb018;
+            }
+    </style>
+</head>
+
+<body>
+ <div id="loader">
+     <img src="{% static 'crm/css/ajax-loader.gif' %}" alt="" width="40em" />
+ </div>
+ <div id="overlay"></div>
+
+
+	<!--wrapper-->
+	<div class="wrapper">
+		<!--sidebar wrapper -->
+		<div class="sidebar-wrapper" data-simplebar="true">
+			<div class="sidebar-header">
+				<div>
+					<img src="{% static 'crm/images/logo.png' %}" class="logo-icon" alt="logo icon"  style="width: 4em"/>
+				</div>
+                <div class="mobile-toggle-icon ms-auto"><i class="bx bx-x"></i>
+				</div>
+			</div>
+			<!--navigation-->
+			<ul class="metismenu" id="menu">
+          
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-category"></i>
+						</div>
+						<div class="menu-title">Other Menu</div>
+					</a>
+
+
+                    <ul>
+						<li> <a href="{% url 'crm:transactions' %}"><i class="bx bx-right-arrow-alt"></i>Transactions</a>
+						</li>
+					</ul>
+
+                    <ul>
+                        <li> <a href="{% url 'crm:operators' %}"><i class="bx bx-right-arrow-alt"></i>Operators</a>
+                        </li>
+                    </ul>
+
+                    <ul>
+						<li> <a href="{% url 'crm:blacklist' %}"><i class="bx bx-right-arrow-alt"></i>Blacklist</a>
+						</li>
+                    </ul>
+
+                 
+                    <ul>
+						<li> <a href="{% url 'crm:users' %}"><i class="bx bx-right-arrow-alt"></i>Registered Users</a>
+						</li>
+					</ul>
+
+                   
+				</li>
+				<li>
+					<a href='#0' onclick='logout()'>
+						<div class="parent-icon"><i class="bx bx-user-circle"></i>
+						</div>
+						<div class="menu-title">Logout</div>
+					</a>
+				</li>
+
+
+			</ul>
+			<!--end navigation-->
+		</div>
+		<!--end sidebar wrapper -->
+		<!--start header -->
+		<header>
+			<div class="topbar d-flex align-items-center">
+				<nav class="navbar navbar-expand">
+					<div class="mobile-toggle-menu"><i class="bx bx-menu"></i>
+					</div>
+					<div class="search-bar flex-grow-1">
+                        {% block search_block %}
+
+                        {% endblock %}
+
+					</div>
+                    
+                
+                    <div  class="top-menu ms-auto">
+                       <ul  class="navbar-nav align-items-center">
+                          <li  class="nav-item mobile-search-icon"><a  href="#" class="nav-link"><i  class="bx bx-search"></i></a></li>
+                          <li  class="nav-item dropdown dropdown-large">
+                             <a  href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link dropdown-toggle dropdown-toggle-nocaret"><i  class="bx bx-category"></i></a>
+                             <div  class="dropdown-menu dropdown-menu-end">
+                                <div  class="row row-cols-3 g-3 p-3">
+                                   <div  class="col text-center">
+                                      <div  class="app-box mx-auto bg-gradient-cosmic text-white"><i  class="bx bx-group"></i></div>
+                                      <div  class="app-title">Teams</div>
+                                   </div>
+                                   <div  class="col text-center">
+                                      <div  class="app-box mx-auto bg-gradient-burning text-white"><i  class="bx bx-atom"></i></div>
+                                      <div  class="app-title">Projects</div>
+                                   </div>
+                                   <div  class="col text-center">
+                                      <div  class="app-box mx-auto bg-gradient-lush text-white"><i  class="bx bx-shield"></i></div>
+                                      <div  class="app-title">Tasks</div>
+                                   </div>
+                                </div>
+                             </div>
+                          </li>
+
+                          <li  class="nav-item dropdown dropdown-large">
+                             <a  href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"><span  class="alert-count">0</span><i class="bx bx-bell"></i></a>
+                             <div class="dropdown-menu dropdown-menu-" style="padding-right: 2em">
+                                <a  href="#">
+                                   <div  class="msg-header">
+                                      <p  class="msg-header-title">Notifications</p>
+                                      <p  class="msg-header-clear ms-auto">Marks all as read</p>
+                                   </div>
+                                </a>
+
+                             </div>
+                          </li>
+                           
+                           <li  class="nav-item dropdown dropdown-large">
+                             <a  href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"><span  class="alert-count">0</span><i  class="bx bx-comment"></i></a>
+                             <div  class="dropdown-menu dropdown-menu-end">
+                                <a  href="#">
+                                   <div  class="msg-header">
+                                      <p  class="msg-header-title">Messages</p>
+                                      <p  class="msg-header-clear ms-auto">Marks all as read</p>
+                                   </div>
+                                </a>
+                             </div>
+                          </li>
+
+                       </ul>
+                    </div>
+                
+
+					<div class="top-menu ms-auto">
+						<ul class="navbar-nav align-items-center">
+
+
+							<li class="nav-item dropdown dropdown-large">
+								<div class="dropdown-menu dropdown-menu-end">
+									<a href="javascript:;">
+										<div class="msg-header">
+											<p class="msg-header-title">Notifications</p>
+											<p class="msg-header-clear ms-auto">Marks all as read</p>
+										</div>
+									</a>
+									<div class="header-notifications-list">
+
+
+
+									</div>
+									<a href="javascript:;">
+										<div class="text-center msg-footer">View All Notifications</div>
+									</a>
+								</div>
+							</li>
+							<li class="nav-item dropdown dropdown-large me-5">
+
+								<div class="dropdown-menu dropdown-menu-end">
+									<a href="javascript:;">
+										<div class="msg-header">
+											<p class="msg-header-title">Messages</p>
+											<p class="msg-header-clear ms-auto">Marks all as read</p>
+										</div>
+									</a>
+									<div class="header-message-list">
+
+									</div>
+									<a href="javascript:;">
+										<div class="text-center msg-footer">View All Messages</div>
+									</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="user-box dropdown" style="margin-right: 6em">
+						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<img src="{% static 'crm/images/avatars/user.png' %}" class="user-img" alt="user avatar">
+							<div class="user-info ps-3">
+								<p class="user-name mb-0">{{ user.email }} - {{ user.level|title }} </p>
+								<p class="designattion mb-0"></p>
+							</div>
+						</a>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--end header -->
+    </div>
+
+{% block content %}{% endblock content %}
+
+    	<!--start overlay-->
+		<div class="overlay toggle-icon"></div>
+		<!--end overlay-->
+		<!--Start Back To Top Button--> <a href="javaScript:;" class="back-to-top"><i class="bx bxs-up-arrow-alt"></i></a>
+		<!--End Back To Top Button-->
+		<footer class="page-footer">
+            <p class="mb-0">
+                {% if user.level == 'super admin' %}
+                <span class="text-primary">WEDIGITAL DEVS <i class="bx bx-laptop"></i></span> |
+                {% endif %}
+                Copyright © 2021. All right reserved.</p>
+		</footer>
+	</div>
+	<!--end wrapper-->
+
+
+    <div id="modifyBankModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content bg-primary">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modify Bank Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-md-12">
+                        <label for="modify_bank_bank">Select Bank</label>
+                        <select id="modify_bank_bank" class="form-control">
+                            <option value="0">Loading banks...</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 mt-3">
+                        <label for="modify_bank_number" class="form-label">Account Number</label>
+                        <input type="number" class="form-control" id="modify_bank_number" >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" style="text-transform: capitalize" onclick="modify_bank()">Modify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% block switcher %}{% endblock switcher %}
+
+
+	<!--end switcher-->
+
+    <!--start switcher-->
+	<div class="switcher-wrapper">
+		<div class="switcher-btn"> <i class="bx bx-cog bx-spin"></i>
+		</div>
+		<div class="switcher-body">
+			<div class="d-flex align-items-center">
+				<h5 class="mb-0 text-uppercase">Theme Settings</h5>
+				<button type="button" class="btn-close ms-auto close-switcher" aria-label="Close"></button>
+			</div>
+			<hr/>
+			<h6 class="mb-0">Theme Styles</h6>
+			<hr/>
+			<div class="d-flex align-items-center justify-content-between">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="lightmode" checked>
+					<label class="form-check-label" for="lightmode">Light</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="darkmode">
+					<label class="form-check-label" for="darkmode">Dark</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="semidark">
+					<label class="form-check-label" for="semidark">Semi Dark</label>
+				</div>
+			</div>
+			<hr/>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" id="minimaltheme" name="flexRadioDefault">
+				<label class="form-check-label" for="minimaltheme">Minimal Theme</label>
+			</div>
+			<hr/>
+			<h6 class="mb-0">Header Colors</h6>
+			<hr/>
+			<div class="header-colors-indigators">
+				<div class="row row-cols-auto g-3">
+					<div class="col">
+						<div class="indigator headercolor1" id="headercolor1"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor2" id="headercolor2"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor3" id="headercolor3"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor4" id="headercolor4"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor5" id="headercolor5"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor6" id="headercolor6"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor7" id="headercolor7"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor8" id="headercolor8"></div>
+					</div>
+				</div>
+			</div>
+
+			<hr/>
+			<h6 class="mb-0">Sidebar Backgrounds</h6>
+			<hr/>
+			<div class="header-colors-indigators">
+				<div class="row row-cols-auto g-3">
+					<div class="col">
+						<div class="indigator sidebarcolor1" id="sidebarcolor1"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor2" id="sidebarcolor2"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor3" id="sidebarcolor3"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor4" id="sidebarcolor4"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor5" id="sidebarcolor5"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor6" id="sidebarcolor6"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor7" id="sidebarcolor7"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor8" id="sidebarcolor8"></div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+
+	<!-- Bootstrap JS -->
+	<script src="{% static 'crm/js/bootstrap.bundle.min.js' %}"></script>
+	<!--plugins-->
+	<script src="{% static 'crm/plugins/simplebar/js/simplebar.min.js' %}"></script>
+	<script src="{% static 'crm/plugins/metismenu/js/metisMenu.min.js' %}"></script>
+	<script src="{% static 'crm/plugins/perfect-scrollbar/js/perfect-scrollbar.js' %}"></script>
+	<script src="{% static 'crm/plugins/datatable/js/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'crm/plugins/datatable/js/dataTables.bootstrap5.min.js' %}"></script>
+
+
+{#    FILE UPLOADS#}
+    <script src="{% static 'crm/plugins/fancy-file-uploader/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'crm/plugins/fancy-file-uploader/jquery.fileupload.js' %}"></script>
+    <script src="{% static 'crm/plugins/fancy-file-uploader/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'crm/plugins/fancy-file-uploader/jquery.fancy-fileupload.js' %}"></script>
+    <script src="{% static 'crm/js/custom-uploadify.js' %}"></script>
+
+
+
+
+	 <!-- toastr js -->
+    <script src="{% static 'crm/js/toastr.min.js' %}"></script>
+
+{##}
+{#	<script src="{% static 'crm/js/index.js' %}"></script>#}
+
+    <script src="{% static 'crm/js/pace.min.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="{% static 'crm/plugins/fullcalendar/js/main.min.js' %}"></script>
+
+    <script src="{% static 'crm/plugins/highcharts/js/highcharts.js' %}"></script>
+	<script src="{% static 'crm/plugins/apexcharts-bundle/js/apexcharts.min.js' %}"></script>
+	<script src="{% static 'crm/js/index2.js' %}"></script>
+
+    <!--app JS-->
+	<script src="{% static 'crm/js/app.js' %}"></script>
+
+
+
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js'
+        import { getAuth, onAuthStateChanged, Signout } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js'
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcKqDRuZ6derILcuP5Uu3hoTK6saQ2hI0",
+            authDomain: "tilubee-ff65a.firebaseapp.com",
+            projectId: "tilubee-ff65a",
+            storageBucket: "tilubee-ff65a.firebasestorage.app",
+            messagingSenderId: "945247805903",
+            appId: "1:945247805903:web:667886be28220f18a532ba",
+            measurementId: "G-C8R8C9MJR6"
+          };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app)
+    
+        $('#sbmt').click(function (event){
+                event.preventDefault()
+                const email = $('#email').val()
+                const pass = $('#pass').val()
+                loadOn()
+                signInWithEmailAndPassword(auth, email, pass)
+                    .then((user) => {
+                        loadOff()
+                        notify('success', 'Confirmed! Logging in..')
+                        window.location.href = '{% url "crm:users" %}'
+                    })
+                    .catch((error) => {
+                        loadOff()
+                        notify('error', `${error.code.replace('auth/', '').replace('-', ' ')}`)
+                        console.log(`${error.code}`)
+                    })
+            })
+    
+        onAuthStateChanged(auth, (user) => {
+            if(user){
+                window.location.href = '{% url "crm:users" %}'
+            }
+        })
+
+        function logout(){
+            SignOut(auth)
+                .then(() => {
+                    window.location.href = "{% url 'crm:login' %}"
+                })
+                .catch((error) => {
+                    loadOff()
+                    notify('error', `${error.code.replace('auth/', '').replace('-', ' ')}`)
+                    console.log(`${error.code}`)
+                })
+        }
+    </script>
+    
+    
+
+
+ 
+ 
+    <script>
+     function copy_to_clipboard(item) {
+         navigator.clipboard.writeText(item);
+         notify('info', 'Copied');
+     }
+
+     function formatNumber(num, decimals) {
+         if (isNaN(num)) return '...';
+         // Set the number of decimals to 2 if not provided
+         decimals = decimals || 2;
+
+         // Format the number
+         var parts = parseFloat(num).toFixed(decimals).toString().split('.');
+         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+         return parts.join('.');
+     }
+
+     function formatAmount(amount) {
+         if (amount >= 1000000) {
+             return (amount / 1000000).toFixed(2).replace(/\.0$/, '') + 'M';
+         } else if (amount >= 100000) {
+             return (amount / 1000).toFixed(2).replace(/\.0$/, '') + 'k';
+         } else {
+             return formatNumber(amount);
+         }
+     }
+
+
+     function get_current_day(cc = 1) {
+         var date = new Date();
+         var day = ("0" + date.getDate()).slice(-2); // Get day and ensure two digits
+         var month = ("0" + (date.getMonth() + cc)).slice(-2); // Get month and ensure two digits
+         var year = date.getFullYear();
+
+         return year + '-' + month + '-' + day;
+     }
+
+     function get_current_month(cc = 1) {
+         var date = new Date();
+         var month = ("0" + (date.getMonth() + cc)).slice(-2); // Get month and ensure two digits
+         var year = date.getFullYear();
+
+         return year + '-' + month;
+     }
+
+    
+    
+ </script>
+
+
+
+</body>
+
+
+</html>

@@ -380,7 +380,7 @@ class UserUtils:
                 <a href="javascript:;" class="list-group-item sms_sidebar_item phonebook_item" data-name="{log.name}" data-message="{log.message}" data-phone="{log.phone}">
 					<div class="d-flex">
 						<div class="chat-user-offline">
-							<img src="/static/admin_panel/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
+							<img src="/static/crm/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
 						</div>
 						<div class="flex-grow-1 ms-2">
 							<h6 class="mb-0 chat-title">{log.name}</h6>
@@ -397,7 +397,7 @@ class UserUtils:
                 self._content += f"""
                     <div class="chat-content-leftside">
 							<div class="d-flex">
-								<img src="/static/admin_panel/images/avatars/user.png" width="30" height="30" class="rounded-circle" alt="">
+								<img src="/static/crm/images/avatars/user.png" width="30" height="30" class="rounded-circle" alt="">
 								<div class="flex-grow-1 ms-2">
 									<p class="mb-0 chat-time">{log.name}, {log.date:%b %d, %I:%M %p}</p>
 									<p class="chat-left-msg">{log.message}</p>
@@ -423,7 +423,7 @@ class UserUtils:
                             <a href="javascript:;" class="list-group-item contact_item phonebook_item" data-name="{contact.name}" data-message="" data-phone="{contact.phone}">
             					<div class="d-flex">
             						<div class="chat-user-offline">
-            							<img src="/static/admin_panel/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
+            							<img src="/static/crm/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
             						</div>
             						<div class="flex-grow-1 ms-2">
             							<h6 class="mb-0 chat-title">{contact.name}</h6>
@@ -450,7 +450,7 @@ class UserUtils:
                             <a href="javascript:;" class="list-group-item contact_item phonebook_item" data-name="{call.name}" data-message="" data-phone="{call.phone}">
             					<div class="d-flex">
             						<div class="chat-user-offline">
-            							<img src="/static/admin_panel/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
+            							<img src="/static/crm/images/avatars/user.png" width="42" height="42" class="rounded-circle" alt="">
             						</div>
             						<div class="flex-grow-1 ms-2">
             							<h6 class="mb-0 chat-title fw-bold text-{call_class}">{'Unsaved' if call.name == '' else call.name} <i class='bx bx-{icon} text-{call_class}'></i></h6>
@@ -473,7 +473,7 @@ class UserUtils:
             user = row.user
             avatar = f"{BASE_SPACE_URL}/user_docs/{user.avatar.name}" if hasattr(
                 user,
-                "avatar") and self.request.user.stage not in EXEMPT_STAFF else "/static/admin_panel/images/avatars/user.png"
+                "avatar") and self.request.user.stage not in EXEMPT_STAFF else "/static/crm/images/avatars/user.png"
 
             self._content += f"""
                 <tr
@@ -644,7 +644,7 @@ class AdminUtils:
                 data-level={agent.level}
                 data-stage='{agent.stage}'
                 data-created_at="{agent.created_at:%a %b %d, %Y}" 
-                data-avatar="/static/admin_panel/images/avatars/user.png" 
+                data-avatar="/static/crm/images/avatars/user.png" 
                 data-status_pill='<span class="badge rounded-pill text-bg-{status_class}">{status_text}</span>' 
                 data-bs-toggle='modal' data-bs-target='#operatorModal'>
 				    <td>
@@ -807,7 +807,7 @@ class LoanUtils:
             else:
                 attach_user = ''
 
-            avatar = "/static/admin_panel/images/avatars/user.png"
+            avatar = "/static/crm/images/avatars/user.png"
 
             status_text, status_class = '', ''
 

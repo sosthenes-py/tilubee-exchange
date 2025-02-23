@@ -1,8 +1,8 @@
-{% extends "admin_panel/layout.html" %}
+{% extends "crm/layout.html" %}
 {% load static %}
 
 {% block title %}
-    <title>Members - SportyCredit</title>
+    <title>Api Logs - SportyCredit</title>
 {% endblock %}
 
 {% block search_block %}
@@ -103,7 +103,7 @@
             <div class="card radius-10">
                 <div class="card-body">
                     <div class="d-flex align-items-center bg-light p-3">
-                        <div class="me-auto fw-bold fs-6">Filtered Users</div>
+                        <div class="me-auto fw-bold fs-6">Api Logs</div>
 
 
                         <div class="d-flex align-items-center">
@@ -120,7 +120,7 @@
                             <div class="me-2">
                                 <label for="history_rows" class="form-label me-1">Rows:</label>
                                 <select id="history_rows" class="form-select d-inline-block" style="width: auto;">
-                                    <option selected value="15">15</option>
+                                    <option value="15">15</option>
                                     <option value="50">50</option>
                                     <option value="200">200</option>
                                     <option value="500">500</option>
@@ -138,7 +138,8 @@
 
                             <div class="me-2">
                                 <label for="filter" class="form-label me-1">Filters:</label>
-                                <input type="text" placeholder="Search by U.ID, Phone, BVN, Fname, Lname" id="filters" class="form-control d-inline-block" value="">
+                                <input type="text" placeholder="Search by Action, Message, Status" id="filters" class="form-control d-inline-block" value=""
+                                       style="width: 22em;">
                             </div>
 
                             <div>
@@ -146,7 +147,6 @@
                                         onclick="start(true)">Search
                                 </button>
                             </div>
-
                         </div>
                     </div>
 
@@ -158,16 +158,16 @@
                         <table class="table align-middle mb-0" id="example2">
                             <thead class="table-light">
                             <tr>
-                                <th>S/N</th>
-                                <th>Phone</th>
-                                <th>Created At</th>
                                 <th>Action</th>
-
+                                <th>Fee</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                                <th>Date</th>
                             </tr>
                             </thead>
-                            <tbody id="blacklist">
+                            <tbody id="logs">
                             <tr>
-                                <td colspan="12" style="font-weight: bold">Fetching blacklist, PLEASE WAIT ...</td>
+                                <td colspan="12" style="font-weight: bold">Fetching logs, PLEASE WAIT ...</td>
                             </tr>
                             </tbody>
                         </table>
@@ -183,52 +183,17 @@
 
 
 
-     <!--ADD MODAL-->
-
-    <div id="addModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content bg-primary">
-                <div class="modal-header">
-                    <h5 class="mb-0 text-light"> Add New User</h5>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
-                </div>
-                <div class="modal-body">
-
-
-                    <div class="card">
-                        <div class="card-body p-4">
-                            <form class="row g-3" id="addForm">
-                                <div class="col-md-12">
-                                    <label for="input3" class="form-label">Phone number</label>
-                                    <textarea rows="4" type="text" class="form-control" id="add_phone" placeholder="Paste/Enter phones"></textarea>
-                                </div>
-
-
-                                <div class="col-md-12">
-                                    <div class="d-md-flex d-grid align-items-end gap-3">
-                                        <button type="button" class="btn btn-primary px-4" id="add_sbmt">Add</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
     </div>
     </div>
     </div>
     </div>
+
+
 
 
     <script>
-        const success_audio = new Audio("{% static 'admin_panel/audio/correct.mp3' %}");
-        const error_audio = new Audio("{% static 'admin_panel/audio/wrong.mp3' %}");
+        const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
+        const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
 
 
         var overlay = $("#overlay");
@@ -267,7 +232,7 @@
             var end_date = new Date($(this).val())
             if (start_date > end_date) {
                 $(this).val(get_current_month())
-                $("#history_month_start").val(get_current_month(-1))
+                $("#history_month_start").val(get_current_day(-1))
                 notify('warning', 'Ending date cannot be less than starting date')
             }
         })
@@ -277,7 +242,7 @@
             var start_date = new Date($(this).val())
             if (start_date > end_date) {
                 $(this).val(get_current_month(-1))
-                $("#history_month_end").val(get_current_month())
+                $("#history_month_end").val(get_current_day())
                 notify('warning', 'Ending date cannot be less than starting date')
             }
 
@@ -290,7 +255,7 @@
                 url: "{% url 'operators' %}",
                 type: "POST",
                 data: {
-                    action: 'fetch_accepted_users',
+                    action: 'fetch_logs',
                     rows: $('#history_rows').val(),
                     start: $('#history_month_start').val(),
                     end: $('#history_month_end').val(),
@@ -303,16 +268,13 @@
                         $('#example2').DataTable().destroy()
                     }
                     setTimeout(function () {
-                        $("#blacklist").html(data.content);
+                        $("#logs").html(data.content);
                         var table = $('#example2').DataTable({
                             lengthChange: false,
-                            pageLength: 50,
+                            pageLength: 15,
                             buttons: ['copy', 'excel', 'pdf', 'print']
                         });
                         table.buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
-                        $('.dt-buttons').append(`<button class="btn btn-primary btn-outline-dark ms-5" data-bs-toggle='modal'
-                                    data-bs-target='#addModal'>Add User
-                            </button>`)
                     }, 10)
                 },
                 error: function (jqXHR, errorThrown) {
@@ -328,12 +290,10 @@
             })
         }
 
-
         $('.copy').click(function (){
             var item = $(this).data('item')
             copy_to_clipboard(item)
         })
-
     </script>
 
 
@@ -344,71 +304,6 @@
             $('#history_month_end').val(get_current_day())
 
             start()
-
-
-            $('body').on('click', '.remove', function () {
-                const phone = $(this).data('phone')
-                loadOn();
-                $.ajax({
-                    url: '{% url "operators" %}',
-                    data: {
-                        main_action: 'remove',
-                        action: 'accepted_user',
-                        phone: phone
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        notify(data.status, data.message)
-                        if (data.status === 'success') {
-                            start(true)
-                        }
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            })
-
-
-            $('#add_sbmt').click(function () {
-                const phone = $('#add_phone').val()
-                if (phone === "") {
-                    notify('error', 'Enter phone')
-                } else {
-                    loadOn();
-                    $.ajax({
-                        url: '{% url "operators" %}',
-                        data: {
-                            main_action: 'add',
-                            action: 'accepted_user',
-                            phone: phone
-                        },
-                        dataType: 'json',
-                        type: 'post',
-                        success: function (data) {
-                            loadOff()
-                            notify(data.status, data.message)
-                            if (data.status === 'success') {
-                                start(true)
-                                $('#add_phone').val('')
-                            }
-                        },
-                        error: function (err1, err2) {
-                            loadOff()
-                            notify('error', JSON.stringify(err1))
-                        },
-                        beforeSend: function (xhr, settings) {
-                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                        }
-                    })
-                }
-            })
 
 
             $('body').on('mouseover', '.user_rows', function () {

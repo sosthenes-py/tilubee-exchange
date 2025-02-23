@@ -7,17 +7,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!--plugins-->
-	<link href="{% static 'admin_panel/plugins/simplebar/css/simplebar.css' %}" rel="stylesheet" />
-	<link href="{% static 'admin_panel/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet" />
-	<link href="{% static 'admin_panel/plugins/metismenu/css/metisMenu.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'crm/plugins/simplebar/css/simplebar.css' %}" rel="stylesheet" />
+	<link href="{% static 'crm/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet" />
+	<link href="{% static 'crm/plugins/metismenu/css/metisMenu.min.css' %}" rel="stylesheet" />
 	<!-- loader-->
-	<link href="{% static 'admin_panel/css/pace.min.css' %}" rel="stylesheet" />
-	<script src="{% static 'admin_panel/js/pace.min.js' %}"></script>
+	<link href="{% static 'crm/css/pace.min.css' %}" rel="stylesheet" />
+	<script src="{% static 'crm/js/pace.min.js' %}"></script>
 	<!-- Bootstrap CSS -->
-	<link href="{% static 'admin_panel/css/bootstrap.min.css' %}" rel="stylesheet">
-	<link href="{% static 'admin_panel/css/app.scss' %}" rel="stylesheet">
-	<link href="{% static 'admin_panel/css/icons.css' %}" rel="stylesheet">
-    <link href="{% static 'admin_panel/css/toastr.min.css' %}" rel="stylesheet">
+	<link href="{% static 'crm/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'crm/css/app.scss' %}" rel="stylesheet">
+	<link href="{% static 'crm/css/icons.css' %}" rel="stylesheet">
+    <link href="{% static 'crm/css/toastr.min.css' %}" rel="stylesheet">
 	<title>PRJECT_NAME - ADMIN SIGN IN</title>
 
     <style>
@@ -58,7 +58,7 @@
 
 <body class="bg-login">
     <div id="loader">
-     <img src="{% static 'admin_panel/css/ajax-loader.gif' %}" alt="" width="40em">
+     <img src="{% static 'crm/css/ajax-loader.gif' %}" alt="" width="40em">
      </div>
      <div id="overlay"></div>
 	<!--wrapper-->
@@ -68,7 +68,7 @@
 				<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
 					<div class="col mx-auto">
 						<div class="mb-4 text-center">
-							<img src="{% static 'admin_panel/images/logo.png' %}" width="180" alt="" />
+							<img src="{% static 'crm/images/logo.png' %}" width="180" alt="" />
 						</div>
 
                     {% block content %}{% endblock content %}
@@ -85,14 +85,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 	<!-- Bootstrap JS -->
-	<script src="{% static 'admin_panel/js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'crm/js/bootstrap.bundle.min.js' %}"></script>
 	<!--plugins-->
-	<script src="{% static 'admin_panel/plugins/simplebar/js/simplebar.min.js' %}"></script>
-	<script src="{% static 'admin_panel/plugins/metismenu/js/metisMenu.min.js' %}"></script>
-	<script src="{% static 'admin_panel/plugins/perfect-scrollbar/js/perfect-scrollbar.js' %}"></script>
-    <script src="{% static 'admin_panel/js/toastr.min.js' %}"></script>
+	<script src="{% static 'crm/plugins/simplebar/js/simplebar.min.js' %}"></script>
+	<script src="{% static 'crm/plugins/metismenu/js/metisMenu.min.js' %}"></script>
+	<script src="{% static 'crm/plugins/perfect-scrollbar/js/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'crm/js/toastr.min.js' %}"></script>
 
-	<script src="{% static 'admin_panel/js/app.js' %}"></script>
+	<script src="{% static 'crm/js/app.js' %}"></script>
 
     
 
@@ -102,8 +102,8 @@
             var loader= $("#loader");
             var loader_trans= $("#loader-trans");
 
-            const success_audio = new Audio("{% static 'admin_panel/audio/correct.mp3' %}}");
-	        const error_audio = new Audio("{% static 'admin_panel/audio/wrong.mp3' %}");
+            const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}}");
+	        const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
 
 
             function loadOn(){

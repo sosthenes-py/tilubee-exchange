@@ -1,4 +1,4 @@
-{% extends "admin_panel/layout.html" %}
+{% extends "crm/layout.html" %}
 {% load static %}
 
 {% block title %}
@@ -206,7 +206,7 @@
 
                                                     <!--------------------AVATAR AND USER NAMES---------------------->
                                                     <div class="d-flex flex-column align-items-center text-center">
-                                                        <img src="{% static 'admin_panel/images/avatars/user.png' %}"
+                                                        <img src="{% static 'crm/images/avatars/user.png' %}"
                                                              alt="Admin" width="110"
                                                              class="rounded-circle p-1 bg-primary details_avatar">
                                                         <div class="mt-3">
@@ -782,8 +782,8 @@
 
 
     <script>
-        const success_audio = new Audio("{% static 'admin_panel/audio/correct.mp3' %}");
-        const error_audio = new Audio("{% static 'admin_panel/audio/wrong.mp3' %}");
+        const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
+        const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
 
 
         var overlay = $("#overlay");
