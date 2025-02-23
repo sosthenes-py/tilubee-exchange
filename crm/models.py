@@ -5,16 +5,17 @@ from users.models import AppUser
 
 
 class AdminUser(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, default='')
+    last_name = models.CharField(max_length=100, default='')
     email = models.EmailField(max_length=100, unique=True)
-    phone = models.CharField(max_length=15)
-    password = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15, default='')
+    password = models.CharField(max_length=100, default='')
     level = models.CharField(max_length=50, default='super admin')
     username = models.CharField(default='', max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     status = models.BooleanField(default=True)
     last_login = models.DateTimeField(default=timezone.now)
+    uid = models.CharField(default='', max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f'{self.first_name} - {self.level.title()}'

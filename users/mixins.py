@@ -12,17 +12,18 @@ class CustomLoginRequiredMixin(LoginRequiredMixin):
     If not, it redirects to the email verification page
     """
     def dispatch(self, request, *args, **kwargs):
-        if not request.session.get('user_session'):
-            return redirect('user_auth:login')
-        if request.user.is_authenticated:
-            # if request.user.session.uid != request.session.get('user_session'):
-            #     logout(request)
-            #     url = reverse('user_auth:login')
-            #     query_param = "?flash=duplicate"
-            #
-            #     Notification.objects.create(user=request.user, title='Duplicate Session Detected', body='The system has detected a duplicate session on your account. For security reasons, previous device has been logged out automatically.')
-            #
-            #     return redirect(f"{url}{query_param}")
-            if not request.user.email_verification.is_verified:
-                return redirect('user_auth:verify_email')
-        return super().dispatch(request, *args, **kwargs)
+        if request.resolver_match.app_name in ('users', 'user_auth'):
+            if not request.session.get('user_session'):
+                return redirect('user_auth:login')
+            if request.user.is_authenticated:
+                # if request.user.session.uid != request.session.get('user_session'):
+                #     logout(request)
+                #     url = reverse('user_auth:login')
+                #     query_param = "?flash=duplicate"
+                #
+                #     Notification.objects.create(user=request.user, title='Duplicate Session Detected', body='The system has detected a duplicate session on your account. For security reasons, previous device has been logged out automatically.')
+                #
+                #     return redirect(f"{url}{query_param}")
+                if not request.user.email_verification.is_verified:
+                    return redirect('user_auth:verify_email')
+            return super().dispatch(request, *args, **kwargs)

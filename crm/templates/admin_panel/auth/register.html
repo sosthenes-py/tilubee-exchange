@@ -1,0 +1,156 @@
+{% extends 'admin_panel/auth/layout.html' %}
+
+{% block content %}
+    <div>
+        <h3 class="text-center">Register to panel</h3>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="border p-4 rounded">
+
+
+                <div class="form-body">
+                    <form id="form" action="" class="row g-3" novalidate>
+                        <div class="col-12">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="tel" name="phone" class="form-control" id="email">
+                        </div>
+                        <div class="col-12">
+                            <label for="pass" class="form-label">Enter Password</label>
+                            <div class="input-group" id="show_hide_password">
+                                <input name="password" type="password" class="form-control" id="pass">
+                                <a href="javascript:;" class="input-group-text bg-transparent"><i
+                                        class='bx bx-hide'></i></a>
+                            </div>
+                        </div>
+
+
+                        <div id="msg">
+
+                        </div>
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button id="sbmt" class="btn btn-primary"><i class="bx bxs-lock-open"></i>Create New Account
+                                </button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+
+{% block script %}
+
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js'
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser, onAuthStateChanged, reauthenticateWithCredential, EmailAuthProvider } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js'
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCcKqDRuZ6derILcuP5Uu3hoTK6saQ2hI0",
+        authDomain: "tilubee-ff65a.firebaseapp.com",
+        projectId: "tilubee-ff65a",
+        storageBucket: "tilubee-ff65a.firebasestorage.app",
+        messagingSenderId: "945247805903",
+        appId: "1:945247805903:web:667886be28220f18a532ba",
+        measurementId: "G-C8R8C9MJR6"
+      };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app)
+
+
+    /*
+    onAuthStateChanged(auth, (user) => {
+        if(user){
+            console.log(`User ${user.email} exists`)
+            reauthenticateAndDelete(user, 'sosthenes.py@gmail.com', 'Password1@')
+        }else{
+            console.log(`User does not exist`)
+        }
+    })
+    */
+
+    function reauthenticateAndDelete(user, email, password) {
+        const credential = EmailAuthProvider.credential(email, password);
+
+        reauthenticateWithCredential(user, credential)
+            .then(() => {
+                return deleteUser(user);
+            })
+            .then(() => {
+                console.log("User deleted successfully");
+            })
+            .catch((error) => {
+                console.error("Re-authentication failed:", error);
+            });
+    }
+
+    $('#sbmt').click(function (event){
+            event.preventDefault()
+            const email = $('#email').val()
+            const pass = $('#pass').val()
+            loadOn()
+            createUserWithEmailAndPassword(auth, email, pass)
+                .then((userCredential) => {
+                    notify('success', 'Registration successful')
+                    const user = userCredential.user;
+                    user.getIdToken().then((idToken) => {
+                        notify('info', 'Checking with backend...')
+                        // Updating new user to db
+                        fetch('{% url 'crm:register' %}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${idToken}`,
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            data: JSON.stringify({
+                                'email': email,
+                                'password': pass
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.status === 'success'){
+                                    notify('success', 'Confirmed! Logging in..')
+                                    //Now signin the user
+                                    signInWithEmailAndPassword(auth, email, pass)
+                                        .then(userCredential => {
+                                            window.location.href = '{% url "crm:users" %}'
+                                        })
+                                }else{
+                                    loadOff()
+                                    notify('error', data.message)
+                                }
+                            })
+                        .catch(error => {
+                            loadOff()
+                            notify('error', error.message)
+                        })
+
+
+                    })
+                })
+                .catch((error) => {
+                    loadOff()
+                    notify('error', `${error.code.replace('auth/', '').replaceAll('-', ' ')}`)
+                    console.log(`An error occurred: ${error.message}`)
+                })
+        })
+  </script>
+
+
+<script>
+
+
+</script>
+{% endblock %}
+

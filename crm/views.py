@@ -16,6 +16,7 @@ import datetime as dt
 from decouple import config
 import os
 from django.conf import settings
+from firebase_admin import auth as firebase_auth
 
 
 # Create your views here.
@@ -42,21 +43,21 @@ def login_user(request):
 
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            if not AdminUser.objects.filter(phone=form.cleaned_data['phone']).exists():
-                user = form.save(commit=False)
-                user.password = make_password(form.cleaned_data['password'])
-                user.save()
-                return JsonResponse({'status': 'success', 'message': 'User registered successfully!'})
-            return JsonResponse({'status': 'error', 'message': 'Phone already registered!'})
-        return JsonResponse({'status': 'warning', 'message': form.errors})
+        header = request.headers.get('Authorization')
+        if header:
+            token = header.split('Bearer ')[1]
+            try:
+                user = firebase_auth.verify_id_token(token, clock_skew_seconds=10)
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': 'Invalid token'})
+            else:
+                user, created = AdminUser.objects.get_or_create(uid=user['uid'], email=user['email'])
+                return JsonResponse({'status': 'success', 'message': 'Successfully registered'})
     else:
-        form = RegisterForm()
-        return render(request, 'admin_panel/auth/register.html', {'form': form})
+        return render(request, 'admin_panel/auth/register.html')
 
 
-@login_required
+
 def dashboard(request):
     if request.user.level in ('admin', 'team leader'):
         return redirect('analysis')
@@ -65,7 +66,6 @@ def dashboard(request):
     return render(request, 'admin_panel/dashboard.html')
 
 
-@login_required
 def users(request):
     if request.method == "GET":
         return render(request, 'admin_panel/users.html')
@@ -77,7 +77,6 @@ def users(request):
     return JsonResponse({'status': response.status, 'content': response.content, 'message': response.message})
 
 
-@login_required
 def loans(request):
     if request.method == "GET":
         return render(request, 'admin_panel/loans.html',

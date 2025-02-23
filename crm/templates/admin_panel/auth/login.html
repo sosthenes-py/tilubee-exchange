@@ -13,11 +13,11 @@
                 <div class="form-body">
                     <form id="form" action="" class="row g-3" novalidate>
                         <div class="col-12">
-                            <label for="inputEmailAddress" class="form-label">Email Address</label>
+                            <label for="email" class="form-label">Email Address</label>
                             <input type="tel" name="phone" class="form-control" id="email">
                         </div>
                         <div class="col-12">
-                            <label for="inputChoosePassword" id="pass" class="form-label">Enter Password</label>
+                            <label for="pass" class="form-label">Enter Password</label>
                             <div class="input-group" id="show_hide_password">
                                 <input name="password" type="password" class="form-control" id="pass">
                                 <a href="javascript:;" class="input-group-text bg-transparent"><i
@@ -48,14 +48,11 @@
 
 {% block script %}
 
-<!-- Firebase App -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<!-- Firebase Auth -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js'
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js'
 
-<script>
     const firebaseConfig = {
         apiKey: "AIzaSyCcKqDRuZ6derILcuP5Uu3hoTK6saQ2hI0",
         authDomain: "tilubee-ff65a.firebaseapp.com",
@@ -66,26 +63,33 @@
         measurementId: "G-C8R8C9MJR6"
       };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-</script>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app)
 
-    <script>
-        $('#sbmt').click(function (event){
+    $('#sbmt').click(function (event){
             event.preventDefault()
             const email = $('#email').val()
             const pass = $('#pass').val()
             loadOn()
-            auth.createUserWithEmailAndPassword(password)
+            signInWithEmailAndPassword(auth, email, pass)
                 .then((user) => {
                     loadOff()
-                    console.log(`User was created successfully: ${user}`)
+                    notify('success', 'Confirmed! Logging in..')
+                    window.location.href = '{% url "crm:users" %}'
                 })
                 .catch((error) => {
                     loadOff()
-                    console.log(`An error occurred: ${error}`)
+                    notify('error', `${error.code.replace('auth/', '').replace('-', ' ')}`)
+                    console.log(`${error.code}`)
                 })
         })
-    </script>
+
+    onAuthStateChanged(auth, (user) => {
+        if(user){
+            window.location.href = '{% url "crm:users" %}'
+        }
+    })
+  </script>
+
 {% endblock %}
 

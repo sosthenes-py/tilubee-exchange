@@ -4,6 +4,8 @@ from . import views
 from django.conf.urls.static import static
 from django.conf import settings
 
+app_name = 'crm'
+
 urlpatterns = [
     path('auth/', views.login_user, name='login'),
     path('register/', views.register, name='register'),
