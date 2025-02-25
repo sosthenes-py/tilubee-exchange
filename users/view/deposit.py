@@ -1,10 +1,11 @@
 import random
 
 from django.views import View
-from transactions.models import Ticker
+from payment_utils.models import Ticker
 # from admin_panel.models import AccountDetails
 from django.http import JsonResponse
-from transactions.view.crypto import create_user_wallet, markets as crypto_markets
+from transactions.view.crypto import create_user_wallet
+from payment_utils.tickers import markets as crypto_markets
 from django.db.models import Q
 from transactions.models import Transaction
 from users.forms import DepositForm

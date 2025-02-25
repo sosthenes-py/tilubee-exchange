@@ -5,7 +5,8 @@ import datetime as dt
 from django.db.models import Sum, Count, Case, When, Value, F, DecimalField, Q, OuterRef, Subquery, IntegerField, \
     FloatField
 from django.db.models.functions import TruncDay, TruncMonth, Coalesce, Lower
-from transactions.view.crypto import bcdiv, coins_dict, markets as crypto_markets
+from payment_utils.tickers import COINS_DICT, markets as crypto_markets
+from payment_utils.funcs import bcdiv
 from crm.models import AdminUser, AdminLog, Note
 from users.models import AppUser, VirtualAccount
 from users.nuban import Nuban

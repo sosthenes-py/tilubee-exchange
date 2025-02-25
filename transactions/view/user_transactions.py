@@ -1,6 +1,7 @@
 from django.views import View
 from transactions.models import Transaction, Conversion
-from transactions.view.crypto import coins_dict, bcdiv
+from payment_utils.tickers import COINS_DICT
+from payment_utils.funcs import bcdiv
 from django.db.models import Count, QuerySet
 from typing import Optional
 
@@ -30,7 +31,7 @@ class UserTransactions:
                 'address': transaction.address,
                 'reference': transaction.reference,
                 'hash': transaction.hash,
-                'currency_name': coins_dict.get(transaction.currency, "NULL"),
+                'currency_name': COINS_DICT.get(transaction.currency, "NULL"),
                 'medium': transaction.medium
             }
             for transaction in transactions

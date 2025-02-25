@@ -99,7 +99,6 @@
         <div class="page-content">
 
             <!--end row-->
-
             <div class="card radius-10">
                 <div class="card-body">
                     <div class="d-flex align-items-center bg-light p-3 flex-wrap">
@@ -231,8 +230,6 @@
                                                data-bs-toggle='modal' data-bs-target='#transactionModal'><i
                                                     class="lni lni-cloud-upload"></i> transactions <span
                                                     class="badge rounded-pill bg-dark m-1 tx_count count">0</span></a>
-
-                                            <div class="dropdown-divider"></div>
 
 
                                             <div class="dropdown-divider"></div>
@@ -1369,5 +1366,25 @@
     </script>
 
 
+    <script>
+
+
+        const socket = new WebSocket("ws://localhost:8000/api/tickers");
+
+        socket.onopen = function() {
+            console.log("WebSocket connected o!");
+            socket.send("--------Hello Server!");
+        };
+
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            updateTable(data);
+        };
+
+        function updateTable(data) {
+            {#console.log(data);#}
+        }
+    </script>
 
 {% endblock %}

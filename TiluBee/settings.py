@@ -21,7 +21,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.99.48', 'localhost', '127.0.0.1']
 
 
 cred = credentials.Certificate("crm/firebase/firebase_credentials.json")
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'user_auth',
     'transactions',
     'crm',
+    'payment_utils',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +121,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-# settings.py
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_SMTP_HOST')
 EMAIL_PORT = 465
@@ -133,9 +134,26 @@ DEFAULT_FROM_EMAIL = config('EMAIL_USER_EMAIL')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',  # This is where you place your static files (app_name, images, etc.)
+# ]
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# Setup Tickers
+# from payment_utils.models import Ticker
+# from payment_utils.tickers import COINS_DICT
+# available_tickers = Ticker.objects.all()
+# tickers_to_add = []
+# for coin_short, coin_long in COINS_DICT.items():
+#     if coin_short not in available_tickers.values('coin_short'):
+#         tickers_to_add.append(Ticker(coin_short=coin_short, coin_long=coin_long))
+# if tickers_to_add:
+#     Ticker.objects.bulk_create(tickers_to_add)

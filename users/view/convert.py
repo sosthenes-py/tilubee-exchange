@@ -3,7 +3,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from users.view.wallet import WalletView
 from users.forms import ConvertQuoteForm, FilterForm
-from transactions.view.crypto import markets as crypto_market, bcdiv
+from payment_utils.tickers import markets as crypto_markets
+from payment_utils.funcs import bcdiv
 from transactions.models import Conversion
 import datetime as dt
 from django.db.models import Q

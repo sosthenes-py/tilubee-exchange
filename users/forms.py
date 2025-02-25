@@ -1,5 +1,5 @@
 from django import forms
-from transactions.view.crypto import coins_dict
+from payment_utils.tickers import COINS_DICT
 
 
 class DepositForm(forms.Form):
@@ -53,11 +53,11 @@ class ConvertQuoteForm(forms.Form):
     from_qty = forms.FloatField(required=True)
     from_coin = forms.ChoiceField(choices=[
         (coin, full)
-        for coin, full in coins_dict.items()
+        for coin, full in COINS_DICT.items()
     ], required=True)
     to_coin = forms.ChoiceField(choices=[
         (coin, full)
-        for coin, full in coins_dict.items()
+        for coin, full in COINS_DICT.items()
     ], required=True)
 
 

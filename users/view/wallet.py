@@ -5,8 +5,10 @@ from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import render
 from users.mixins import CustomLoginRequiredMixin
-from transactions.view.crypto import markets as crypto_markets, bcdiv
-from transactions.models import Ticker, Transaction
+from payment_utils.tickers import markets as crypto_markets
+from payment_utils.funcs import bcdiv
+from payment_utils.models import Ticker
+from transactions.models import Transaction
 from transactions.view.user_transactions import UserTransactions
 from users.models import UserBankAccount
 from users.forms import FilterForm

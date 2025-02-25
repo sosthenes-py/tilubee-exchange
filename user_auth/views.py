@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from users.decorators import custom_login_required
 
@@ -14,3 +14,6 @@ def boarding(request, page=1):
 def last_boarding(request):
     return render(request, 'user_auth/boarding_last.html')
 
+
+def account_login(request):
+    return redirect('user_auth:login')

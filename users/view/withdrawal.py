@@ -2,12 +2,13 @@ import random
 
 from django.db import transaction
 from django.views import View
-from transactions.models import Ticker
+from payment_utils.models import Ticker
 from django.http import JsonResponse
 from transactions.models import Transaction
 from users.forms import WithdrawalForm
 from decimal import Decimal
-from transactions.view.crypto import markets as crypto_markets, coins_dict, bcdiv
+from payment_utils.tickers import markets as crypto_markets, COINS_DICT
+from payment_utils.funcs import bcdiv
 from users.models import UserBankAccount, Notification
 
 
@@ -73,7 +74,7 @@ class WithdrawalView(View):
         address = form.cleaned_data.get('wallet')
         bank_id = form.cleaned_data.get('bank_id')
         if currency != '' and qty != '' and qty > 0 and address != '' and platform != '':
-            if currency in list(coins_dict.keys()):
+            if currency in list(COINS_DICT.keys()):
                 bank = UserBankAccount.objects.filter(user=self.user, id=bank_id).first()
                 if currency == 'ngn' and bank is not None or currency != 'ngn':
                     if qty >= crypto_markets(self.tickers)[currency]['min']:
