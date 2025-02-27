@@ -84,8 +84,10 @@
                 })
         })
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if(user){
+            const token = await user.getIdToken();
+            localStorage.setItem('userToken', token);
             window.location.href = '{% url "crm:users" %}'
         }
     })

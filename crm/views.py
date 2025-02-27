@@ -23,131 +23,185 @@ from firebase_admin import auth as firebase_auth
 @login_required
 def logout_user(request):
     logout(request)
-    return redirect('login')
+    return redirect("login")
 
 
 def login_user(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
-            user = authenticate(request, username=form.cleaned_data['phone'], password=form.cleaned_data['password'])
+            user = authenticate(
+                request,
+                username=form.cleaned_data["phone"],
+                password=form.cleaned_data["password"],
+            )
             if user:
                 login(request, user)
-                return JsonResponse({'status': 'success', 'message': 'User login successful'})
-            return JsonResponse({'status': 'error', 'message': 'Invalid phone or password'})
-        return JsonResponse({'status': 'warning', 'message': form.errors})
+                return JsonResponse(
+                    {"status": "success", "message": "User login successful"}
+                )
+            return JsonResponse(
+                {"status": "error", "message": "Invalid phone or password"}
+            )
+        return JsonResponse({"status": "warning", "message": form.errors})
     else:
         form = LoginForm()
-        return render(request, 'crm/auth/login.html', {'form': form})
+        return render(request, "crm/auth/login.html", {"form": form})
 
 
 def register(request):
-    if request.method == 'POST':
-        header = request.headers.get('Authorization')
+    if request.method == "POST":
+        header = request.headers.get("Authorization")
         if header:
-            token = header.split('Bearer ')[1]
+            token = header.split("Bearer ")[1]
             try:
                 user = firebase_auth.verify_id_token(token, clock_skew_seconds=10)
             except Exception as e:
-                return JsonResponse({'status': 'error', 'message': 'Invalid token'})
+                return JsonResponse({"status": "error", "message": "Invalid token"})
             else:
-                user, created = AdminUser.objects.get_or_create(uid=user['uid'], email=user['email'])
-                return JsonResponse({'status': 'success', 'message': 'Successfully registered'})
+                user, created = AdminUser.objects.get_or_create(
+                    uid=user["uid"], email=user["email"]
+                )
+                return JsonResponse(
+                    {"status": "success", "message": "Successfully registered"}
+                )
     else:
-        return render(request, 'crm/auth/register.html')
-
+        return render(request, "crm/auth/register.html")
 
 
 def dashboard(request):
-    if request.user.level in ('admin', 'team leader'):
-        return redirect('analysis')
-    elif request.user.level != 'super admin':
-        return redirect('loans')
-    return render(request, 'crm/dashboard.html')
+    if request.user.level in ("admin", "team leader"):
+        return redirect("analysis")
+    elif request.user.level != "super admin":
+        return redirect("loans")
+    return render(request, "crm/dashboard.html")
 
 
 def users(request):
     if request.method == "GET":
-        return render(request, 'crm/users.html')
+        return render(request, "crm/users.html")
     posted_data = {}
     for key, value in request.POST.items():
         posted_data[key] = value
     response = utils.UserUtils(request, **posted_data)
     response.process()
-    return JsonResponse({'status': response.status, 'content': response.content, 'message': response.message})
+    return JsonResponse(
+        {
+            "status": response.status,
+            "content": response.content,
+            "message": response.message,
+        }
+    )
 
 
 def loans(request):
     if request.method == "GET":
-        return render(request, 'crm/loans.html',
-                      {'app_stages': settings.APP_STAGES.keys(), 'APP_STAGES': settings.APP_STAGES}
-                      )
+        return render(
+            request,
+            "crm/loans.html",
+            {
+                "app_stages": settings.APP_STAGES.keys(),
+                "APP_STAGES": settings.APP_STAGES,
+            },
+        )
     posted_data = {}
     for key, value in request.POST.items():
         posted_data[key] = value
     response = utils.LoanUtils(request, **posted_data)
     response.process()
-    return JsonResponse({'status': response.status, 'content': response.content, 'message': response.message})
+    return JsonResponse(
+        {
+            "status": response.status,
+            "content": response.content,
+            "message": response.message,
+        }
+    )
 
 
 @login_required
 def loans_with_status(request, status):
     if request.method == "GET":
-        if status in ('pending', 'approved', 'declined', 'disbursed', 'overdue', 'partpayment', 'repaid'):
-            return render(request, 'crm/loan_with_status.html', {"status": status})
+        if status in (
+            "pending",
+            "approved",
+            "declined",
+            "disbursed",
+            "overdue",
+            "partpayment",
+            "repaid",
+        ):
+            return render(request, "crm/loan_with_status.html", {"status": status})
         return HttpResponseBadRequest(status=404)
 
 
-@login_required
-def repayments(request):
+def transactions(request):
     if request.method == "GET":
-        return render(request, 'crm/repayments.html')
+        return render(request, "crm/transactions.html")
     posted_data = {}
     for key, value in request.POST.items():
         posted_data[key] = value
-    response = utils.LoanUtils(request, **posted_data)
+    response = utils.TxUtils(request, **posted_data)
     response.process()
     print(response.status)
-    return JsonResponse({'status': response.status, 'content': response.content, 'message': response.message})
+    return JsonResponse(
+        {
+            "status": response.status,
+            "content": response.content,
+            "message": response.message,
+        }
+    )
 
 
 @login_required
 def waiver(request):
-    return render(request, 'crm/waiver.html')
+    return render(request, "crm/waiver.html")
 
 
 @login_required
 def view_blacklist(request):
-    return render(request, 'crm/blacklist.html')
+    return render(request, "crm/blacklist.html")
 
 
 @login_required
 def view_logs(request):
-    return render(request, 'crm/logs.html')
+    return render(request, "crm/logs.html")
 
 
 @login_required
 def accepted_users(request):
-    return render(request, 'crm/accepted_user.html')
-
+    return render(request, "crm/accepted_user.html")
 
 
 @login_required
 def operators(request):
     if request.method == "GET":
-        return render(request, 'crm/operators.html', {'app_stages': settings.APP_STAGES.keys(), 'APP_STAGES': settings.APP_STAGES})
+        return render(
+            request,
+            "crm/operators.html",
+            {
+                "app_stages": settings.APP_STAGES.keys(),
+                "APP_STAGES": settings.APP_STAGES,
+            },
+        )
     posted_data = {}
     for key, value in request.POST.items():
         posted_data[key] = value
     response = utils.AdminUtils(request, **posted_data)
     response.process()
-    return JsonResponse({'status': response.status, 'content': response.content, 'message': response.message})
+    return JsonResponse(
+        {
+            "status": response.status,
+            "content": response.content,
+            "message": response.message,
+        }
+    )
 
 
 @csrf_exempt
 def automations(request, program):
     if request.method == "GET":
-        return JsonResponse({'status': f'success: {program}'})
+        return JsonResponse({"status": f"success: {program}"})
+
 
 @csrf_exempt
 def test(request):

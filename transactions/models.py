@@ -5,8 +5,8 @@ from users.models import AppUser, UserBankAccount
 
 
 # Create your models here.
-class Wallet(models.Model):
-    user = models.OneToOneField(AppUser, on_delete=models.CASCADE, related_name='wallet')
+class Asset(models.Model):
+    user = models.OneToOneField(AppUser, on_delete=models.CASCADE, related_name='assets')
     ada = models.FloatField(default=0)
     bch = models.FloatField(default=0)
     bnb = models.FloatField(default=0)

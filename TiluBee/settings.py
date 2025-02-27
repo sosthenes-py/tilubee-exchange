@@ -21,7 +21,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.99.48', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.99.48', 'localhost', '127.0.0.1', '.app.github.dev']
 
 
 cred = credentials.Certificate("crm/firebase/firebase_credentials.json")
@@ -63,6 +63,7 @@ TEMPLATES = [
         ,
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': True,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -71,6 +72,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+CSRF_TRUSTED_ORIGINS = [ 
+    "http://localhost:8000",
+    "https://refactored-disco-wr7gpvj5rv9wfgww4-8000.app.github.dev"
 ]
 
 WSGI_APPLICATION = 'TiluBee.wsgi.application'

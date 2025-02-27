@@ -28,7 +28,7 @@ class ConvertView(WalletView):
                 quoted = self.sort(qf)
                 from_coin = qf.cleaned_data['from_coin']
                 to_coin = qf.cleaned_data['to_coin']
-                if getattr(self.user.wallet, from_coin) >= qf.cleaned_data['from_qty']:
+                if getattr(self.user.assets, from_coin) >= qf.cleaned_data['from_qty']:
                     if qf.cleaned_data['action2'] == 'quote':
                         return self.quote(quoted, from_coin, to_coin)
                     elif qf.cleaned_data['action2'] == 'confirm':
@@ -45,11 +45,11 @@ class ConvertView(WalletView):
             return self.filter(request)
     
     def sort(self, qf):
-        crypto_markets = crypto_market(self.tickers)
+        markets = crypto_markets(self.tickers)
         from_coin = qf.cleaned_data['from_coin']
         to_coin = qf.cleaned_data['to_coin']
-        from_price_one_usd = 1 / crypto_markets[from_coin]['price']
-        to_price_one_usd = 1 / crypto_markets[to_coin]['price']
+        from_price_one_usd = 1 / markets[from_coin]['price']
+        to_price_one_usd = 1 / markets[to_coin]['price']
         quote_price = to_price_one_usd/from_price_one_usd  # This is price of one from_coin in to_coin
         quote_qty = quote_price * qf.cleaned_data['from_qty']
         return {
@@ -70,17 +70,17 @@ class ConvertView(WalletView):
     def confirm(self, quoted, qf):
         from_coin = qf.cleaned_data['from_coin']
         to_coin = qf.cleaned_data['to_coin']
-        from_bal = getattr(self.user.wallet, from_coin) - qf.cleaned_data['from_qty']
-        to_bal = getattr(self.user.wallet, to_coin) + quoted['qty']
-        setattr(self.user.wallet, from_coin, from_bal)
-        setattr(self.user.wallet, to_coin, to_bal)
+        from_bal = getattr(self.user.assets, from_coin) - qf.cleaned_data['from_qty']
+        to_bal = getattr(self.user.assets, to_coin) + quoted['qty']
+        setattr(self.user.assets, from_coin, from_bal)
+        setattr(self.user.assets, to_coin, to_bal)
 
         Conversion.objects.create(user=self.user, qty_from=qf.cleaned_data['from_qty'], qty_to=quoted['qty'], currency_from=from_coin, currency_to=to_coin, status='completed')
 
 
         Notification.objects.create(user=self.user, title='Conversion Successful', body=f"You have successfully converted {bcdiv(qf.cleaned_data['from_qty']):,} {from_coin.upper()} to {bcdiv(quoted['qty']):,} {to_coin.upper()}.")
 
-        self.user.wallet.save()
+        self.user.assets.save()
 
         return JsonResponse({
             'status': 'success',

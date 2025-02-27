@@ -1,0 +1,1234 @@
+{% extends "crm/layout.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Transaction History - We Digital</title>
+{% endblock %}
+
+{% block content %}
+
+
+
+<!--start page wrapper -->
+		<div class="page-wrapper">
+			<div class="page-content">
+
+				<!--end row-->
+
+				<div class="card radius-10">
+					<div class="card-body">
+
+
+                        <div class="d-flex align-items-center bg-light">
+                        <div class="me-auto fw-bold fs-6"> Transactions</div>
+                        <div class="d-flex align-items-center">
+                            <div class="me-2">
+                                <label for="history_month_start" class="form-label me-1">From:</label>
+                                <input type="date" id="history_month_start" class="form-control d-inline-block" value=""
+                                       style="width: auto;">
+                            </div>
+                            <div class="me-2">
+                                <label for="history_month_end" class="form-label me-1">To:</label>
+                                <input type="date" id="history_month_end" class="form-control d-inline-block" value=""
+                                       style="width: auto;">
+                            </div>
+                            <div class="me-2">
+                                <label for="history_rows" class="form-label me-1">Rows:</label>
+                                <select id="history_rows" class="form-select d-inline-block" style="width: auto;">
+                                    <option selected value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                    <option value="2000">2000</option>
+                                    <option value="10000">2000+</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="d-flex align-items-center bg-light">
+                        <div class="me-auto fw-bold fs-6"></div>
+                        <div class="d-flex align-items-center">
+
+                            <div class="me-2">
+                                <label for="filter" class="form-label me-1">Filters:</label>
+                                <input type="text" placeholder="Search by TXID, UID, Medium, Fname, Lname, Coin" id="filters" class="form-control d-inline-block" value="">
+                            </div>
+
+                            <div>
+                                <button id="search_rdp" type="button" class="btn btn-primary px-3 radius-30"
+                                        onclick="start(true)">Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+						<hr/>
+						<div class="table-responsive">
+							<table class="table align-middle mb-5" id="transaction_table">
+								<thead class="table-light">
+									<tr>
+                                        <th>TXID/User</th>
+                                        <th>Qty</th>
+                                        <th>IN_USD </th>
+                                        <th>Medium </th>
+                                        <th>Ref </th>
+                                        <th>Address</th>
+                                        <th>Hash </th>
+                                        <th>Status</th>
+                                        <th>Date </th>
+                                    </tr>
+								</thead>
+								<tbody id="transaction_history" style="padding-bottom: 4em !important">
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--end page wrapper -->
+
+
+
+    <input type="hidden" id="selected_user_id">
+
+
+
+    <!--MODAL FOR USER PROFILE-->
+
+
+    <div id="exampleLargeModal1" tabindex="-1" class="modal fade show" style="display: none;" aria-modal="true"
+         role="dialog">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">User Profile</h5>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"
+                            id="close_user"></button>
+                </div>
+
+
+                <div class="modal-body">
+                    <div id="user-modal"></div>
+
+
+                    <div class="page-content">
+                        <router-outlet></router-outlet>
+                        <app-user-profile>
+                            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                                <div class="ps-3">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb mb-0 p-0">
+                                            <li class="breadcrumb-item"><a href="#"><i class="bx bx-home-alt"></i></a>
+                                            </li>
+                                            <li aria-current="page" class="breadcrumb-item active">Account: <span
+                                                    class="details_text_username">John Doe</span></li>
+                                        </ol>
+                                    </nav>
+                                </div>
+
+                                <!---------------TOP ACTIONS------------------->
+                                <div class="ms-auto">
+                                    <div class="btn-group">
+                                        <button data-bs-toggle="dropdown" type="button" class="btn btn-primary">More
+                                            Actions
+                                        </button>
+                                        <button type="button" data-bs-toggle="dropdown"
+                                                class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split">
+                                            <span class="visually-hidden">Toggle Dropdown</span></button>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+
+                                            <a href="#0" class="dropdown-item view_transaction_history text-dark"
+                                               data-bs-toggle='modal' data-bs-target='#transactionModal'><i
+                                                    class="lni lni-cloud-upload"></i> transactions <span
+                                                    class="badge rounded-pill bg-dark m-1 tx_count count">0</span></a>
+                                            
+                                            <a href="#0" class="dropdown-item text-dark" onclick="load_coins()"
+                                                    data-bs-toggle='modal' data-bs-target='#addModal'><i
+                                                         class="lni lni-cloud-upload"></i> Add Transaction
+                                            </a>
+
+
+                                            <div class="dropdown-divider"></div>
+                                            <a href="#0" class="dropdown-item text-warning blacklist"
+                                               style="font-weight: bold"><i class="lni lni-ban"></i>
+                                                Blacklist</a>
+
+                                            <a href="#" class="dropdown-item" style="color: red; font-weight: bold"
+                                               data-bs-toggle='modal' data-bs-target='#EraseUserModal'><i
+                                                    class="lni lni-trash"></i> Delete Account</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="container">
+                                <div class="main-body">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="card">
+                                                <div class="card-body">
+
+
+                                                    <!--------------------AVATAR AND USER NAMES---------------------->
+                                                    <div class="d-flex flex-column align-items-center text-center">
+                                                        <img src="{% static 'crm/images/avatars/user.png' %}"
+                                                             alt="Admin" width="110"
+                                                             class="rounded-circle p-1 bg-primary details_avatar">
+                                                        <div class="mt-3">
+                                                            <h4 class="details_fullname"></h4>
+                                                            <p class="mb-1 details_status_show"
+                                                               style="text-transform: capitalize; font-weight: bold">
+                                                                <span class='badge rounded-pill'>AA</span></p>
+                                                            <p class="font-size-sm fw-bold">Registered: <span
+                                                                    class="details_registered"></span></p>
+                                                            <button class="btn btn-primary m-1" data-bs-toggle='modal'
+                                                                    data-bs-target='#DocsModal'><i
+                                                                    class="fadeIn animated bx bx-book-content"></i> Docs
+                                                                <span class="badge bg-light text-primary files_count count">0</span>
+                                                            </button>
+
+                                                            <button type="button" class="btn btn-dark view_note"
+                                                                    data-bs-toggle='modal' data-bs-target='#NoteModal'>
+                                                                <i class="fadeIn animated bx bx-note"></i> Notes <span
+                                                                    class="badge bg-secondary notes_count count">0</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <hr class="my-4">
+
+
+                                                   
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!--------------------MAIN PROFILE---------------------->
+                                        <style>
+                                            .nav-tabs {
+                                                display: flex;
+                                                width: 100%;
+                                                overflow-x: auto; /* Enable horizontal scrolling if necessary */
+                                                white-space: nowrap; /* Prevent line breaks */
+                                            }
+
+                                            .nav-item {
+                                                flex: 1;
+                                                min-width: 0; /* Allow items to shrink */
+                                            }
+                                        </style>
+
+                                        <div class="col-lg-8">
+
+                                            {# --------------------SELECTED USER PROFILE AND OTHER INFO ---------------------------------#}
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <ul class="nav nav-tabs nav-primary py-2" role="tablist">
+                                                        <li class="nav-item" role="presentation">
+                                                            <a class="nav-link active" data-bs-toggle="tab"
+                                                               href="#contactinfo" role="tab" aria-selected="true">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="tab-icon"><i
+                                                                            class="bx bx-user font-18 me-1"></i>
+                                                                    </div>
+                                                                    <div class="tab-title">Contact Info</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+
+                                                        <li class="nav-item" role="presentation">
+                                                            <a class="nav-link" data-bs-toggle="tab" href="#bankdetails"
+                                                               role="tab" aria-selected="false" tabindex="-1">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="tab-icon"><i
+                                                                            class="bx bxs-bank font-18 me-1"></i>
+                                                                    </div>
+                                                                    <div class="tab-title">Bank Details</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+
+
+                                                        <li class="nav-item" role="presentation">
+                                                            <a class="nav-link" data-bs-toggle="tab" href="#assets"
+                                                               role="tab" aria-selected="false" tabindex="-1">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="tab-icon"><i
+                                                                            class="bx bxs-bank font-18 me-1"></i>
+                                                                    </div>
+                                                                    <div class="tab-title">Assets</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+
+
+
+                                                        <li class="nav-item" role="presentation">
+                                                            <a class="nav-link" data-bs-toggle="tab" href="#wallets"
+                                                               role="tab" aria-selected="false" tabindex="-1">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="tab-icon"><i
+                                                                            class="bx bxs-bank font-18 me-1"></i>
+                                                                    </div>
+                                                                    <div class="tab-title">Wallets</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+
+                                                        
+                                                    </ul>
+
+
+                                                    {#       -------------------------  CONTACT INFO ----------------------#}
+                                                    <div class="tab-content py-3">
+                                                        <div class="tab-pane fade active show" id="contactinfo"
+                                                             role="tabpanel">
+
+
+                                                            <div class="card-body">
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-sm-3">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="fadeIn animated bx bx-user"></i>
+                                                                            First Name</h6>
+                                                                    </div>
+                                                                    <div class="col-sm-9 text-secondary">
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="text" placeholder="First Name"
+                                                                                   aria-label="First Name"
+                                                                                   aria-describedby="button-addon2"
+                                                                                   class="form-control details_first_name">
+                                                                            <button type="button" id="button-addon2"
+                                                                                    class="btn btn-outline-primary details_save"
+                                                                                    data-key="first_name"
+                                                                                    data-table="members">Save
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-sm-3">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="fadeIn animated bx bx-user font-18"></i>
+                                                                            Last Name</h6>
+                                                                    </div>
+                                                                    <div class="col-sm-9 text-secondary">
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="text" placeholder="Last Name"
+                                                                                   aria-label="Last Name"
+                                                                                   aria-describedby="button-addon2"
+                                                                                   class="form-control details_last_name">
+                                                                            <button type="button" id="button-addon2"
+                                                                                    class="btn btn-outline-primary details_save"
+                                                                                    data-key="last_name"
+                                                                                    data-table="members">Save
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="row mb-3">
+                                                                    <div class="col-sm-3">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="fadeIn animated bx bx-mail-send"></i>
+                                                                            Email</h6>
+                                                                    </div>
+                                                                    <div class="col-sm-9 text-secondary">
+                                                                        <div class="input-group mb-3">
+                                                                            <input type="email"
+                                                                                   placeholder="Email Address"
+                                                                                   aria-label="Email"
+                                                                                   aria-describedby="button-addon2"
+                                                                                   class="form-control details_email">
+                                                                            <button type="button" id="button-addon2"
+                                                                                    class="btn btn-outline-primary details_save"
+                                                                                    data-key="email"
+                                                                                    data-table="members">Save
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        {#       -----------------------  BANK DETAILS ----------------------#}
+
+                                                        <div class="tab-pane fade" id="bankdetails" role="tabpanel">
+                                                            <ul class="list-group list-group-flush">
+                                                                <h5 class="mt-1 text-primary">Withdrawal Bank Details</h5>
+                                                                <div class='withdrawal_bank_list'>
+                                                                    
+                                                                </div>
+
+
+                                                                <h5 class="mt-5 text-primary">Virtual Bank Details</h5>
+                                                                <div class="w-100 border-top mb-2"></div>
+
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <h6 class="mb-0 fw-bold"><i
+                                                                            class="bx bxs-building font-18 me-1"></i>
+                                                                        Account Number</h6>
+                                                                    <span class="text-secondary virtual_bankdetails_number">wedigital</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <h6 class="mb-0 fw-bold"><i
+                                                                            class="bx bxs-map-pin font-18 me-1"></i>
+                                                                        Bank Name</h6>
+                                                                    <span class="text-secondary virtual_bankdetails_bank">wedigital</span>
+                                                                </li>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <h6 class="mb-0 fw-bold"><i
+                                                                            class="bx bxs-buildings font-18 me-1"></i>
+                                                                        Account Name</h6>
+                                                                    <span class="text-secondary virtual_bankdetails_name">@wedigital</span>
+                                                                </li>
+
+
+                                                            </ul>
+                                                        </div>
+
+
+
+
+                                                        
+                                                        {#       -----------------------  Assets ----------------------#}
+
+                                                        <div class="tab-pane fade" id="assets" role="tabpanel">
+                                                            <ul class="list-group list-group-flush">
+                                                                <h5 class="mt-1 text-primary">User Assets</h5>
+                                                                <div class='assets_list'>
+                                                                    
+                                                                </div>
+
+                                                            </ul>
+                                                        </div>
+
+
+
+
+
+                                                        {#       -----------------------  Wallets ----------------------#}
+
+                                                        <div class="tab-pane fade" id="wallets" role="tabpanel">
+                                                            <ul class="list-group list-group-flush">
+                                                                <h5 class="mt-1 text-primary">User Wallets</h5>
+                                                                <div class='wallets_list'>
+                                                                    
+                                                                </div>
+
+                                                            </ul>
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="card">
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="transactionModal" tabindex="-1" class="modal fade show" aria-modal="true" role="dialog"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+            <div class="modal-content bg-primary">
+                <div class="modal-header">
+                    <h5 class="mb-0 text-light">Transactions History</h5>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="card border-top border-0 border-4 border-primary">
+
+
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>Tx ID</th>
+                                        <th>Qty</th>
+                                        <th>IN_USD </th>
+                                        <th>Medium </th>
+                                        <th>Ref </th>
+                                        <th>Address</th>
+                                        <th>Hash </th>
+                                        <th>Status</th>
+                                        <th>Date </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="mini_transaction_history" style="padding-bottom: 4em !important">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
+        const error_audio = new Audio("{% static 'crm/audio/wrong.mp3' %}");
+
+
+        var overlay = $("#overlay");
+        var loader = $("#loader");
+        var loader_trans = $("#loader-trans");
+
+        function loadOn() {
+            overlay.css('display', 'block');
+            loader.css('display', 'block');
+        }
+
+        function onProgress(elem) {
+            $('#' + elem).addClass('thin-loader')
+        }
+
+        function offProgress(elem) {
+            $('#' + elem).removeClass('thin-loader')
+        }
+
+        function loadOff() {
+            overlay.css('display', 'none');
+            loader.css('display', 'none');
+        }
+
+        function notify(status, message) {
+            if (status === "success" || status === "info") {
+                success_audio.play();
+            } else {
+                error_audio.play();
+            }
+            toastr[status](message)
+        }
+
+        $('#history_month_end').change(function () {
+            var start_date = new Date($("#history_month_start").val())
+            var end_date = new Date($(this).val())
+            if (start_date > end_date) {
+                $(this).val(get_current_day())
+                $("#history_month_start").val(get_current_day(-1))
+                notify('warning', 'Ending date cannot be less than starting date')
+            }
+        })
+
+        $('#history_month_start').change(function () {
+            var end_date = new Date($("#history_month_end").val())
+            var start_date = new Date($(this).val())
+            if (start_date > end_date) {
+                $(this).val(get_current_day(0))
+                $("#history_month_end").val(get_current_day(0))
+                notify('warning', 'Ending date cannot be less than starting date')
+            }
+
+        })
+
+
+        function start(refresh = false) {
+            loadOn()
+            $.ajax({
+                url: "{% url 'crm:transactions' %}",
+                type: "POST",
+                data: {
+                    action: 'fetch_all_txs',
+                    rows: $('#history_rows').val(),
+                    start: $('#history_month_start').val(),
+                    end: $('#history_month_end').val(),
+                    filters: $('#filters').val(),
+                },
+                dataType: "json",
+                success: function (data) {
+                    loadOff()
+                    if (refresh) {
+                        $('#transaction_table').DataTable().destroy()
+                    }
+                    setTimeout(function () {
+                        $("#transaction_history").html(data.content);
+                        var table = $('#transaction_table').DataTable({
+                            lengthMenu: [ [30, 70, 150, 500, -1], [30, 70, 150, 500, "All"] ],
+                            pageLength: 30
+                        });
+                        table.buttons().container().appendTo('#transaction_table_wrapper .col-md-6:eq(0)');
+                    }, 10)
+                },
+                error: function (jqXHR, errorThrown) {
+                    loadOff()
+                    notify('error', 'An error occurred. Page will be refreshed in 3s')
+                    setTimeout(function () {
+                        {#window.location.update()#}
+                    }, 3000)
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+        $('.copy').click(function (){
+            var item = $(this).data('item')
+            copy_to_clipboard(item)
+        })
+
+      
+
+        function doc_decide(action) {
+            const reason = $('.doc-reason').val()
+            if (action === 'reject' && reason === '') {
+                notify('error', 'Please enter rejection reason')
+            } else {
+                loadOn();
+                $.ajax({
+                    url: '{% url "crm:users" %}',
+                    data: {
+                        action: 'doc_decide',
+                        user_id: $('#selected_user_id').val(),
+                        doc_action: action,
+                        doc_reason: reason
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        notify(data.status, data.message)
+                        $('#DoccModal').modal('hide')
+                        if (data.status === "success") {
+                            $('.doc-title').html(data.content['html'])
+                            $('.user_rows').each(function (){
+                                if($(this).data('user_id') === $('#selected_user_id').val()){
+                                    $(this).prop({'data-doc_status': data.content['doc_status'], 'data-doc_reason': data.content['doc_reason']})
+                                }
+                            })
+                        }
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            }
+        }
+
+
+        function delete_user() {
+            loadOn();
+            $.ajax({
+                url: '{% url "crm:users" %}',
+                data: {
+                    action: 'delete_user',
+                    user_id: $('#selected_user_id').val(),
+                },
+                dataType: 'json',
+                type: 'post',
+                success: function (data) {
+                    loadOff()
+                    notify(data.status, data.message)
+                    if (data.status === "success") {
+                        $('#exampleLargeModal1').modal('hide')
+                        $('.user_rows').each(function (){
+                            if($(this).data('user_id') === $('#selected_user_id').val()){
+                                $(this).hide()
+                            }
+                        })
+                    }
+                },
+                error: function (err1, err2) {
+                    loadOff()
+                    notify('error', JSON.stringify(err1))
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+        function load_coins(){
+            $('#add_currency').html('')
+            $.ajax({
+                url: '{% url "crm:operators" %}',
+                dataType: "json",
+                type: "POST",
+                async: true,
+                data: {
+                    action: 'load_coins',
+                },
+                success: function (data) {
+                    loadOff()
+                    $.each(data.content, function(short, details){
+                        $('#add_currency').append(`<option value="${short}">${details.long} &asymp;$${fmtNum(details.price)}</option>`)
+                    })
+                },
+                error: function () {
+                    notify('error', 'Fetch failed, Retry')
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+    </script>
+
+    
+    
+
+    <script>
+        $(function () {
+            $('#history_month_start').val(get_current_day(0))
+            $('#history_month_end').val(get_current_day())
+
+            start()
+
+            $('.device_details').click(function () {
+                $('.device_details_name').text($(this).data('name'))
+            })
+
+            $('.generate_transaction_link').click(function () {
+                notify('error', 'Error generating link')
+            })
+
+            $('body').on('click', '.waive', function () {
+                var id = $(this).data('id')
+                $('#selected_loan').val(id)
+            })
+
+
+            $('#add_sbmt').click(function(){
+                const type = $('#add_type').val()
+                const qty = $('#add_qty').val()
+                const uuid = $('#add_uuid').val()
+                const medium = $('#add_medium').val()
+                const currency = $('#add_currency').val()
+
+                if(type !== '' && qty !== '' && uuid !== '' && medium !== '' && currency !== ''){
+                    loadOn()
+                    $.ajax({
+                        url: '{% url "crm:users" %}',
+                        dataType: "json",
+                        type: "POST",
+                        async: true,
+                        data: {
+                            uid: uuid,
+                            action: 'add_tx',
+                            type: type,
+                            medium: medium,
+                            currency: currency,
+                            qty: qty
+                        },
+                        success: function (data) {
+                            loadOff()
+                            notify(data.status, data.message)
+                            if(data.status === 'success'){
+                                $('#add_qty').val('')
+                                $('#add_uuid').val('')
+                                $('#addModal').modal('hide')
+                                fetch_modal_for_user()
+                            }
+                        },
+                        error: function () {
+                            loadOff()
+                            notify('error', 'Fetch failed, Retry')
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+                }
+            })
+
+
+            $(".login_as").click(function () {
+                var user = $("#selected_user_id").val();
+                var hash = $("#general_hash").val();
+                var url = ""
+                window.open(url, '_blank');
+            })
+
+
+            $('body').on('click', '.tx_rows', function () {
+                var row = $(this);
+                var first_name = row.data('first_name');
+                var last_name = row.data('last_name');
+                var email = row.data('email');
+                var phone = row.data('phone');
+                var created_at = row.data('created_at');
+                var avatar = row.data('avatar');
+                var status = row.data('status');
+                var status_pill = row.data('status_pill');
+                var id = row.data('uid');
+                var doc_status = row.data('doc_status');
+                var doc_reason = row.data('doc_reason');
+
+                $(".details_first_name").val(first_name).data('id', id);
+                $(".details_last_name").val(last_name).data('id', id);
+                $(".details_email").val(email).data('id', id);
+                $(".details_phone").val(phone).data('id', id);
+                $(".details_status_show").html(status_pill);
+                $(".details_status").data('id', id);
+
+                $(".details_avatar").prop('src', avatar);
+                $(".details_registered").text(created_at);
+                $(".details_current_user").text(id);
+                $(".details_text_username").text(last_name + ' ' + first_name + ' (' + id + ')');
+
+                var blacklist_text = status === 'Active' ? 'Blacklist' : 'Whitelist'
+                $('.blacklist').html('<i class="lni lni-ban"></i> '+blacklist_text).data('value', blacklist_text)
+
+                if(doc_status === 'True'){
+                    $('.doc-title').html('User Docs  <span class="badge text-bg-success">APPROVED</span>')
+                }else{
+                    if(doc_reason === ''){
+                        $('.doc-title').html('User Docs  <span class="badge text-bg-info">WAITING</span>')
+                    }else if(doc_reason === 'submitted'){
+                        $('.doc-title').html('User Docs  <span class="badge text-bg-warning">SUBMITTED</span>')
+                    }else{
+                        $('.doc-title').html('User Docs  <span class="badge text-bg-danger">REJECTED</span>')
+                    }
+                }
+
+
+                $("#selected_user_id").val(id);
+
+                {#RESET COUNTERS AND ELEMENTS#}
+                $('.count').text('0')
+                $('#show_notes').html('')
+
+                onProgress('user-modal')
+
+                // HANDLE OTHER DETAILS FETCH
+                fetch_modal_for_user()
+
+            })
+
+
+
+            function fetch_modal_for_user(){
+                setTimeout(function () {
+                    $.ajax({
+                        url: '{% url "crm:users" %}',
+                        dataType: "json",
+                        type: "POST",
+                        async: true,
+                        data: {
+                            uid: $('#selected_user_id').val(),
+                            action: 'get_other_details'
+                        },
+                        success: function (data) {
+                            offProgress('user-modal')
+                            {#POPULATE OTHER DETAILS WITH RESPONSE#}
+                            $.each(data.content, function (key, value) {
+                                if(key === 'banks'){
+                                    populate_banks(value)
+                                }else if(key === 'virtual_accounts'){
+                                    populate_virtual_accounts(value)
+                                }else if(key === 'notes'){
+
+                                }else if(key === 'assets'){
+                                    populate_assets(value)
+                                }else if(key === 'wallets'){
+                                    populate_wallets(value)
+                                }else{
+                                    $(`.${key}`).text(value)
+                                }
+                            });
+                            $('#show_notes').html(data.content['tables']['notes'])
+                            $('#show_files').html(data.content['tables']['files'])
+                        },
+                        error: function () {
+                            notify('error', 'Fetch failed, Retry')
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+
+                }, 1100)
+            }
+
+
+
+            function populate_banks(banks){
+                $('.withdrawal_bank_list').html('')
+                $.each(banks, function(index, bank){
+                    $('.withdrawal_bank_list').append(
+                        `
+                        <div class="w-100 border-top mb-2"></div>
+                                                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                    <h6 class="mb-0 fw-bold"><i
+                                                                                class="bx bxs-building font-18 me-1"></i>
+                                                                            Account Number</h6>
+                                                                        <span class="text-secondary">${bank.number}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="bx bxs-map-pin font-18 me-1"></i>
+                                                                            Bank Name</h6>
+                                                                        <span class="text-secondary bankdetails_bank">${bank.bank}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                                        <h6 class="mb-0 fw-bold"><i
+                                                                                class="bx bxs-buildings font-18 me-1"></i>
+                                                                            Account Name</h6>
+                                                                        <span class="text-secondary bankdetails_name">${bank.name}</span>
+                                                                    </li>
+                        `
+                    )
+                })
+            }
+
+
+            function populate_virtual_accounts(accts){
+                $.each(accts, function(key, value){
+                    $(`.virtual_bankdetails_${key}`).text(value)
+                })
+            }
+
+            function populate_assets(assets){
+                $('.assets_list').html('')
+                $.each(assets, function(coin, bal){
+                    let bg = bal <= 0 ? 'primary' : 'warning'
+                    let text = bal <= 0 ? 'light' : 'dark'
+                    $('.assets_list').append(
+                        `
+                        <div class="w-100 border-top mb-2"></div>
+                            <li class="bg-${bg} list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 class="mb-0 fw-bold text-${text}"><i class="bx bxs-coin font-18 me-1"></i>
+                                    ${coin.toUpperCase()}
+                                </h6>
+                                <span class="" style="font-family: monospace">${fmtNum(bal)}</span>
+                            </li>
+                                                                   
+                        `
+                    )
+                })
+            }
+
+
+            function populate_wallets(wallets){
+                $('.wallets_list').html('')
+                $.each(wallets, function(index, wallet){
+                    $('.wallets_list').append(
+                        `
+                        <div class="w-100 border-top mb-2"></div>
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 class="mb-0 fw-bold"><i class="bx bxs-coin font-18 me-1"></i>
+                                    ${wallet.currency_name} (${wallet.network})
+                                </h6>
+                                <span class="text-secondary">${wallet.address}</span>
+                            </li>
+                                                                   
+                        `
+                    )
+                })
+            }
+
+
+
+            {#transactionS#}
+
+            $(".view_transaction_history").click(function () {
+                var user_id = $("#selected_user_id").val();
+                loadOn();
+                $.ajax({
+                    url: '{% url "crm:transactions" %}',
+                    data: {
+                        uid: user_id,
+                        action: 'fetch_txs'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        $('#mini_transaction_history').html(data.content)
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            })
+
+
+
+            $("body").on('click', '.tx_actions', function () {
+                var id = $(this).data('id');
+                var uid = $(this).data('uid');
+                var action = $(this).data('action');
+                var size = $(this).data('size');
+
+                loadOn();
+                    $.ajax({
+                        url: '{% url "crm:transactions" %}',
+                        data: {
+                            action: 'status_update',
+                            tx_id: id,
+                            main_action: action,
+                            size: size,
+                            uid: uid
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (data) {
+                            loadOff()
+                            $('#mini_transaction_history').html(data.content)
+                            notify(data.status, data.message)
+                            start(true)
+                        },
+                        error: function (err1, err2) {
+                            loadOff()
+                            notify('error', JSON.stringify(err1))
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+            })
+
+
+
+
+            // NOTE BLOCK
+            $("#add_note").click(function () {
+                var user_id = $("#selected_user_id").val();
+                var input = $("#note_input").val();
+                var select = $("#note_select").val();
+                if (input === "" && select === "" || select === "0" && input === "" || select === null) {
+                    toastr["warning"]('Input cannot be empty');
+                } else {
+                    let body = (select === '0') ? input : select
+                    loadOn();
+                    $.ajax({
+                        url: '{% url "crm:users" %}',
+                        data: {
+                            note: body,
+                            user_id: user_id,
+                            action: 'add_note'
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (data) {
+                            loadOff()
+                            $('#note_input').val('')
+                            $('#note_select').val('').change()
+                            $('#show_notes').html(data.content)
+                            notify(data.status, data.message)
+                        },
+                        error: function (err1, err2) {
+                            loadOff()
+                            notify('error', JSON.stringify(err1))
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+                }
+            })
+
+            $('#note_select').change(function (){
+                if($(this).val() === '0'){
+                    $('#note_input').show()
+                }else{
+                    $('#note_input').hide()
+                }
+            })
+
+            $("body").on('click', '.delete_note', function () {
+                var user_id = $("#selected_user_id").val();
+                var id = $(this).data('id');
+                loadOn()
+                $.ajax({
+                    url: '{% url "crm:users" %}',
+                    data: {
+                        note_id: id,
+                        user_id: user_id,
+                        action: 'delete_note'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        $('#show_notes').html(data.content)
+                        notify(data.status, data.message)
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            })
+
+
+            $("body").on('blur', '.old_note', function () {
+                var user_id = $("#selected_user_id").val();
+                var id = $(this).data('id');
+                var input = $(this).val();
+                if (input !== "") {
+                    $.ajax({
+                        url: '{% url "crm:users" %}',
+                        data: {
+                            note: input,
+                            user_id: user_id,
+                            action: 'modify_note',
+                            note_id: id
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (data) {
+                            loadOff()
+                            notify(data.status, data.message)
+                        },
+                        error: function (err1, err2) {
+                            loadOff()
+                            notify('error', JSON.stringify(err1))
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+                } else {
+                    toastr["error"]("Input cannot be empty. Note was not saved");
+                }
+            })
+
+
+
+            {#BLACKLIST#}
+            $('.blacklist').click(function () {
+                var user_id = $("#selected_user_id").val();
+                loadOn();
+                $.ajax({
+                    url: '{% url "crm:users" %}',
+                    data: {
+                        user_id: user_id,
+                        action: 'blacklist',
+                        main_action: $(this).text()
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        notify(data.status, data.message)
+                        if (data.status === 'success') {
+                            start(true)
+                            $('#exampleLargeModal1').modal('hide')
+                        }
+
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            })
+
+            $('.whitelist').click(function () {
+                var user_id = $("#selected_user_id").val();
+                loadOn();
+                $.ajax({
+                    url: '{% url "crm:users" %}',
+                    data: {
+                        user_id: user_id,
+                        action: 'whitelist'
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        loadOff()
+                        notify(data.status, data.message)
+                        if (data.status === 'success') {
+                            start(true)
+                            $('#exampleLargeModal1').modal('hide')
+                        }
+
+                    },
+                    error: function (err1, err2) {
+                        loadOff()
+                        notify('error', JSON.stringify(err1))
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                    }
+                })
+            })
+
+
+
+
+            $('body').on('mouseover', '.tx_rows', function () {
+                $(this).css({'background-color': '#E2EDFF', 'color': '#267DFD', 'cursor': 'pointer'})
+            })
+            $('body').on('mouseout', '.tx_rows', function () {
+                $(this).css({'background': 'white', 'color': 'black', 'cursor': 'pointer'})
+            })
+
+
+        })
+    </script>
+
+
+
+
+
+{% endblock %}

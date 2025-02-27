@@ -51,8 +51,8 @@ class WithdrawalView(View):
             result, d = self.validate_withdrawal(form)
             if result:
                 with transaction.atomic():
-                    setattr(self.user.wallet, d['currency'], d['diff'])  # set new balance for wallet
-                    self.user.wallet.save()
+                    setattr(self.user.assets, d['currency'], d['diff'])  # set new balance for wallet
+                    self.user.assets.save()
 
                     amount_usd = crypto_markets(self.tickers)[d['currency']]['price'] * d['qty']
                     Transaction.objects.create(user=self.user, currency=d['currency'], qty=d['qty'], address=d['address'], transaction_type='withdrawal', medium=action, reference=d['platform'], amount_usd=amount_usd)
@@ -79,7 +79,7 @@ class WithdrawalView(View):
                 if currency == 'ngn' and bank is not None or currency != 'ngn':
                     if qty >= crypto_markets(self.tickers)[currency]['min']:
                         qty = Decimal(qty)
-                        bal = Decimal(getattr(self.user.wallet, currency))
+                        bal = Decimal(getattr(self.user.assets, currency))
                         if bal >= qty:
                             diff = bal - qty
                             return True, {

@@ -80,7 +80,7 @@ class SettingsView(View):
         current_pass = self.form.cleaned_data.get('current_pass')
         new_pass = self.form.cleaned_data.get('new_pass')
         if check_password(current_pass, self.user.password):
-            if re.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\.-_!\$%\(\)\=\+#]).{6,20}$', new_pass):
+            if re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\.-_!\$%\(\)\=\+#]).{6,20}$", new_pass):
                 self.user.set_password(new_pass)
                 self.user.save()
                 Notification.objects.create(user=self.user, title='Password Change', body='Your account password was changed. If you did not authorize this, please quickly let us know')

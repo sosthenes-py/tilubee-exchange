@@ -11,7 +11,7 @@ from string import digits
 from users.email_sender import EmailSender
 from user_auth.view.login import update_session
 from user_auth.models import EmailVerification
-from transactions.models import Wallet
+from transactions.models import Asset
 
 
 def generate_uid(user_id):
@@ -39,7 +39,7 @@ class RegistrationView(View):
             # Send email
             code = ''.join([random.choice(digits) for _ in range(4)])
             EmailVerification.objects.create(code=f'{code}',user=user)
-            Wallet.objects.create(user=user)
+            Asset.objects.create(user=user)
 
             EmailSender(reason='registration', email=user.email, name=user.first_name, code=code).send_email()
 

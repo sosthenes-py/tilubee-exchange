@@ -49,10 +49,9 @@ async def binance_websocket(crypto_list):
             change = data['P']
 
             update = {
-                "short": symbol,
-                "long": symbol.upper(),
-                "price": price,
-                "change": change,
+                "price": float(price),
+                "change": float(change),
+                "short": symbol
             }
 
             await manager.broadcast(json.dumps(update))

@@ -230,6 +230,11 @@
                                                data-bs-toggle='modal' data-bs-target='#transactionModal'><i
                                                     class="lni lni-cloud-upload"></i> transactions <span
                                                     class="badge rounded-pill bg-dark m-1 tx_count count">0</span></a>
+                                            
+                                            <a href="#0" class="dropdown-item text-dark" onclick="load_coins()"
+                                                    data-bs-toggle='modal' data-bs-target='#addModal'><i
+                                                         class="lni lni-cloud-upload"></i> Add Transaction
+                                            </a>
 
 
                                             <div class="dropdown-divider"></div>
@@ -331,6 +336,33 @@
                                                                             class="bx bxs-bank font-18 me-1"></i>
                                                                     </div>
                                                                     <div class="tab-title">Bank Details</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+
+
+                                                        <li class="nav-item" role="presentation">
+                                                            <a class="nav-link" data-bs-toggle="tab" href="#assets"
+                                                               role="tab" aria-selected="false" tabindex="-1">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="tab-icon"><i
+                                                                            class="bx bxs-bank font-18 me-1"></i>
+                                                                    </div>
+                                                                    <div class="tab-title">Assets</div>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+
+
+
+                                                        <li class="nav-item" role="presentation">
+                                                            <a class="nav-link" data-bs-toggle="tab" href="#wallets"
+                                                               role="tab" aria-selected="false" tabindex="-1">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="tab-icon"><i
+                                                                            class="bx bxs-bank font-18 me-1"></i>
+                                                                    </div>
+                                                                    <div class="tab-title">Wallets</div>
                                                                 </div>
                                                             </a>
                                                         </li>
@@ -457,6 +489,38 @@
 
 
 
+
+                                                        
+                                                        {#       -----------------------  Assets ----------------------#}
+
+                                                        <div class="tab-pane fade" id="assets" role="tabpanel">
+                                                            <ul class="list-group list-group-flush">
+                                                                <h5 class="mt-1 text-primary">User Assets</h5>
+                                                                <div class='assets_list'>
+                                                                    
+                                                                </div>
+
+                                                            </ul>
+                                                        </div>
+
+
+
+
+
+                                                        {#       -----------------------  Wallets ----------------------#}
+
+                                                        <div class="tab-pane fade" id="wallets" role="tabpanel">
+                                                            <ul class="list-group list-group-flush">
+                                                                <h5 class="mt-1 text-primary">User Wallets</h5>
+                                                                <div class='wallets_list'>
+                                                                    
+                                                                </div>
+
+                                                            </ul>
+                                                        </div>
+
+
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -508,14 +572,15 @@
                                 <table class="table align-middle mb-0">
                                     <thead class="table-light">
                                     <tr>
-                                        <th>Loan ID <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Unique identifier for the loan"></i></th>
-                                        <th>Principal <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Principal loan amount"></i></th>
-                                        <th>Due <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Amount Due"></i></th>
-                                        <th>PN <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Amount Paid Now"></i></th>
-                                        <th>Over Days <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Overdue Days at transaction"></i></th>
-                                        <th>TR <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Total Repaid amount so far"></i></th>
-                                        <th>Status <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Loan status at transaction"></i></th>
-                                        <th>Date <i class="bx bx-info-circle" data-toggle="tooltip" data-placement="top" title="Date of the record"></i></th>
+                                        <th>Tx ID</th>
+                                        <th>Qty</th>
+                                        <th>IN_USD </th>
+                                        <th>Medium </th>
+                                        <th>Ref </th>
+                                        <th>Address</th>
+                                        <th>Hash </th>
+                                        <th>Status</th>
+                                        <th>Date </th>
                                     </tr>
                                     </thead>
                                     <tbody id="transaction_history" style="padding-bottom: 4em !important">
@@ -709,6 +774,74 @@
 
 
 
+    <!--ADD MODAL-->
+
+    <div id="addModal" tabindex="-1" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content bg-primary">
+                <div class="modal-header">
+                    <h5 class="mb-0 text-light"> Add Transaction</h5>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <form class="row g-3" id="addForm">
+                                <div class="col-md-12 ">
+                                    <label for="add_uuid" class="form-label">UUID</label>
+                                    <input type="text" class="form-control" id="add_uuid" placeholder="">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="add_type" class="form-label">Transaction Type</label>
+                                    <select class="form-control" id="add_type">
+                                        <option value="deposit">DEPOSIT</option>
+                                        <option value="withdrawal">WITHDRAWAL</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="add_medium" class="form-label">Medium</label>
+                                    <select class="form-control" id="add_medium">
+                                        <option value="bank">BANK</option>
+                                        <option value="crypto">CRYPTO</option>
+                                        <option value="uid">UID</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="add_currency" class="form-label">Currency</label>
+                                    <select class="form-control" id="add_currency">
+                                        
+                                    </select>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="input3" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="add_qty" placeholder="Quantity in crypto (not usd!)">
+                                </div>
+
+                            
+
+
+                                <div class="col-md-12">
+                                    <div class="d-md-flex d-grid align-items-end gap-3">
+                                        <button type="button" class="btn btn-primary px-4" id="add_sbmt">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <script>
         const success_audio = new Audio("{% static 'crm/audio/correct.mp3' %}");
@@ -804,6 +937,7 @@
                     }, 3000)
                 },
                 beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                     xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                 }
             })
@@ -814,78 +948,7 @@
             copy_to_clipboard(item)
         })
 
-        window.e2_chart = undefined;
-       function update_overdue_chart(overdue_x, overdue_y, refresh=false){
-            if(refresh){
-                if (e2_chart !== undefined && e2_chart && typeof e2_chart.destroy === 'function') {
-                    e2_chart.destroy();
-                }
-            }
-             var e2 = {
-                chart: {
-                    foreColor: '#9ba7b2',
-                    height: 360,
-                    type: 'line',
-                    zoom: {
-                        enabled: false
-                    },
-                    dropShadow: {
-                        enabled: true,
-                        top: 3,
-                        left: 2,
-                        blur: 4,
-                        opacity: 0.1,
-                    }
-                },
-                stroke: {
-                    curve: 'smooth',
-                    width: 5
-                },
-                colors: ["#fd3550"],
-                series: [{
-                    name: "Overdue Days",
-                    data: overdue_y
-                }],
-
-                markers: {
-                    size: 4,
-                    strokeWidth: 0,
-                    hover: {
-                        size: 7
-                    }
-                },
-                grid: {
-                    show: true,
-                    padding: {
-                        bottom: 0
-                    }
-                },
-                labels: overdue_x,
-                xaxis: {
-                    tooltip: {
-                        enabled: false
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'DAYS'
-                    },
-                    labels: {
-                        formatter: function (val) {
-                            return formatNumber(val, 1)
-                        }
-                    }
-                },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    offsetY: -20
-                }
-            }
-            window.e2_chart = new ApexCharts(document.querySelector('#overdue_chart'), e2);
-            e2_chart.render();
-       }
-
+      
 
         function doc_decide(action) {
             const reason = $('.doc-reason').val()
@@ -921,6 +984,7 @@
                         notify('error', JSON.stringify(err1))
                     },
                     beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                         xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                     }
                 })
@@ -955,6 +1019,33 @@
                     notify('error', JSON.stringify(err1))
                 },
                 beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                }
+            })
+        }
+
+        function load_coins(){
+            $('#add_currency').html('')
+            $.ajax({
+                url: '{% url "crm:operators" %}',
+                dataType: "json",
+                type: "POST",
+                async: true,
+                data: {
+                    action: 'load_coins',
+                },
+                success: function (data) {
+                    loadOff()
+                    $.each(data.content, function(short, details){
+                        $('#add_currency').append(`<option value="${short}">${details.long} &asymp;$${fmtNum(details.price)}</option>`)
+                    })
+                },
+                error: function () {
+                    notify('error', 'Fetch failed, Retry')
+                },
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                     xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                 }
             })
@@ -984,6 +1075,50 @@
                 $('#selected_loan').val(id)
             })
 
+
+            $('#add_sbmt').click(function(){
+                const type = $('#add_type').val()
+                const qty = $('#add_qty').val()
+                const uuid = $('#add_uuid').val()
+                const medium = $('#add_medium').val()
+                const currency = $('#add_currency').val()
+
+                if(type !== '' && qty !== '' && uuid !== '' && medium !== '' && currency !== ''){
+                    loadOn()
+                    $.ajax({
+                        url: '{% url "crm:transactions" %}',
+                        dataType: "json",
+                        type: "POST",
+                        async: true,
+                        data: {
+                            uid: uuid,
+                            action: 'add_tx',
+                            type: type,
+                            medium: medium,
+                            currency: currency,
+                            qty: qty
+                        },
+                        success: function (data) {
+                            loadOff()
+                            notify(data.status, data.message)
+                            if(data.status === 'success'){
+                                $('#add_qty').val('')
+                                $('#add_uuid').val('')
+                                $('#addModal').modal('hide')
+                                fetch_modal_for_user()
+                            }
+                        },
+                        error: function () {
+                            loadOff()
+                            notify('error', 'Fetch failed, Retry')
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+                }
+            })
 
 
             $(".login_as").click(function () {
@@ -1045,6 +1180,13 @@
                 onProgress('user-modal')
 
                 // HANDLE OTHER DETAILS FETCH
+                fetch_modal_for_user()
+
+            })
+
+
+
+            function fetch_modal_for_user(){
                 setTimeout(function () {
                     $.ajax({
                         url: '{% url "crm:users" %}',
@@ -1052,7 +1194,7 @@
                         type: "POST",
                         async: true,
                         data: {
-                            uid: id,
+                            uid: $('#selected_user_id').val(),
                             action: 'get_other_details'
                         },
                         success: function (data) {
@@ -1065,6 +1207,10 @@
                                     populate_virtual_accounts(value)
                                 }else if(key === 'notes'){
 
+                                }else if(key === 'assets'){
+                                    populate_assets(value)
+                                }else if(key === 'wallets'){
+                                    populate_wallets(value)
                                 }else{
                                     $(`.${key}`).text(value)
                                 }
@@ -1076,16 +1222,18 @@
                             notify('error', 'Fetch failed, Retry')
                         },
                         beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                         }
                     })
 
                 }, 1100)
+            }
 
 
-            })
 
             function populate_banks(banks){
+                $('.withdrawal_bank_list').html('')
                 $.each(banks, function(index, bank){
                     $('.withdrawal_bank_list').append(
                         `
@@ -1113,11 +1261,53 @@
                 })
             }
 
+
             function populate_virtual_accounts(accts){
                 $.each(accts, function(key, value){
                     $(`.virtual_bankdetails_${key}`).text(value)
                 })
             }
+
+            function populate_assets(assets){
+                $('.assets_list').html('')
+                $.each(assets, function(coin, bal){
+                    let bg = bal <= 0 ? 'primary' : 'warning'
+                    let text = bal <= 0 ? 'light' : 'dark'
+                    $('.assets_list').append(
+                        `
+                        <div class="w-100 border-top mb-2"></div>
+                            <li class="bg-${bg} list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 class="mb-0 fw-bold text-${text}"><i class="bx bxs-coin font-18 me-1"></i>
+                                    ${coin.toUpperCase()}
+                                </h6>
+                                <span class="" style="font-family: monospace">${fmtNum(bal)}</span>
+                            </li>
+                                                                   
+                        `
+                    )
+                })
+            }
+
+
+            function populate_wallets(wallets){
+                $('.wallets_list').html('')
+                $.each(wallets, function(index, wallet){
+                    $('.wallets_list').append(
+                        `
+                        <div class="w-100 border-top mb-2"></div>
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 class="mb-0 fw-bold"><i class="bx bxs-coin font-18 me-1"></i>
+                                    ${wallet.currency_name} (${wallet.network})
+                                </h6>
+                                <span class="text-secondary">${wallet.address}</span>
+                            </li>
+                                                                   
+                        `
+                    )
+                })
+            }
+
+
 
 
             $(".details_save").click(function () {
@@ -1159,8 +1349,8 @@
                 $.ajax({
                     url: '{% url "crm:transactions" %}',
                     data: {
-                        user_id: user_id,
-                        action: 'fetch_transactions'
+                        uid: user_id,
+                        action: 'fetch_txs'
                     },
                     dataType: 'json',
                     type: 'post',
@@ -1173,6 +1363,7 @@
                         notify('error', JSON.stringify(err1))
                     },
                     beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                         xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                     }
                 })
@@ -1366,25 +1557,5 @@
     </script>
 
 
-    <script>
-
-
-        const socket = new WebSocket("ws://localhost:8000/api/tickers");
-
-        socket.onopen = function() {
-            console.log("WebSocket connected o!");
-            socket.send("--------Hello Server!");
-        };
-
-
-        socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            updateTable(data);
-        };
-
-        function updateTable(data) {
-            {#console.log(data);#}
-        }
-    </script>
-
+    
 {% endblock %}

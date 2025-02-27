@@ -16,7 +16,7 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return JSONResponse({"message": "Hello S from FastAPI!"})
+    return JSONResponse({"message": "Hello Sssss from FastAPI!"})
 
 @app.get("/home")
 def home():
@@ -39,9 +39,8 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()  # Keep connection alive
-            print(f"Received from client: {data}")
             if ws_manager.active_connections:
-                await binance_websocket(list(COINS_DICT.keys()))
+                await binance_websocket(list(COINS_DICT))
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
 

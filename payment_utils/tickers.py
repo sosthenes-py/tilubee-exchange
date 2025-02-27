@@ -34,7 +34,8 @@ COINS_DICT = {
     "zec": "Zcash"
 }
 
-def markets(tickers: QuerySet = None, order_by=''):
+
+def markets(tickers: QuerySet = None, order_by='', reload=False):
     """
     Returns all available markets in a dictionary, Eg:
     {
@@ -48,11 +49,13 @@ def markets(tickers: QuerySet = None, order_by=''):
         ...
     }
     """
+
     tickers = Ticker.objects.all() if tickers is None else tickers
     if order_by != '':
         tickers = tickers.order_by(order_by)
+
     tickers_dict = {
-        ticker.coin_short:{
+        ticker.coin_short: {
             'short': ticker.coin_short,
             'long': ticker.coin_long,
             'min': ticker.min,
@@ -63,23 +66,30 @@ def markets(tickers: QuerySet = None, order_by=''):
         }
         for ticker in tickers
     }
-    # Get prices from binance api
-    prices = fetch_tickers_http(list(tickers_dict))
 
-    # Construct the response in required format
-    result = {}
-    for symbol, details in tickers_dict.copy().items():
-        if symbol in prices:
-            # Update tickers_dict with data from binance and leave other symbols as default
-            tickers_dict[symbol] = {
-                "short": symbol,
-                "long": details['long'],
-                "price": float(prices[symbol]["price"]),
-                "change": float(prices[symbol]["change"]),
-                "network": details['network'],
-                "min": details['min'],
-                "max": details['max']
-            }
+    if reload:
+        # Get prices from binance api
+        prices = fetch_tickers_http(list(tickers_dict))
+
+        # Construct the response in required format
+        for symbol, details in tickers_dict.copy().items():
+            if symbol in prices:
+                # Update tickers_dict with data from binance and leave other symbols as default
+                tickers_dict[symbol] = {
+                    "short": symbol,
+                    "long": details['long'],
+                    "price": float(prices[symbol]["price"]),
+                    "change": float(prices[symbol]["change"]),
+                    "network": details['network'],
+                    "min": details['min'],
+                    "max": details['max']
+                }
+        # Update Ticker DB
+        tickers_to_update = Ticker.objects.filter(coin_short__in=list(tickers_dict))
+        for ticker in tickers_to_update:
+            ticker.price = tickers_dict[ticker.coin_short]['price']
+            ticker.change = tickers_dict[ticker.coin_short]['change']
+        Ticker.objects.bulk_update(tickers_to_update, ['price', 'change'])
 
     return tickers_dict
 
