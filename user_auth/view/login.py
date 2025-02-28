@@ -50,14 +50,19 @@ class LoginView(View):
                 })
             else:
                 if check_password(form.cleaned_data['password'], user.password):
-                    login(request, user)
-                    update_session(request)
+                    if not user.is_blacklisted():
+                        login(request, user)
+                        update_session(request)
 
-                    Notification.objects.create(user=user, title='Login Attempt', body=f'There was a successful login action on your account from the IP: {get_client_ip(request)}')
+                        Notification.objects.create(user=user, title='Login Attempt', body=f'There was a successful login action on your account from the IP: {get_client_ip(request)}')
 
+                        return JsonResponse({
+                            'status': 'success',
+                            'message': f'Welcome back, {user.first_name}',
+                        })
                     return JsonResponse({
-                        'status': 'success',
-                        'message': f'Welcome back, {user.first_name}',
+                        'status': 'error',
+                        'message': 'Account is suspended!',
                     })
                 else:
                     return JsonResponse({

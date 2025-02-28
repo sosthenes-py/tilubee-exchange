@@ -45,6 +45,8 @@
             if (flash !== ""){
                 if (flash === "duplicate"){
                     notify('info', 'Duplicate login detected, please login again')
+                }else if(flash === 'blacklist'){
+                    notify('error', 'Account is suspended')
                 }
             }
         })

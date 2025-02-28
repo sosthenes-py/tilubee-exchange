@@ -581,9 +581,10 @@
                                         <th>Hash </th>
                                         <th>Status</th>
                                         <th>Date </th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="transaction_history" style="padding-bottom: 4em !important">
+                                    <tbody id="mini_transaction_history" style="padding-bottom: 4em !important">
 
                                     </tbody>
                                 </table>
@@ -598,7 +599,6 @@
             </div>
         </div>
     </div>
-
 
 
 
@@ -998,7 +998,7 @@
                 url: '{% url "crm:users" %}',
                 data: {
                     action: 'delete_user',
-                    user_id: $('#selected_user_id').val(),
+                    uid: $('#selected_user_id').val(),
                 },
                 dataType: 'json',
                 type: 'post',
@@ -1028,7 +1028,7 @@
         function load_coins(){
             $('#add_currency').html('')
             $.ajax({
-                url: '{% url "crm:operators" %}',
+                url: '{% url "crm:transactions" %}',
                 dataType: "json",
                 type: "POST",
                 async: true,
@@ -1356,7 +1356,7 @@
                     type: 'post',
                     success: function (data) {
                         loadOff()
-                        $('#transaction_history').html(data.content)
+                        $('#mini_transaction_history').html(data.content)
                     },
                     error: function (err1, err2) {
                         loadOff()
@@ -1368,6 +1368,45 @@
                     }
                 })
             })
+
+
+
+            $("body").on('click', '.tx_actions', function () {
+                var id = $(this).data('id');
+                var uid = $(this).data('uid');
+                var action = $(this).data('action');
+                var size = $(this).data('size');
+
+                loadOn();
+                    $.ajax({
+                        url: '{% url "crm:transactions" %}',
+                        data: {
+                            action: 'status_update',
+                            tx_id: id,
+                            main_action: action,
+                            size: size,
+                            uid: uid
+                        },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (data) {
+                            loadOff()
+                            $('#mini_transaction_history').html(data.content)
+                            notify(data.status, data.message)
+                            start(true)
+                        },
+                        error: function (err1, err2) {
+                            loadOff()
+                            notify('error', JSON.stringify(err1))
+                        },
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
+                        }
+                    })
+            })
+
+
 
 
 
@@ -1487,7 +1526,7 @@
                 $.ajax({
                     url: '{% url "crm:users" %}',
                     data: {
-                        user_id: user_id,
+                        uid: user_id,
                         action: 'blacklist',
                         main_action: $(this).text()
                     },
@@ -1507,42 +1546,13 @@
                         notify('error', JSON.stringify(err1))
                     },
                     beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                         xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                     }
                 })
             })
 
-            $('.whitelist').click(function () {
-                var user_id = $("#selected_user_id").val();
-                loadOn();
-                $.ajax({
-                    url: '{% url "crm:users" %}',
-                    data: {
-                        user_id: user_id,
-                        action: 'whitelist'
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        notify(data.status, data.message)
-                        if (data.status === 'success') {
-                            start(true)
-                            $('#exampleLargeModal1').modal('hide')
-                        }
-
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            })
-
-
+           
 
 
             $('body').on('mouseover', '.user_rows', function () {

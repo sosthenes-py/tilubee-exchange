@@ -26,4 +26,9 @@ class CustomLoginRequiredMixin(LoginRequiredMixin):
                 #     return redirect(f"{url}{query_param}")
                 if not request.user.email_verification.is_verified:
                     return redirect('user_auth:verify_email')
+                if request.user.is_blacklisted():
+                    logout(request)
+                    url = reverse('user_auth:login')
+                    query_param = "?flash=blacklist"
+                    return redirect(f"{url}{query_param}")
             return super().dispatch(request, *args, **kwargs)

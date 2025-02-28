@@ -159,10 +159,10 @@
 						</li>
 					</ul>
 
-                    <ul>
+                    {% comment %} <ul>
                         <li> <a href="{% url 'crm:operators' %}"><i class="bx bx-right-arrow-alt"></i>Operators</a>
                         </li>
-                    </ul>
+                    </ul> {% endcomment %}
 
                     <ul>
 						<li> <a href="{% url 'crm:blacklist' %}"><i class="bx bx-right-arrow-alt"></i>Blacklist</a>
@@ -552,7 +552,7 @@
 
 
         function logout(){
-            SignOut(auth)
+            signOut(auth)
                 .then(() => {
                     window.location.href = "{% url 'crm:login' %}"
                 })
@@ -562,6 +562,7 @@
                     console.log(`${error.code}`)
                 })
         }
+        window.logout = logout
 
 
         onAuthStateChanged(auth, async (user) => {
@@ -570,6 +571,7 @@
                 localStorage.setItem('userToken', token);
             } else {
                 localStorage.removeItem('userToken');
+                logout()
             }
         });
     </script>

@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.contrib.auth import logout
 
 
 def custom_login_required(function=None):
@@ -20,5 +21,10 @@ def custom_login_required(function=None):
                 return redirect(f"{url}{query_param}")
             if not request.user.email_verification.is_verified:
                 return redirect('user_auth:verify_email')
+            if request.user.is_blacklisted():
+                    logout(request)
+                    url = reverse('user_auth:login')
+                    query_param = "?flash=blacklist"
+                    return redirect(f"{url}{query_param}")
         return function(request, *args, **kwargs)
     return wrapper

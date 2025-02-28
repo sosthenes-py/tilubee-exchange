@@ -80,6 +80,7 @@
                                         <th>Hash </th>
                                         <th>Status</th>
                                         <th>Date </th>
+                                        <th>Action</th>
                                     </tr>
 								</thead>
 								<tbody id="transaction_history" style="padding-bottom: 4em !important">
@@ -666,7 +667,7 @@
                 url: '{% url "crm:users" %}',
                 data: {
                     action: 'delete_user',
-                    user_id: $('#selected_user_id').val(),
+                    uid: $('#selected_user_id').val(),
                 },
                 dataType: 'json',
                 type: 'post',
@@ -687,6 +688,7 @@
                     notify('error', JSON.stringify(err1))
                 },
                 beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                     xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                 }
             })
@@ -695,7 +697,7 @@
         function load_coins(){
             $('#add_currency').html('')
             $.ajax({
-                url: '{% url "crm:operators" %}',
+                url: '{% url "crm:transactions" %}',
                 dataType: "json",
                 type: "POST",
                 async: true,
@@ -1158,7 +1160,7 @@
                 $.ajax({
                     url: '{% url "crm:users" %}',
                     data: {
-                        user_id: user_id,
+                        uid: user_id,
                         action: 'blacklist',
                         main_action: $(this).text()
                     },
@@ -1178,36 +1180,7 @@
                         notify('error', JSON.stringify(err1))
                     },
                     beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
-                    }
-                })
-            })
-
-            $('.whitelist').click(function () {
-                var user_id = $("#selected_user_id").val();
-                loadOn();
-                $.ajax({
-                    url: '{% url "crm:users" %}',
-                    data: {
-                        user_id: user_id,
-                        action: 'whitelist'
-                    },
-                    dataType: 'json',
-                    type: 'post',
-                    success: function (data) {
-                        loadOff()
-                        notify(data.status, data.message)
-                        if (data.status === 'success') {
-                            start(true)
-                            $('#exampleLargeModal1').modal('hide')
-                        }
-
-                    },
-                    error: function (err1, err2) {
-                        loadOff()
-                        notify('error', JSON.stringify(err1))
-                    },
-                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem('userToken')}`),
                         xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}")
                     }
                 })

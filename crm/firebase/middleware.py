@@ -22,6 +22,8 @@ class FirebaseAuthMiddleware(MiddlewareMixin):
                     request.user, created = AdminUser.objects.get_or_create(
                         uid=decoded_token["uid"]
                     )
+                    if not created and request.user.status is False:
+                        return JsonResponse({"message": "Invalid request"}, status=401)
                 except Exception as e:
                     return JsonResponse({"message": "Invalid token"}, status=401)
             else:

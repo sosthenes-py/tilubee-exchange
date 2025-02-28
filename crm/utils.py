@@ -338,13 +338,11 @@ class UserUtils:
         }
 
     def blacklist(self):
-        if self.request.user.level in ("super admin", "admin", "approval admin"):
+        if self.request.user.level in ("super admin"):
             action = self.kwargs["main_action"]
             if "Blacklist" in action:
                 if not self.user.is_blacklisted():
                     Blacklist(user=self.user).save()
-                if hasattr(self.user, "whitelist"):
-                    self.user.whitelist.delete()
             else:
                 self.user.blacklist.delete()
         else:
@@ -370,9 +368,7 @@ class UserUtils:
                 & (
                     Q(user__uid__startswith=filters)
                     | Q(user__phone__startswith=filters)
-                    | Q(user__bvn__startswith=filters)
-                    | Q(user__first_name__startswith=filters)
-                    | Q(user__last_name__startswith=filters)
+                    | Q(user__email__startswith=filters)
                 )
             )
             .order_by("-created_at")
@@ -382,9 +378,8 @@ class UserUtils:
         rows = int(rows)
         for item in items:
             if rows > 0:
-                if not hasattr(item.user, "whitelist"):
-                    self.add_table_content(_for="blacklist", row=item)
-                    rows -= 1
+                self.add_table_content(_for="blacklist", row=item)
+                rows -= 1
 
     def process(self):
         if self.action == "get_all_users":
@@ -489,37 +484,10 @@ class UserUtils:
         elif _for == "blacklist":
             row = kwargs["row"]
             user = row.user
-            avatar = (
-                f"{BASE_SPACE_URL}/user_docs/{user.avatar.name}"
-                if hasattr(user, "avatar")
-                and self.request.user.stage not in EXEMPT_STAFF
-                else "/static/crm/images/avatars/user.png"
-            )
-
+            
             self._content += f"""
                 <tr
-                data-uid='{user.uid}' 
-                data-first_name='{user.first_name}' 
-                data-eligible_amount='{user.eligible_amount:,}' 
-                data-last_name='{user.last_name}' 
-                data-phone='{user.phone}' 
-                data-phone2='{user.phone2}' 
-                data-middle_name='{user.middle_name}' 
-                data-email='{user.email}' 
-                data-gender='{user.gender}' 
-                data-state='{user.state}' 
-                data-lga='{user.lga}' 
-                data-email2='{user.email2}' 
-                data-address='{user.address}' 
-                data-dob='{user.dob}' 
-                data-created_at="{user.created_at:%a %b %d, %Y}" 
-                data-avatar="{avatar}" 
-                data-doc_status="{user.status}"
-                data-doc_reason="{user.status_reason}"
-                data-status='{'Active' if not user.is_blacklisted() or hasattr(user, 'whitelist') else f'Blacklisted: {getattr(user, "blacklist").created_at:%b %d}'}' 
-                data-status_pill='<span class="badge rounded-pill text-bg-{'success' if not user.is_blacklisted() or hasattr(user, 'whitelist') else 'danger'}">{'Active' if not user.is_blacklisted() or hasattr(user, 'whitelist') else f'Blacklisted: {getattr(user, "blacklist").created_at:%b %d}: {getattr(user, "blacklist").reason}'}</span>' 
-                data-style='grey' 
-                data-last_access='{user.last_access}' class='user_rows'
+                class='user_rows'
                 >
                     <td>
 						<div class="d-flex align-items-center">
@@ -531,9 +499,8 @@ class UserUtils:
 							</div>
 						</div>
 					</td>
-                    <td>{row.user.last_name} {row.user.first_name}</td>
-                    <td>{row.user.phone}</td>
-                    <td>{row.reason}</td>
+                    <td>{row.user.uid}</td>
+                    <td>{row.user.email}</td>
                     <td>{row.created_at:%a %b %d, %Y}</td>
                 </tr>
 
@@ -584,13 +551,6 @@ class AdminUtils:
         AdminLog(
             user=user, app_user=app_user, action_type=action_type, action=action
         ).save()
-
-    def load_coins(self):
-        markets = crypto_markets()
-        self._content = {
-            short: {"long": long, "price": markets[short]["price"]}
-            for short, long in COINS_DICT.items()
-        }
 
     def fetch_operators(self):
         agents = AdminUser.objects.all().order_by("-created_at").all()
@@ -691,8 +651,6 @@ class AdminUtils:
             self.modify_admin()
         elif self.action == "delete_operator":
             self.delete_operator()
-        elif self.action == "load_coins":
-            self.load_coins()
 
     @property
     def content(self):
@@ -874,6 +832,13 @@ class TxUtils:
         self._status = "error"
         return None
 
+    def load_coins(self):
+        markets = crypto_markets()
+        self._content = {
+            short: {"long": long, "price": markets[short]["price"]}
+            for short, long in COINS_DICT.items()
+        }
+
     def add_table_content(self, _for="", **kwargs):
         if _for == "txs":
             tx = kwargs["tx"]
@@ -988,6 +953,8 @@ class TxUtils:
                     self.status_update(self.kwargs["main_action"])
             elif self.action == "add_tx":
                 self.add_transaction()
+            elif self.action == "load_coins":
+                self.load_coins()
 
     @property
     def content(self):

@@ -13,7 +13,7 @@ class AdminUser(models.Model):
     level = models.CharField(max_length=50, default='super admin')
     username = models.CharField(default='', max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=False)
     last_login = models.DateTimeField(default=timezone.now)
     uid = models.CharField(default='', max_length=100, blank=True, null=True)
 
