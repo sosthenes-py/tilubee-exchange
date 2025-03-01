@@ -47,6 +47,7 @@ class UserBankAccount(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE, related_name='user_bank_accounts')
     number = models.CharField(max_length=20, default='')
     bank = models.CharField(max_length=20, default='')
+    bank_code = models.CharField(max_length=10, default='')
     name = models.CharField(max_length=20, default='')
     created_at = models.DateTimeField(default=timezone.now)
 

@@ -138,7 +138,7 @@
 		<div class="sidebar-wrapper" data-simplebar="true">
 			<div class="sidebar-header">
 				<div>
-					<img src="{% static 'crm/images/logo.png' %}" class="logo-icon" alt="logo icon"  style="width: 4em"/>
+					<img src="{% static 'crm/images/logo.png' %}" class="logo-icon" alt="logo icon"  style="width: 10em"/>
 				</div>
                 <div class="mobile-toggle-icon ms-auto"><i class="bx bx-x"></i>
 				</div>
@@ -150,9 +150,28 @@
 					<a href="javascript:;" class="has-arrow">
 						<div class="parent-icon"><i class="bx bx-category"></i>
 						</div>
-						<div class="menu-title">Other Menu</div>
+						<div class="menu-title">Main Menu</div>
 					</a>
 
+                    <ul>
+						<li> <a href="{% url 'crm:users' %}"><i class="bx bx-right-arrow-alt"></i>Registered Users</a>
+						</li>
+					</ul>
+
+                    <ul>
+						<li> <a href="{% url 'crm:transactions' %}"><i class="bx bx-right-arrow-alt"></i>Registered Domains</a>
+						</li>
+					</ul>
+
+                    <ul>
+						<li> <a href="{% url 'crm:transactions' %}"><i class="bx bx-right-arrow-alt"></i>Addon Websites</a>
+						</li>
+					</ul>
+
+                    <ul>
+						<li> <a href="{% url 'crm:transactions' %}"><i class="bx bx-right-arrow-alt"></i>User Subscriptions</a>
+						</li>
+					</ul>
 
                     <ul>
 						<li> <a href="{% url 'crm:transactions' %}"><i class="bx bx-right-arrow-alt"></i>Transactions</a>
@@ -170,10 +189,7 @@
                     </ul>
 
                  
-                    <ul>
-						<li> <a href="{% url 'crm:users' %}"><i class="bx bx-right-arrow-alt"></i>Registered Users</a>
-						</li>
-					</ul>
+                    
 
                    
 				</li>
@@ -326,9 +342,8 @@
 		<!--End Back To Top Button-->
 		<footer class="page-footer">
             <p class="mb-0">
-                {% if user.level == 'super admin' %}
                 <span class="text-primary">WEDIGITAL DEVS <i class="bx bx-laptop"></i></span> |
-                {% endif %}
+             
                 Copyright © 2021. All right reserved.</p>
 		</footer>
 	</div>

@@ -317,6 +317,9 @@
             loadPage()
         })
 
+        $('.fetch_banks').click(function () {
+            fetch_banks()
+        })
 
         function loadPage(){
             showPreloader()
@@ -563,7 +566,7 @@
     <script type="text/javascript" src="{% static 'users/js/custom/deposit.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/history-transactions.js' %}"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/history-conversions.js' %}"></script>
-    <script type="text/javascript" src="{% static 'users/js/custom/settings-addbank.js' %}"></script>
+    <script type="text/javascript" src="{% static 'users/js/custom/settings-addbank.js' %}?v1.2"></script>
     <script type="text/javascript" src="{% static 'users/js/custom/profile.js' %}"></script>
 {% endblock embedded_scripts %}
 
