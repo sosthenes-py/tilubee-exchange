@@ -41,6 +41,7 @@ class UserWallet(models.Model):
     currency_name = models.CharField(max_length=100, default='')
     address = models.CharField(max_length=100, default='')
     network = models.CharField(max_length=100, default='')
+    key = models.CharField(max_length=500, default='')
     created_at = models.DateTimeField(default=timezone.now)
 
 class UserBankAccount(models.Model):

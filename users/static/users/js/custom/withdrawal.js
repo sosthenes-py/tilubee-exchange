@@ -75,6 +75,7 @@
             if(curr === 'ngn') {
                 w_populate_conf_box()
             }else{
+                $('.w-bank-conf').css('display', 'none')
                 $('.w-notbank-wallet').css('display', 'block')
                 if(action === 'uid'){
                     $('#w-wallet').attr('placeholder', `Enter ${myForm.platform.toUpperCase()} UID`)
@@ -139,10 +140,10 @@
                         notify('warning', `You cannot withdraw below ${window.markets[curr]['min']} ${curr.toUpperCase()}`)
                     }
                 }else{
-                    notify('warning', 'Please refresh the page and try again')
+                    notify('warning', 'Check your inputs')
                 }
             }else{
-                notify('warning', 'Please check your inputs')
+                notify('warning', 'Check your inputs')
             }
         }
 

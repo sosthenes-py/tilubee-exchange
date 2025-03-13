@@ -333,7 +333,7 @@
                         success: function (data) {
                             hidePreloader()
                             if (data.status === "success") {
-                                notifyAmount(`${fmtNum(myForm.qty)} ${myForm.currency.toUpperCase()}`, data.message, null, '{% url "users:wallet" %}')
+                                notifyAmount(`${fmtNum(myForm.qty)} ${myForm.currency.toUpperCase()}`, data.message, null, wallet_base_url)
                             }else{
                                 notify(data.status, data.message)
                             }

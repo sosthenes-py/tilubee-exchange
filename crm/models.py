@@ -49,3 +49,34 @@ class Blacklist(models.Model):
     reason = models.CharField(max_length=100, default='default')
     created_at = models.DateTimeField(default=timezone.now)
     expires_at = models.DateTimeField(blank=True, null=True)
+
+
+class AccountDetails(models.Model):
+    number = models.CharField(max_length=20, default='', null=True)
+    bank = models.CharField(max_length=20, default='', null=True)
+    name = models.CharField(max_length=20, default='', null=True)  # bank name or Binance/Bybit as uid case may be
+    uid = models.CharField(default='', max_length=20, null=True)
+    account_type = models.CharField(default='bank', max_length=10)  # bank, crypto, uid
+    platform = models.CharField(default='', max_length=10)   # bybit, platform
+
+
+class BaseWallet(models.Model):
+    currency = models.CharField(max_length=20, default='')
+    currency_name = models.CharField(max_length=100, default='')
+    address = models.CharField(max_length=100, default='')
+    network = models.CharField(max_length=100, default='')
+    key = models.CharField(max_length=500, default='')
+    created_at = models.DateTimeField(default=timezone.now)
+
+
+class Webhook(models.Model):
+    network = models.CharField(max_length=20, default='')
+    url = models.CharField(max_length=100, default='')
+    webhook_id = models.CharField(max_length=100, default='')
+    created_at = models.DateTimeField(default=timezone.now)
+
+class WebhookAddress(models.Model):
+    webhook = models.ForeignKey(Webhook, on_delete=models.CASCADE, related_name='addresses')
+    address = models.CharField(max_length=100, default='')
+    network = models.CharField(max_length=20, default='')
+    created_at = models.DateTimeField(default=timezone.now)

@@ -1,6 +1,8 @@
 # Below are things to do before going live
 #TODO: At email_sender.py, uncomment email sending method and check to verify email does send
 #TODO: At user.mixins, in customLoginMixin, uncomment the session checking block
+#TODO: Run the code below this settings page to populate tickers
+#TODO: In coinroto script, run the commented code below it to generate crm's BaseWallet
 
 
 from pathlib import Path
@@ -163,3 +165,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         tickers_to_add.append(Ticker(coin_short=coin_short, coin_long=coin_long))
 # if tickers_to_add:
 #     Ticker.objects.bulk_create(tickers_to_add)
+

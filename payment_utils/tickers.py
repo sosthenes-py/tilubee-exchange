@@ -34,6 +34,16 @@ COINS_DICT = {
     "zec": "Zcash"
 }
 
+MAIN_TOKENS = {
+    'btc': 'bitcoin',
+    'eth': 'erc20',
+    'usdt': 'trc20',
+    'trx': 'trc20',
+    'sol': 'solana',
+    'bnb': 'bep20',
+    'xrp': 'ripple'
+}
+
 
 def markets(tickers: QuerySet = None, order_by='', reload=False):
     """
